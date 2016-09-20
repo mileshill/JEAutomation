@@ -1,7 +1,7 @@
 #!/bin/bash
 # Use -gt 1 to consume two arguments per pass in the loop (e.g. each
 # argument has a corresponding value to got with it.)
-while [[ $# -gt 1 ]]
+while [[ $# -gt 0 ]]
 do
     key="$1"
     case $key in
@@ -18,41 +18,53 @@ do
     esac
     shift
 done
+# Auxiliary functions
+function add_date {
+    echo "$(date '+%H:%M:%S')"
+}
+# If no utility given
+if [ -z "${UTILITY}" ]; then
+    UTILITY=$(basename $(pwd))
+    echo "$(add_date) ${UTILITY} calculations started"
+fi
 
-# Clean directory
+# If clean directory
 if [ "${OVERWRITE}" ]; then
-    echo "Removing previous results."
+    echo "$(add_date) Removing previous results."
     rm *.csv *.txt
 fi
-echo "${OVERWRITE}"
 
+# Variable declarition
 RECIPE="${UTILITY}_rec.m"
+RECIPE_RESULT="${UTILITY}_rec.csv"
+PREDICTION="${UTILITY}_pred.m"
+PREDICTION_RESULT="${UTILITY}_pred.csv"
+
 # Does the recipe exists?
 if [ ! -e "${RECIPE}" ]; then
-    echo "${RECIPE} not found."
+    echo "$(add_date) ${RECIPE} not found."
     exit
 fi
 
 # Has the recipe been run?
 if [ ! -e "${UTILITY}_rec.csv" ]; then
-    echo "Running recipe predictions"
-    math -script ${RECIPE} > ${UTILITY}_rec.csv
+    echo "$(add_date) Running recipe predictions"
+    math -script ${RECIPE} > ${RECIPE_RESULT}
 fi
 # Store the unique premises
 if [ ! -e "${UTILITY}_premises.txt" ]; then
-    echo "Storing unique premises for prediction"
-    cat ${UTILITY}_rec.csv | awk -F ',' '{print $1 }' | uniq > ${UTILITY}_premises.txt
+    echo "$(add_date) Storing unique premises for prediction"
+    cat ${RECIPE_RESULT} | awk -F ',' '{print $1 }' | uniq > ${UTILITY}_premises.txt
 fi
 
 # Run the prediction script on unique premises
-if [ -e ${UTILITY}_pred.m ] && [ ! -e ${UTILITY}_pred.csv ]; then
-    echo "Running predictions on unique premises"
-    echo "***** script goes here *****"
-else
-    echo "Script not found or prediction results exist"
+if [ -e "${PREDICTION}" ] && [ ! -e ${UTILITY}_pred.csv ]; then
+    echo "$(add_date) Running predictions on unique premises"
+    math -script ${PREDICTION} > ${PREDICTION_RESULT}
+    echo "$( cat ${PREDICTION_RESULT} | wc -l ) predictios made."
 fi
 
 
-echo "Recipe complete"
+echo "$(add_date) $(UTILITY) Recipe complete."
 echo
 ls -lth
