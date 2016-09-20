@@ -53,18 +53,18 @@ Do[
     maxYear = Union[ records[[All,1]] ] // Last;
     {rateClass, strata} = records[[1,-2;;]];
     
-    trainingData = (#[[All,;;5]] -> #[[All,6]])& @ records;
-    predictTREE = Predict[ trainingData, Method -> "RandomForest" ];
-    predictNN   = Predict[ trainingData, Method -> "NeuralNetwork"]; 
+    trainingData = N[ #[[All,;;5]] -> #[[All,6]] ]& @ records;
+    predictTREE = Predict[ trainingData, Method -> "RandomForest", PerformanceGoal->"TrainingSpeed" ];
+    predictNN   = Predict[ trainingData, Method -> "NeuralNetwork", PerformanceGoal->"TrainingSpeed"]; 
 
     ClearAll @ buildSummer;
     Attributes[buildSummer] = HoldFirst;
     buildSummer[func_]:= Outer[
         func[{maxYear+1, #, #2, #3, #4}, "Distribution"]&,
-        Range[{6,9}],
-        Range[31],
-        Range[7],
-        Range[{13,19}]
+        Range[{6.,9}],
+        Range[{1.,31}],
+        Range[{1.,7}],
+        Range[{13.,19}]
     ];
 
     {summerTREEPred, summerTREEUnc} = buildSummer[ predictTREE ] // 
