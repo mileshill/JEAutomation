@@ -3,8 +3,6 @@
 # argument has a corresponding value to got with it.)
 
 OVERWRITE=false
-ONLY_PREDICT=false
-ONLY_RECIPE=false
 while [[ $# -gt 0 ]]
 do
     key="$1"
@@ -62,10 +60,10 @@ if [ ! -e "${RECIPE}" ] && [ ! -e "${PREDICTION}" ] ; then
 fi
 
 # Has the recipe been run?
-if [ ! -e "${RECIPE_RESULT}" ] && [ ! "${ONLY_PREDCTION}" ]; then
+if [ ! -e "${RECIPE_RESULT}" ]; then 
     # run recipe and store result
     echo "$(add_date) Running recipe calculations."
-    math -script ${RECIPE} > ${RECIPE_RESULT}
+    MathKernel -script ${RECIPE} > ${RECIPE_RESULT}
     # store unique premises
     echo "$(add_date) Storing unique premises for prediction"
     cat ${RECIPE_RESULT} | awk -F ',' '{print $1 }' | uniq > ${UNIQ_PREM}
@@ -73,9 +71,9 @@ if [ ! -e "${RECIPE_RESULT}" ] && [ ! "${ONLY_PREDCTION}" ]; then
 fi
 
 # Run the prediction script on unique premises
-if [ ! -e "${PREDICTION_RESULT}" ] &&  [ ! "${ONLY_RECIPE}" ]; then
+if [ ! -e "${PREDICTION_RESULT}" ]; then 
     echo "$(add_date) Running predictions on unique premises"
-    math -script ${PREDICTION} > ${PREDICTION_RESULT}
+    MathKernel -script ${PREDICTION} > ${PREDICTION_RESULT}
 fi
 
 
