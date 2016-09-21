@@ -61,10 +61,10 @@ Do[
     Attributes[buildSummer] = HoldFirst;
     buildSummer[func_]:= Outer[
         func[{maxYear+1, #, #2, #3, #4}, "Distribution"]&,
-        Range[{6.,9}],
-        Range[{1.,31}],
-        Range[{1.,7}],
-        Range[{13.,19}]
+        Range[6.,9],
+        Range[1.,31],
+        Range[1.,7],
+        Range[13.,19]
     ];
 
     {summerTREEPred, summerTREEUnc} = buildSummer[ predictTREE ] // 
@@ -78,14 +78,14 @@ Do[
 
     (* Compute *)
     icapTREE = Mean /@ {summerTREEPred * utilVector, summerTREEUnc * utilVector};
-    icapNN  = Mean/@ {summerNNPred * utilVector, summerNNUnc * utilVector };
+    icapNN  = Mean  /@ {summerNNPred * utilVector, summerNNUnc * utilVector };
 
-    {icap, icapUnc} = Mean @ {icapTREE, icapNN};
+    {icap, icapUnc} = If[Head@#===Times,First@#,#]& /@ Mean[ {icapTREE, icapNN} ];
 
-    results = {premItr, maxYear+1, rateClass, strata, icap, icapUnc, yearCount, sampleCount};
+    results = {premItr, maxYear+1, rateClass, Sequence @ strata, Sequence @ icap, icapUnc, yearCount, sampleCount};
     Write[stdout, StringRiffle[ results, ", " ]];
 
-,{premItr, premises[[;;1]]}]
+,{premItr, premises}]
 
 
 
