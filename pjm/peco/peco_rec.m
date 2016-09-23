@@ -39,19 +39,19 @@ SQLExecute[conn,"select
 		or  pv.ParameterId = 'RateClassLoss'
 		or  pv.ParameterId = 'NormalKW'
 		or  pv.ParameterId = 'CoincidentKW')"]//
-	<|"Year"->#,"RateClass"->#2,"Strata"->#3,#4->#5|>&@@@#&//
+	<|"Year" -> #,"RateClass" -> #2,"Strata" -> #3,#4 -> #5|>& @@@ #&//
 		GroupBy[#,{#Year,#RateClass,#Strata}&]&//
 		Map[Merge[Identity]]//
-		Select[#,KeyExistsQ[#,"RateClassLoss"]&&KeyExistsQ[#,"NCRatio"]&]&//
-		Select[#,Length@#NCRatio==5&]&//
-		Map[#NCRatio* (1+#RateClassLoss[[1]]/100.)&]//
+		Select[#, KeyExistsQ[#, "RateClassLoss"] && KeyExistsQ[#, "NCRatio"]&]&//
+		Select[#, Length @ #NCRatio = =5&]&//
+		Map[#NCRatio * (1 + #RateClassLoss[[1]] / 100.)&]//
 		(utilParams=#)&;
   
  results//
  	Normal//
-	#/.Rule[{prem_,yr_,rc_,st_},usage_List]:>{prem,ToString[ToExpression[yr]+1],rc,st,Mean[usage*Lookup[utilParams,{{yr,rc,st}},ConstantArray[0.,5]][[1]]]}&//
-	Prepend[#,{"PremiseId","Year","RateClass","Strata","RecipeICap"}]&//
-	(icapValues=#)&;
+	#/.Rule[{prem_,yr_,rc_,st_}, usage_List] :> {prem, ToString[ToExpression[yr] + 1], rc, st, Mean[usage * Lookup[utilParams, {{yr,rc,st}}, ConstantArray[0., 5]][[1]]]}&//
+	Prepend[#,{"PremiseId", "Year", "RateClass", "Strata", "RecipeICap"}]&//
+	(icapValues = #)&;
 	
 stdout=Streams[][[1]];
 Map[Write[stdout, StringRiffle[#,", "]]&, icapValues]
