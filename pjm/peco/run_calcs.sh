@@ -43,7 +43,7 @@ fi
 # If clean directory
 if [ "${OVERWRITE}" ]; then
     echo "$(add_date) Removing previous results."
-    rm *pred.csv *.txt
+    find . -type f -not \( -name "*.m" -o -name "*.sh" \) -print0 | xargs --null rm 
 fi
 
 # Variable declarition
@@ -52,11 +52,11 @@ RECIPE_RESULT="${UTILITY}_rec.csv"
 UNIQ_PREM="${UTILITY}_premises.txt"
 PREDICTION="${UTILITY}_pred.m"
 PREDICTION_RESULT="${UTILITY}_pred.csv"
-COMPARE_SCRIPT="pred_compare.m"
+COMPARE="pred_compare.m"
 COMPARE_RESULT="${UTILITY}_pred_compare.csv"
 
 # Does the recipe and prediction scripts exist?
-if [ ! -e "${RECIPE}" ] && [ ! -e "${PREDICTION}" ] ; then
+if [ ! -e "${RECIPE}" ] && [ ! -e "${PREDICTION}" ] && [ ! -e "${COMPARE}" ] ; then
     echo "$(add_date) Scripts not found."
     exit
 fi
@@ -64,7 +64,7 @@ fi
 # Has the recipe been run?
 if [ ! -e "${RECIPE_RESULT}" ]; then 
     # run recipe and store result
-    echo "$(add_date) Running recipe calculations."
+    echo "$(add_date) Running ${RECIPE}."
     MathKernel -script ${RECIPE} > ${RECIPE_RESULT}
     # store unique premises
     echo "$(add_date) Storing unique premises for prediction"
@@ -74,14 +74,14 @@ fi
 
 # Run the prediction script on unique premises
 if [ ! -e "${PREDICTION_RESULT}" ]; then 
-    echo "$(add_date) Running predictions on unique premises"
+    echo "$(add_date) Running ${PREDICTION}"
     MathKernel -script ${PREDICTION} > ${PREDICTION_RESULT}
 fi
 
 # Comparison against available historical
-if [ -e "${COMPARE_SCRIPT}" ]; then
-    echo "$(add_date) Running ${COMPARE_SCRIPT}"
-    MathKernel -script ${COMPARE_SCRIPT} > ${COMPARE_RESULT} 
+if [ ! -e "${COMPARE_RESULT}" ] ||  [ "${PREDICTION_RESULT}" -nt  "${COMPARE_RESULT}" ]; then
+    echo "$(add_date) Running ${COMPARE}"
+    MathKernel -script ${COMPARE} > ${COMPARE_RESULT} 
 fi
 
 echo "$(add_date) ${UTILITY} Recipe complete."

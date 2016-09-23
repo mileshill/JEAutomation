@@ -1,3 +1,5 @@
+#!/usr/bin/env/WolframScript -script
+
 (* imports *)
 BeginPackage["PecoScript`",{"DatabaseLink`","DBConnect`"}];
 
@@ -24,7 +26,7 @@ With[
 		GroupBy[#,{#PremiseId,#Year,#RateClass,#Strata}&]&//
 		Map[Merge[Identity]]//
 		Map[#Usage&]//
-		Select[#,Length@#==5&]&//
+		Select[#,Length @ # == 5&]&//
 		(results=#)&
 ];
 
@@ -43,7 +45,7 @@ SQLExecute[conn,"select
 		GroupBy[#,{#Year,#RateClass,#Strata}&]&//
 		Map[Merge[Identity]]//
 		Select[#, KeyExistsQ[#, "RateClassLoss"] && KeyExistsQ[#, "NCRatio"]&]&//
-		Select[#, Length @ #NCRatio = =5&]&//
+		Select[#, Length @ #NCRatio == 5&]&//
 		Map[#NCRatio * (1 + #RateClassLoss[[1]] / 100.)&]//
 		(utilParams=#)&;
   
