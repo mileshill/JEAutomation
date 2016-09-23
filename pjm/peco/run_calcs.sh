@@ -43,7 +43,7 @@ fi
 # If clean directory
 if [ "${OVERWRITE}" ]; then
     echo "$(add_date) Removing previous results."
-    rm *.csv  *.txt
+    rm *pred.csv *.txt
 fi
 
 # Variable declarition
@@ -52,6 +52,8 @@ RECIPE_RESULT="${UTILITY}_rec.csv"
 UNIQ_PREM="${UTILITY}_premises.txt"
 PREDICTION="${UTILITY}_pred.m"
 PREDICTION_RESULT="${UTILITY}_pred.csv"
+COMPARE_SCRIPT="pred_compare.m"
+COMPARE_RESULT="${UTILITY}_pred_compare.csv"
 
 # Does the recipe and prediction scripts exist?
 if [ ! -e "${RECIPE}" ] && [ ! -e "${PREDICTION}" ] ; then
@@ -76,6 +78,11 @@ if [ ! -e "${PREDICTION_RESULT}" ]; then
     MathKernel -script ${PREDICTION} > ${PREDICTION_RESULT}
 fi
 
+# Comparison against available historical
+if [ -e "${COMPARE_SCRIPT}" ]; then
+    echo "$(add_date) Running ${COMPARE_SCRIPT}"
+    MathKernel -script ${COMPARE_SCRIPT} > ${COMPARE_RESULT} 
+fi
 
 echo "$(add_date) ${UTILITY} Recipe complete."
 echo
