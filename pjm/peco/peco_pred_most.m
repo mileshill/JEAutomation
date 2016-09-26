@@ -113,7 +113,7 @@ Do[
     *) 
 
     (* Utility Vector *)
-    utilVector = utilParams[ToString /@ {maxYear-1, rateClass, strata}];
+    utilVector = utilParams[ToString /@ {maxYear, rateClass, strata}];
 
     (* Compute *)
     icapTREE = Mean /@ {summerTREEPred * utilVector, summerTREEUnc * utilVector};
