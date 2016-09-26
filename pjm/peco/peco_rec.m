@@ -51,7 +51,7 @@ SQLExecute[conn,"select
   
  results//
  	Normal//
-	#/.Rule[{prem_,yr_,rc_,st_}, usage_List] :> {prem, ToString[ToExpression[yr] + 1], rc, st, Mean[usage * Lookup[utilParams, {{yr,rc,st}}, ConstantArray[0., 5]][[1]]]}&//
+	#/.Rule[{prem_,yr_,rc_,st_}, usage_List] :> {prem, ToExpression[yr]+1, rc, st, Mean[usage * Lookup[utilParams, {{yr,rc,st}}, ConstantArray[0., 5]][[1]]]}&//
 	Prepend[#,{"PremiseId", "Year", "RateClass", "Strata", "RecipeICap"}]&//
 	(icapValues = #)&;
 	
@@ -59,4 +59,6 @@ stdout=Streams[][[1]];
 Map[Write[stdout, StringRiffle[#,", "]]&, icapValues]
 
 JECloseConnection[];
+
 EndPackage[];
+Quit[];

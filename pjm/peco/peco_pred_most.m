@@ -113,16 +113,16 @@ Do[
     *) 
 
     (* Utility Vector *)
-    utilVector = utilParams[ToString /@ {maxYear, rateClass, strata}];
+    utilVector = utilParams[ToString /@ {maxYear+1, rateClass, strata}];
 
     (* Compute *)
     icapTREE = Mean /@ {summerTREEPred * utilVector, summerTREEUnc * utilVector};
 
     (* icapNN  = Mean  /@ {summerNNPred * utilVector, summerNNUnc * utilVector };*)
 
-    (*{icap, icapUnc} = If[Head@#===Times,First@#,#]& /@ Mean[ {icapTREE, icapNN} ];*)
+    {icap, icapUnc} = If[Head@#===Times,First@#,#]& /@ icapTREE; 
+    (*Mean[ {icapTREE, icapNN} ];*)
 
-    {icap, icapUnc} = icapTREE; 
     results = {premItr, maxYear+1, rateClass, Sequence @ strata, Sequence @ icap, icapUnc, yearCount, sampleCount};
     Write[stdout, StringRiffle[ results, ", " ]];
 

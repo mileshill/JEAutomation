@@ -3,7 +3,7 @@ Needs @ "DatabaseLink`";
 Get @ "DBConnect.m";
 
 (* Import predictions *)
-With[{fileName = "./peco_pred.csv"},
+With[{fileName = "./peco_pred_most.csv"},
 
     If[FileExistsQ @ fileName,
         Clear @ predictions;

@@ -1,0 +1,5 @@
+
+Rest::norest: Cannot take Rest of expression {} with length zero.
+Premise, Year, RateClass, Strata, PredictedICap, Uncertainty, TrainingYears, TrainingSamples
+
+Do::iterb: Iterator {premItr, premises} does not have appropriate bounds.
