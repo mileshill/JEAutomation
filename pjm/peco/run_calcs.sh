@@ -43,7 +43,7 @@ fi
 # If clean directory
 if [ "${OVERWRITE}" ]; then
     echo "$(add_date) Removing previous results."
-    find . -type f -not \( -name "*.m" -o -name "*.sh" \) -print0 | xargs --null rm 
+    find . -type f -not \( -name "*.m" -o -name "*.sh" \) -print0 | xargs -0 rm -f 
 fi
 
 # Variable declarition
