@@ -7,10 +7,8 @@ If[ Not @ MatchQ[conn, _SQLConnection],
     Throw[$Failed]; Return[1],
     Nothing
 ];
-Print @ "Connection Established";
 
 
-Print @ "Loading recon factor";
 (* load reconcilation factor: year -> 5 vector *)
 SQLExecute[conn,"select CAST(CPYearID-1 as VARCHAR), ParameterValue
     from SystemLoad
@@ -22,7 +20,6 @@ SQLExecute[conn,"select CAST(CPYearID-1 as VARCHAR), ParameterValue
     (Clear@reconFactor;reconFactor=#)&;
 
 
-Print @ "Loading loss factor";
 (* load loss factor: {year, rateClass} -> scalar *)
 SQLExecute[conn,"select CAST(c.CPYearID-1 as VARCHAR), u.RateClass, u.Strata, 
     u.ParameterID, u.ParameterValue
@@ -54,22 +51,9 @@ queryTemp = StringTemplate[
         where h.UtilityId = 'PPL'
             and h.PremiseId = '`premise`'
             and Month(h.UsageDate) in (6,7,8,9)"];
-Print @ "Load premise text";
 (* import unique premises *)
 premises = Rest @ StringSplit @ Import["ppl_premises.txt","Text"];
-Print["Number of premises: ", Length @ premises];
-(*
-hourlyRecords//Normal//
-    (#/.{
-        Rule[key:{prem_,year_,rateClass_,strata_},usage_]:>Flatten@{key,Mean[usage*reconFactor[year]*lossFactor[{year,rateClass}]]}
-    })&//
-    DeleteMissing[#,1,Infinity]&//
-    Prepend[#,{"PremiseId","Year","RateClass","Strata", "Icap"}]&//
-    (pplICap = #)&;
-*)
-
 (* Loop over premises; train predictor and predict summer values *)
-Print @ "Initializing loop";
 stdout = Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#, ", "]]&;
 labels = {

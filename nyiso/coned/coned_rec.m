@@ -1,3 +1,4 @@
+#!/usr/bin/env/WolframScript -script
 (* imports *)
 BeginPackage["CONEDScript`",{"DatabaseLink`","DBConnect`"}];
 
@@ -129,60 +130,85 @@ SQLExecute[conn, queryDailyAvg]//
         (# /. Rule[key_List, temp_] :> Flatten[{key, temp}])&//
         (tempVariant = #)&;  (* {dateString, daytype} -> tempAdj *)
 
+
+(* Load database service class for faster logic *)
+dbsc = SQLExecute[conn, "select distinct SC
+    from CONED_LoadShapeTempAdj"]// Flatten // ToExpression;
+
+
 (* ::Section:: *)
 (* Build load shape adjustment table; per premise id *)
-testPrem = First @ allPremisesForNormalizedUsage; (* this is an interval meter type *)
+stdout = Streams[][[1]];
+writeFunc = Write[stdout, StringRiffle[#, ", "]]&;
+Do[
+    (* premItr is an entire record!
+        1) premid   2) rateClass    3) strata (don't use)   4) zone code
+        5) stratum  6) tod code     7) year                 8) bill cycle start
+        9) bill cycle end           10) billed usage        11) billed demand
+        12) if interval then CPHourUsage else CMD || DMD
+    *)
+    {   premId, rateClass, zoneCode, 
+        stratum, tod, year, billStart, billEnd,
+        billUsage, billDemand, useOrMType
+    } = {#, ToExpression @ #2, #4, ToExpression @  #5, #6, #7, #8, #9, #10, #11, #12}& @@ premItr;
+
+    (* skip premise if rateClass not in database temp adj table *)
+    If[Not @ MemberQ[dbsc, rateClass], 
+        Continue[],
+        Nothing
+        ];
+   
+    (* select temperature variants by bill cycle  *)
+    billCycle = {billStart, billEnd};
+    tempVarSelect =  ( 
+        Position[tempVariant, {Alternatives @@ billCycle, __}]//
+            Take[tempVariant, Flatten @ #]&
+    );
+    
+    (* conditional template for Load Shape Adjustment Table  *)
+    (********************************************************* 
+    NEED TO DETERMINE WHAT <STRATA> means in the LoadShapeTempAdj TABLE BEFORE
+    FINAL <LOADPROFILE> CAN BE BUILt.
+    *)
+    boundsTemp = StringTemplate["(
+        SC = `rateClass`
+        and `stratum` between [STRAT L BOUND] and [STRAT U BOUND]
+        and DayType = '`day`' 
+        and `tempVar` between [TEMP L BOUND] and [TEMP U BOUND])"
+        ][<|"rateClass" -> #1, "stratum" -> #2, "day" -> #3, "tempVar" -> #4|>]&;
+
+    (* apply template to days in bill cycle *)
+    boundsTemp @@@ Flatten[{{rateClass, stratum, ##}& @@@ tempVarSelect[[All, 2;;]]}, 1] //
+        StringRiffle[#, " or "]&//
+        (boundsTempString = #)&;
+
+    (* construct the sql query to return Load Shape Adjustment Table *)
+    loadAdjTableTemp = StringTemplate["
+       select KW1, KW2, KW3, KW4 ,KW5 ,KW6 ,KW7 ,KW8 , KW9, KW10, KW11, KW12,
+            KW13, KW14, KW15, KW16, KW17, KW18, KW19, KW20, KW21, KW22, KW23, KW24
+       from CONED_LoadShapeTempAdj
+       where `conditions`
+    "][<|"conditions" -> boundsTempString|>];
+
+    SQLExecute[conn, loadAdjTableTemp]//
+        (loadProfile = #)&;
 
 
-{serviceClass, stratum} = ToExpression[{#2, #5}]& @@ testPrem;
-billCycle ={#8, #9}& @@ testPrem ;
-tempVarSelect =  ( (* returns {{dayType, temp}..} for day in bill cycle *)
-    Position[tempVariant, {Alternatives @@ billCycle, __}]//
-        Take[tempVariant, Flatten @ #]&
-);
+    
+    (*  Map[Print[StringRiffle[#, " "]]&, loadProfile];*)
+    Print["LP Dimensions : ",  Dimensions @ loadProfile];
 
-boundsTemp = StringTemplate["(DayType = '`day`' 
-        and `tempVar` between [TEMP L BOUND] and [TEMP U BOUND])"][<|"day" -> #1, "tempVar" -> #2|>]&;
+    csf = Total @ Flatten @ loadProfile;
+    Print["CSF: ", csf];
 
-boundsTemp @@@ tempVarSelect[[All, 2;;]] //
-    StringRiffle[#, " or "]&//
-    (boundsTempString = #)&;
-
-loadAdjTableTemp = StringTemplate["
-   select distinct KW1, KW2, KW3, KW4 ,KW5 ,KW6 ,KW7 ,KW8 , KW9, KW10, KW11, KW12,
-        KW13, KW14, KW15, KW16, KW17, KW18, KW19, KW20, KW21, KW22, KW23, KW24
-   from CONED_LoadShapeTempAdj
-   where SC = `serviceClass`
-    and `stratum` between [STRAT L BOUND] and [STRAT U BOUND]
-    and `tempCycle`
-"][<|"serviceClass" -> serviceClass, "stratum" -> stratum, "tempCycle" -> boundsTempString |>];
-
-Print @ loadAdjTableTemp;
-
-SQLExecute[conn, loadAdjTableTemp]//
-    (loadProfile = #)&;
-
-Map[Print[StringRiffle[#, " "]]&, loadProfile];
-Print["LP Dimensions : ",  Dimensions @ loadProfile];
-
-csf = Total @ Flatten @ loadProfile;
-Print["CSF: ", csf];
-
-cpDay = Position[tempVariant, cpDate][[1,1]];
-Print @ cpDay;
-
-lp = loadProfile[[ cpDay, cpHour ]];
-Print["Load profile: ",lp];
-Quit[];
-
-
-
-
-
-
-
-
-
+    cpDay = Position[tempVariant, cpDate][[1,1]];
+    Print @ cpDay;
+    
+    Continue[];
+    lp = loadProfile[[ cpDay, cpHour ]];
+    Print["Load profile: ",lp];
+,{premItr, allPremisesForNormalizedUsage[[;;30]]}
+];
 
 (* Normalized Usage *)
 
