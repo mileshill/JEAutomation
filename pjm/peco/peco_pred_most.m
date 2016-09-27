@@ -1,5 +1,5 @@
 #!/usr/bin/env/WolframScript -script
-
+BeginPackage["recPECO`",{"DatabaseLink`","DBConnect`"}];
 Needs @ "DatabaseLink`";
 Get @ "DBConnect.m";
 
@@ -131,5 +131,5 @@ Do[
 
 
 
-Return[0]
+EndPackage[];
 Quit[];

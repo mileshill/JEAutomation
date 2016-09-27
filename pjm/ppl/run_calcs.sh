@@ -50,8 +50,8 @@ fi
 RECIPE="${UTILITY}_rec.m"
 RECIPE_RESULT="${UTILITY}_rec.csv"
 UNIQ_PREM="${UTILITY}_premises.txt"
-PREDICTION="${UTILITY}_pred.m"
-PREDICTION_RESULT="${UTILITY}_pred.csv"
+PREDICTION="${UTILITY}_pred_most.m"
+PREDICTION_RESULT="${UTILITY}_pred_most.csv"
 COMPARE="pred_compare.m"
 COMPARE_RESULT="${UTILITY}_pred_compare.csv"
 

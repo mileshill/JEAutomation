@@ -50,8 +50,8 @@ fi
 RECIPE="${UTILITY}_rec.m"
 RECIPE_RESULT="${UTILITY}_rec.csv"
 UNIQ_PREM="${UTILITY}_premises.txt"
-PREDICTION="${UTILITY}_pred.m"
-PREDICTION_RESULT="${UTILITY}_pred.csv"
+PREDICTION="${UTILITY}_pred_most.m"
+PREDICTION_RESULT="${UTILITY}_pred_most.csv"
 COMPARE="pred_compare.m"
 COMPARE_RESULT="${UTILITY}_pred_compare.csv"
 
@@ -68,7 +68,7 @@ if [ ! -e "${RECIPE_RESULT}" ]; then
     MathKernel -script ${RECIPE} > ${RECIPE_RESULT}
     # store unique premises
     echo "$(add_date) Storing unique premises for prediction"
-    cat ${RECIPE_RESULT} | awk -F ',' '{print $1 }' | uniq > ${UNIQ_PREM}
+    cat ${RECIPE_RESULT} | awk -F ',' '{print $1}' | uniq > ${UNIQ_PREM}
     echo "$(add_date) $(cat ${UNIQ_PREM} | wc -l) unique premises"
 fi
 
