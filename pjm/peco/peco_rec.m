@@ -4,13 +4,18 @@
 BeginPackage["PecoScript`",{"DatabaseLink`","DBConnect`"}];
 
 conn = JEConnection[];
-
-(* connected to database *)
+If[Not @ MatchQ[conn, _SQLConnection],
+    Throw[$Failed]; Return[1],
+    Nothing
+];
+(* Query and filter for premises *)
 With[
 	{labels={"PremiseId","Year","Usage","RateClass","Strata"}},
 	
 	SQLExecute[conn,
-	"select distinct h.PremiseId, Cast(Year(h.Usagedate) as VARCHAR), h.Usage,
+	"select distinct h.PremiseId, 
+        Cast(Year(h.Usagedate) as VARCHAR), 
+        h.Usage,
 		p.RateClass, p.Strata
 	from HourlyUsage as h
 	inner join Premise as p
@@ -21,15 +26,16 @@ With[
 		and cp.CPDate = h.UsageDate
 		and cp.HourEnding = h.HourEnding
 	where h.UtilityId = 'PECO'
-	order by h.premiseID, Cast(Year(h.UsageDate) as VARCHAR), p.RateClass, p.Strata"]//
-		AssociationThread[labels-> #]&/@#&//
-		GroupBy[#,{#PremiseId,#Year,#RateClass,#Strata}&]&//
+	order by h.premiseID, 
+        Cast(Year(h.UsageDate) as VARCHAR), 
+        p.RateClass, p.Strata"]//
+		AssociationThread[labels -> #]& /@ #&//
+		GroupBy[#,{#PremiseId, #Year, #RateClass, #Strata}&]&//
 		Map[Merge[Identity]]//
-		Map[#Usage&]//
+		Map[#Usage&]/
 		Select[#,Length @ # == 5&]&//
-		(results=#)&
+		(records=#)&
 ];
-
 
 SQLExecute[conn,"select  
 	Cast(Year(pv.StartDate)-1 as VARCHAR), 
@@ -48,17 +54,20 @@ SQLExecute[conn,"select
 		Select[#, Length @ #NCRatio == 5&]&//
 		Map[#NCRatio * (1 + #RateClassLoss[[1]] / 100.)&]//
 		(utilParams=#)&;
-  
- results//
+ 
+
+ records//
  	Normal//
 	#/.Rule[{prem_,yr_,rc_,st_}, usage_List] :> {prem, ToExpression[yr]+1, rc, st, Mean[usage * Lookup[utilParams, {{yr,rc,st}}, ConstantArray[0., 5]][[1]]]}&//
-	Prepend[#,{"PremiseId", "Year", "RateClass", "Strata", "RecipeICap"}]&//
 	(icapValues = #)&;
 	
+labels = {"PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
-Map[Write[stdout, StringRiffle[#,", "]]&, icapValues]
+writeFunc = Write[stdout, StringRiffle[#,","]]&;
+
+writeFunc @ labels;
+writeFunc /@ icapValues;
 
 JECloseConnection[];
-
 EndPackage[];
 Quit[];
