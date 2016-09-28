@@ -48,7 +48,7 @@ monthlyWithDemandQuery = "
 weatherCorrectionFactorQuery = "
     select Cast(Year(upv.StartDate)-1 as varchar), 
         RTrim(upv.RateClass), RTrim(upv.Strata), 
-        Count(Year(upv.StartDate)), Avg(upv.ParameterValue)
+        Avg(upv.ParameterValue)
     from UtilityParameterValue as upv
     inner join CoincidentPeak as cp
         on cp.UtilityId = upv.UtilityId
@@ -62,34 +62,69 @@ weatherCorrectionFactorQuery = "
 
 
 rateClassLossFactorQuery = "
-    select distinct Cast(Year(upv.StartDate)-1 as varchar), 
+    select distinct 
+        Cast(Year(upv.StartDate)-1 as varchar), 
         RTrim(upv.RateClass), RTrim(upv.Strata),
-        upv.ParameterId, (1 - upv.ParameterValue/100.)
+        (1 - upv.ParameterValue/100.)
     from UtilityParameterValue as upv
     inner join CoincidentPeak as cp
         on cp.UtilityId = upv.UtilityId
         and cp.CPID = upv.CPID
     where upv.UtilityId = 'PECO'
-        and upv.ParameterId = 'RateClassLoss'    
-";
-
+        and upv.ParameterId = 'RateClassLoss'"; 
 
 plcScaleFactorQuery = "
     select Cast((CPYearID - 1) as varchar), ParameterValue
     from SystemLoad
     where UtilityId = 'PECO'
-        and ParameterId = 'PLCScaleFactor'
-";
+        and ParameterId = 'PLCScaleFactor'";
 
-conn = JEConection[];
+conn = JEConnection[];
 If[Not @ MatchQ[conn, _SQLConnection],
     Throw[$Failed]; Return[1],
     Nothing];
 
 records = SQLExecute[conn, monthlyWithDemandQuery];
-wcf = SQLExecute[conn, weatherCorrectionFactorQuery];
-rclf = SQLExecute[conn, rateClassLossFactorQuery];
-plcf = SQLExecute[conn, plcScaleFactorQuery]
+
+wcf = SQLExecute[conn, weatherCorrectionFactorQuery]//
+    <| "Year" -> #, "RateClass" -> #2, "Strata" -> #3, "WCF" -> #4 |>& @@@ #&//
+    GroupBy[#, {#Year, #RateClass, #Strata}&]&//
+    Map[First]//
+    Map[#WCF&];
+    
+rclf = SQLExecute[conn, rateClassLossFactorQuery]//
+    <| "Year" -> #, "RateClass" -> #2, "Strata" -> #3, "RCLF" -> #4 |>& @@@ #&//
+    GroupBy[#, {#Year, #RateClass, #Strata}&]&//
+    Map[(#RCLF& @ First @ #)&];
+
+plcf = SQLExecute[conn, plcScaleFactorQuery]//
+    <|"Year" -> #, "PLC" -> #2|>& @@@ #&//
+    GroupBy[#, #Year&]&//
+    Map[(#PLC& @ First @ #)&];
+
+(*
+records//
+    #/.{
+    {premId_,yr_, rc_, st_,avdDmd_} :> {premId, yr, rc, st, avgDmd * wcf[{yr, rc, st}] * rclf[{yr, rc, st}}
+    }//
+    (icapValues = #)&;
+*)
+stdout = Streams[][[1]];
+writeFunc = Write[stdout, StringRiffle[#, ","]]&;
+
+writeFunc @ {"PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+Do[
+    {premId, yr, rc, st, avgDmd} = premItr;
+    localWcf = Lookup[wcf, {{yr, rc, st}}, 0.];
+    localRclf = Lookup[rclf, {{yr, rc, st}}, 0.];
+    localPlcf = Lookup[plcf, yr, 0.];
+
+    iCap = First[avgDmd * localWcf * localRclf * localPlcf];
+
+    (* premId, year, rateClass, strata, icap *)
+    writeFunc @ {premId, yr, rc, st, iCap};
+
+    ,{premItr, records}];
 
 EndPackage[];
 Quit[];
