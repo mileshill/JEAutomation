@@ -1,4 +1,16 @@
-#!/usr/bin/env/WolframScript -script
+#!/usr/local/bin/WolframScript -script
+(* 1)kernel 2) option 3) script 4..)args *)
+
+BeginPackage["pecoPredict`"];
+
+(* must have file name! *)
+If[ Length @ $CommandLine != 4,
+    Throw[$Failed]; Return[1],
+    Nothing
+];
+
+fileName = $CommandLine[[4]]
+
 
 Needs @ "DatabaseLink`";
 Get @ "DBConnect.m";
@@ -32,7 +44,7 @@ SQLExecute[conn,"select
 Premises are generated from the recipe calculations. BASH script determines
 all unique premises ids and stores them in local file.
 *) 
-premises = Rest @ StringSplit @ Import["peco_premises.txt","Text"];
+premises = Rest @ StringSplit @ Import[fileName, "Text"];
 
 (* Template accepts PremiseID as parameter. Selects all years of summer usage data *)
 queryTemp = StringTemplate[
@@ -108,4 +120,5 @@ Do[
 
 
 Return[0]
+EndPackage[];
 Quit[];

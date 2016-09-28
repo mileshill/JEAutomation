@@ -1,13 +1,22 @@
-#!/usr/bin/env/WolframScript -script
+#!/usr/local/bin/WolframScript -script
+
 BeginPackage["recPECO`",{"DatabaseLink`","DBConnect`"}];
-Needs @ "DatabaseLink`";
-Get @ "DBConnect.m";
+
+If[ Length @ $CommandLine != 4,
+    Throw[$Failed]; Return[1],
+    Nothing
+];
+
+fileName = $CommandLine[[4]];
+
 
 conn =  JEConnection[];
 If[ Not@ MatchQ[ conn, _SQLConnection ],
     Throw[$Failed]; Return[1],
     Nothing
 ];
+
+
 
 (* Import the Utility Parameters *)
 SQLExecute[conn,"select  
@@ -32,7 +41,7 @@ SQLExecute[conn,"select
 Premises are generated from the recipe calculations. BASH script determines
 all unique premises ids and stores them in local file.
 *) 
-premises = Rest @ StringSplit @ Import["peco_premises.txt","Text"];
+premises = Rest @ StringSplit @ Import[fileName, "Text"];
 
 (* Template accepts PremiseID as parameter. Selects all years of summer usage data *)
 queryTemp = StringTemplate[
@@ -68,8 +77,8 @@ Do[
     sampleCount = Length @ records;
     yearCount = Length @ Union @ records[[All,1]];
     
-    (* only train for premises with 3 years *)
-    If[ yearCount != 3, Print[yearCount]; Continue[]];
+    (* only train for premises with 2 years *)
+    If[ yearCount != 2, Continue[]];
 
     maxYear = Union[ records[[All, 1]] ] // Last; 
     {rateClass, strata} = records[[1, -2;;]];

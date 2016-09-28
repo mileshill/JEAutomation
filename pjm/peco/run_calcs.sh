@@ -2,7 +2,8 @@
 # Use -gt 1 to consume two arguments per pass in the loop (e.g. each
 # argument has a corresponding value to got with it.)
 
-OVERWRITE=0;
+# Logging and overwrite vars
+
 while [[ $# -gt 0 ]]
 do
     key="$1"
@@ -29,22 +30,16 @@ do
     shift
 done
 
+# If no utility given
+if [ -z "${UTILITY}" ]; then
+    UTILITY=$(basename $(pwd))
+fi
+
+
 # Auxiliary functions
 function add_date {
     echo "$(date '+%Y_%m_%d_%H_%M_%S')"
 }
-
-# If no utility given
-if [ -z "${UTILITY}" ]; then
-    UTILITY=$(basename $(pwd))
-    echo "$(add_date) ${UTILITY} calculations started"
-fi
-
-# If clean directory
-if [ "${OVERWRITE}" ]; then
-    echo "$(add_date) Removing previous results."
-    find . -type f -not \( -name "*.m" -o -name "*.sh" \) -print0 | xargs -0 rm -f 
-fi
 
 # Variable declarition
 RECIPE="${UTILITY}_rec.m"
@@ -52,10 +47,16 @@ RECIPE_RESULT="${UTILITY}_rec.csv"
 UNIQ_PREM="${UTILITY}_premises.txt"
 PREDICTION="${UTILITY}_pred_most.m"
 PREDICTION_RESULT="${UTILITY}_pred_most.csv"
+LOGFILE="./log/${UTILITY}.log"
+OVERWRITE=0;
 COMPARE="pred_compare.m"
 COMPARE_RESULT="${UTILITY}_pred_compare.csv"
 
-LOGFILE="./log/${UTILITY}_log.log"
+# If clean directory
+if [ "${OVERWRITE}" ]; then
+    echo "$(add_date) Removing previous results." >> ${LOGFILE}
+    find . -type f -not \( -name "*.m" -o -name "*.sh" \) -print0 | xargs -0 rm -f 
+fi
 
 # Does the recipe and prediction scripts exist?
 if [ ! -e "${RECIPE}" ] && [ ! -e "${PREDICTION}" ] && [ ! -e "${COMPARE}" ] ; then
@@ -64,8 +65,9 @@ if [ ! -e "${RECIPE}" ] && [ ! -e "${PREDICTION}" ] && [ ! -e "${COMPARE}" ] ; t
 fi
 
 # Has the recipe been run?
-if [ ! -e "${RECIPE_RESULT}" ] && [ ! "${ONLY_PREDICT}"  ]; then 
+if [ ! -e "${RECIPE_RESULT}" ]; then 
     # run recipe and store result
+    echo "$(add_date) ${UTILITY} calculations started." >> ${LOGFILE}
     echo "$(add_date) Running ${RECIPE}." >> ${LOGFILE}
     MathKernel -script ${RECIPE} > ${RECIPE_RESULT}
     # store unique premises
@@ -74,8 +76,8 @@ if [ ! -e "${RECIPE_RESULT}" ] && [ ! "${ONLY_PREDICT}"  ]; then
     echo "$(add_date) $(cat ${UNIQ_PREM} | wc -l) unique premises" >> ${LOGFILE}
 fi
 
-# Split the premise data for faster predictions
-if [ -e "${UNIQ_PREM}" ] && [ ! -e "${PREDICTION_RESULT}" ]; then
+# Split the premise data and run predictions 
+if [ -e "${UNIQ_PREM}" ] ; then
     echo "$(add_date) Premise split for prediciton" >> ${LOGFILE}
     sh split_premises.sh ${UNIQ_PREM}
     touch ${PREDICTION_RESULT}
@@ -84,7 +86,7 @@ if [ -e "${UNIQ_PREM}" ] && [ ! -e "${PREDICTION_RESULT}" ]; then
     if [ ! "$(pgrep Wolfram)" ]; then
         rm prem_*
     fi
-    echo "$(add_date) Prediciton count: $(wc -l < ${PREDICTION_RESULT})"
+    echo "$(add_date) Prediciton count: $(wc -l < ${PREDICTION_RESULT})" >> ${LOGFILE}
 fi
 
 :<<'END'

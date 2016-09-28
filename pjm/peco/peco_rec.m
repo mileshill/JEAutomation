@@ -1,4 +1,5 @@
-#!/usr/bin/env/WolframScript -script
+#!/usr/local/bin/WolframScript -script
+
 
 (* imports *)
 BeginPackage["PecoScript`",{"DatabaseLink`","DBConnect`"}];
@@ -8,6 +9,7 @@ If[Not @ MatchQ[conn, _SQLConnection],
     Throw[$Failed]; Return[1],
     Nothing
 ];
+
 (* Query and filter for premises *)
 With[
 	{labels={"PremiseId","Year","Usage","RateClass","Strata"}},
@@ -32,11 +34,12 @@ With[
 		AssociationThread[labels -> #]& /@ #&//
 		GroupBy[#,{#PremiseId, #Year, #RateClass, #Strata}&]&//
 		Map[Merge[Identity]]//
-		Map[#Usage&]/
+		Map[#Usage&]//
 		Select[#,Length @ # == 5&]&//
 		(records=#)&
 ];
 
+(* Query for utility/system parameters *)
 SQLExecute[conn,"select  
 	Cast(Year(pv.StartDate)-1 as VARCHAR), 
 	Replace(pv.RateClass,' ',''), 
@@ -56,7 +59,7 @@ SQLExecute[conn,"select
 		(utilParams=#)&;
  
 
- records//
+records//
  	Normal//
 	#/.Rule[{prem_,yr_,rc_,st_}, usage_List] :> {prem, ToExpression[yr]+1, rc, st, Mean[usage * Lookup[utilParams, {{yr,rc,st}}, ConstantArray[0., 5]][[1]]]}&//
 	(icapValues = #)&;
