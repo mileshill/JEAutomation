@@ -98,7 +98,7 @@ Do[
     sampleCount = Length @ records;
     yearCount = Length @ Union @ records[[All, 1]];
     
-    If[ yearCount >= 2, Continue[]];
+    If[Not @ (yearCount >= 2), Continue[]];
     
     maxYear = Last @ Union @ records[[All, 1]];
     {rateClass, strata} = {#, Sequence @ #2}& @@ records[[1, -2;;]];

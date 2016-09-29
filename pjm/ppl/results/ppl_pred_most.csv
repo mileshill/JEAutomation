@@ -1,0 +1,8 @@
+RunDate, RunTime, Premise, Year, RateClass, Strata, PredictedICap, Uncertainty, TrainingYears, TrainingSamples
+RunDate, RunTime, Premise, Year, RateClass, Strata, PredictedICap, Uncertainty, TrainingYears, TrainingSamples
+2016-09-29, 18:00, 5074107006, 2015, GS1, GS1, 6.71226, 3.43921, 1, 5842
+2016-09-29, 18:00, 0004577020, 2015, GS3, GS3, 33.0108, 5.80333, 1, 5856
+2016-09-29, 18:00, 5075012015, 2015, GS3, GS3, 48.7274, 3.64635, 1, 3326
+2016-09-29, 18:00, 0018680003, 2015, GS1, GS1, 5.86681, 0.520939, 1, 5856
+2016-09-29, 18:00, 0029578005, 2015, GS3, GS3, 163.723, 56.7553, 1, 5374
+2016-09-29, 18:00, 0030093004, 2015, GH2, GH2, 3.93652, 0.663987, 1, 5846

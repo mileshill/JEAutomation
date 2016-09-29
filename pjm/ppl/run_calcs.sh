@@ -72,28 +72,24 @@ if [ ! -e "${RECIPE}" ] && [ ! -e "${PREDICTION}" ] ; then
 fi
 
 
-$(record "Start")
 # Has the recipe been run?
 if [ ! -e "${RECIPE_RESULT}" ]; then 
     # run recipe and store result
-    echo "recipe start"
     $(record "Recipe start")
     MathKernel -script ${RECIPE} > ${RECIPE_RESULT}
     # store unique premises
     $(record "Recipe end")
-    echo "recipe end; split data"
-    cat ${RECIPE_RESULT} | awk -F ',' '{print $3}' | uniq > ${UNIQ_PREM}
+    cat ${RECIPE_RESULT} | awk -F ',' '{print $3}' | sort -n | uniq  > ${UNIQ_PREM}
     $(record "Unique premises: $(wc -l < ${UNIQ_PREM})")
 fi
 
 # Split the premise data and run predictions 
 if [ -e "${UNIQ_PREM}" ] ; then
-    echo "pred start"
     $(record "Prediction start")
     $(record "Splitting premises")
     sh split_premises.sh ${UNIQ_PREM}
     touch ${PREDICTION_RESULT}
-    find . -maxdepth 1 -name "prem_*" -print | xargs -I {} sh -c "MathKernel -script ${PREDICTION} {} >> ${PREDICTION_RESULT}"
+    find . -maxdepth 1 -name "prem_*" -print | xargs -n 1 -P 2 -I {} sh -c "MathKernel -script ${PREDICTION} {} >> ${PREDICTION_RESULT}" 
     # check to ensure WolframKernels have terminated; remove split premise files; prem_*
     if [ ! "$(pgrep Wolfram)" ]; then
         rm prem_*
@@ -111,7 +107,8 @@ else
     mv -u *.csv *.txt ${RESULT_DIR}
 fi
 
-$(record "END")
+$(record "Complete")
+
 :<<'END'
 # Run the prediction script on unique premises
 if [ ! -e "${PREDICTION_RESULT}" ]; then 
@@ -127,4 +124,3 @@ fi
 END
 
 echo >> ${LOGFILE}
-tree
