@@ -14,11 +14,7 @@ function add_date(){
 
 
 if [ -f "$1" ]; then
-    echo "$(add_date) Splitting file: ${1}"
     LINE_COUNT="$(wc -l < ${1})"
-    echo "$(add_date) The line count is: ${LINE_COUNT}"
     SPLIT_SIZE="$(( ${LINE_COUNT} / 2 ))"
-    echo "$(add_date) The split size is: ${SPLIT_SIZE}"
     split -a 1 -l ${SPLIT_SIZE} $1 prem_
-    tree
 fi
