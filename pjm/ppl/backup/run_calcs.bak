@@ -2,22 +2,21 @@
 # Use -gt 1 to consume two arguments per pass in the loop (e.g. each
 # argument has a corresponding value to got with it.)
 
-# Logging and overwrite vars
-
+OVERWRITE=false
 while [[ $# -gt 0 ]]
 do
     key="$1"
     case $key in
         -o |--overwrite)
-            OVERWRITE=1
+            OVERWRITE=true
             shift
             ;;
         -p|--predict)
-            ONLY_PREDICT=1
+            ONLY_PREDICT=true
             shift
             ;;
         -r|--recipe)
-            ONLY_RECIPE=1
+            ONLY_RECIPE=true
             shift
             ;;
         -u |--utility)
@@ -30,67 +29,49 @@ do
     shift
 done
 
+# Auxiliary functions
+function add_date {
+    echo "$(date '+%H:%M:%S')"
+}
+
 # If no utility given
 if [ -z "${UTILITY}" ]; then
     UTILITY=$(basename $(pwd))
+    echo "$(add_date) ${UTILITY} calculations started"
 fi
 
+# If clean directory
+if [ "${OVERWRITE}" ]; then
+    echo "$(add_date) Removing previous results."
+    find . -type f -not \( -name "*.m" -o -name "*.sh" \) -print0 | xargs -0 rm -f 
+fi
 
 # Variable declarition
-RECIPE="./scripts/${UTILITY}_rec.m"
-RECIPE_RESULT="./results/${UTILITY}_rec.csv"
-UNIQ_PREM="./results/${UTILITY}_premises.txt"
-PREDICTION="./scripts/${UTILITY}_pred_most.m"
-PREDICTION_RESULT="./results/${UTILITY}_pred_most.csv"
-LOGFILE="./log/${UTILITY}.log"
-OVERWRITE=0;
-
+RECIPE="${UTILITY}_rec.m"
+RECIPE_RESULT="${UTILITY}_rec.csv"
+UNIQ_PREM="${UTILITY}_premises.txt"
+PREDICTION="${UTILITY}_pred_most.m"
+PREDICTION_RESULT="${UTILITY}_pred_most.csv"
 COMPARE="pred_compare.m"
 COMPARE_RESULT="${UTILITY}_pred_compare.csv"
 
-# Auxiliary functions
-function record {
-    echo "CST:$(date '+%Y_%m_%d_%H_%M_%S') Script=$1 Action=$2" >> ${LOGFILE}
-}
-
-function result {
-    echo "CST:$(date '+%Y_%m_%d_%H_%M_%S') File=$1 LineCount=$2" >> ${LOGFILE}
-}
-
-:<<'END'
-# If clean directory
-if [ "${OVERWRITE}" ]; then
-    "$(record BASH File_Removal"
-    find . -type f -not \( -name "*.m" -o -name "*.sh" \) -print0 | xargs -0 rm -f 
-fi
-END
-
 # Does the recipe and prediction scripts exist?
 if [ ! -e "${RECIPE}" ] && [ ! -e "${PREDICTION}" ] && [ ! -e "${COMPARE}" ] ; then
+    echo "$(add_date) Scripts not found."
     exit
 fi
 
 # Has the recipe been run?
 if [ ! -e "${RECIPE_RESULT}" ]; then 
     # run recipe and store result
-    "$(record ${RECIPE} RECIPE)"
+    echo "$(add_date) Running ${RECIPE}."
     MathKernel -script ${RECIPE} > ${RECIPE_RESULT}
     # store unique premises
-    cat ${RECIPE_RESULT} | awk -F ',' '{print $1}' | uniq > ${UNIQ_PREM}
+    echo "$(add_date) Storing unique premises for prediction"
+    cat ${RECIPE_RESULT} | awk -F ',' '{print $1 }' | uniq > ${UNIQ_PREM}
+    echo "$(add_date) $(cat ${UNIQ_PREM} | wc -l) unique premises"
 fi
 
-# Split the premise data and run predictions 
-if [ -e "${UNIQ_PREM}" ] ; then
-    sh split_premises.sh ${UNIQ_PREM}
-    touch ${PREDICTION_RESULT}
-    find . -name "prem_*" -print | xargs -I {} sh -c "MathKernel -script ${PREDICTION} {} >> ${PREDICTION_RESULT}"
-    # check to ensure WolframKernels have terminated; remove split premise files; prem_*
-    if [ ! "$(pgrep Wolfram)" ]; then
-        rm prem_*
-    fi
-fi
-
-:<<'END'
 # Run the prediction script on unique premises
 if [ ! -e "${PREDICTION_RESULT}" ]; then 
     echo "$(add_date) Running ${PREDICTION}"
@@ -102,8 +83,7 @@ if [ ! -e "${COMPARE_RESULT}" ] ||  [ "${PREDICTION_RESULT}" -nt  "${COMPARE_RES
     echo "$(add_date) Running ${COMPARE}"
     MathKernel -script ${COMPARE} > ${COMPARE_RESULT} 
 fi
-END
 
-echo "$(add_date) ${UTILITY} Recipe complete." >> ${LOGFILE}
+echo "$(add_date) ${UTILITY} Recipe complete."
 echo
 ls -lth

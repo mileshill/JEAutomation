@@ -19,7 +19,9 @@ SQLExecute[conn,"select h.PremiseID, CAST(YEAR(h.UsageDate) as VARCHAR), h.Usage
     Map[Merge[Identity]]//
     Map[KeyDrop[#,{"Premise","Year", "RateClass","Strata"}]&]//
     Map[#Usage&]//
-    (Clear@hourlyRecords; hourlyRecords=#)&;
+    Normal// 
+    # /. Rule[key_, usage_] :> Flatten[{key, usage}] &//
+    (Clear@records; records=#)&;
 
 (* load reconcilation factor: year -> 5 vector *)
 SQLExecute[conn,"select CAST(CPYearID-1 as VARCHAR), ParameterValue
@@ -47,18 +49,33 @@ SQLExecute[conn,"select CAST(c.CPYearID-1 as VARCHAR), u.RateClass, u.Strata,
     Map[#LossFactor&@First@#&]//
     (Clear@lossFactor;lossFactor=#)&;
 
-hourlyRecords//Normal//
+(*
+records//Normal//
     (#/.{
         Rule[key:{prem_,year_,rateClass_,strata_},usage_]:>Flatten@{key,Mean[usage*reconFactor[year]*lossFactor[{year,rateClass}]]}
     })&//
     DeleteMissing[#,1,Infinity]&//
     Prepend[#,{"PremiseId","Year","RateClass","Strata", "Icap"}]&//
     (pplICap = #)&;
+*)
 
+(* time stamp *)
+runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
+runTime = DateString[{"Hour24", ":", "Minute"}];
+
+(* out stream and write function *)
 stdout = Streams[][[1]];
-writeFunc = Write[stdout, StringRiffle[#, ", "]]&;
+writeFunc = Write[stdout, StringRiffle[#, ","]]&;
+writeFunc @ {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+Do[
+    {premId, year, rateClass, strata, usageVec} = {#, #2, #3, #4, {##5}}& @@ premItr;
+    localRF = Lookup[reconFactor, year, ConstantArray[0., 5]] // Flatten; 
+    localLF = Lookup[lossFactor, {{year, rateClass}}, 0.] // First;
+    
+    iCap = Mean[ usageVec * localRF * localLF ];
 
-Map[writeFunc, pplICap]
-
+    writeFunc @ {runDate, runTime, premId, year, rateClass, strata, iCap}
+    
+    ,{premItr, records}]
 
 Quit[];

@@ -78,7 +78,7 @@ Do[
     yearCount = Length @ Union @ records[[All,1]];
     
     (* only train for premises with 2 years *)
-    If[ yearCount != 2, Continue[]];
+    If[ yearCount >=  2, Continue[]];
 
     maxYear = Union[ records[[All, 1]] ] // Last; 
     {rateClass, strata} = records[[1, -2;;]];

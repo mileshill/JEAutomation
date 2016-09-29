@@ -2,21 +2,23 @@
 # Use -gt 1 to consume two arguments per pass in the loop (e.g. each
 # argument has a corresponding value to got with it.)
 
-OVERWRITE=false
+# Logging and overwrite vars
+
+:<<'END'
 while [[ $# -gt 0 ]]
 do
     key="$1"
     case $key in
         -o |--overwrite)
-            OVERWRITE=true
+            OVERWRITE=1
             shift
             ;;
         -p|--predict)
-            ONLY_PREDICT=true
+            ONLY_PREDICT=1
             shift
             ;;
         -r|--recipe)
-            ONLY_RECIPE=true
+            ONLY_RECIPE=1
             shift
             ;;
         -u |--utility)
@@ -29,22 +31,17 @@ do
     shift
 done
 
-# Auxiliary functions
-function add_date {
-    echo "$(date '+%H:%M:%S')"
-}
-
 # If no utility given
+
 if [ -z "${UTILITY}" ]; then
     UTILITY=$(basename $(pwd))
-    echo "$(add_date) ${UTILITY} calculations started"
 fi
-
-# If clean directory
-if [ "${OVERWRITE}" ]; then
-    echo "$(add_date) Removing previous results."
-    find . -type f -not \( -name "*.m" -o -name "*.sh" \) -print0 | xargs -0 rm -f 
-fi
+END
+UTILITY=$(basename $(pwd))
+# Auxiliary functions
+function record {
+    echo "CST:$(date '+%Y_%m_%d_%H_%M_%S') UTILITY=${UTILITY} DESC=$1" >> ${LOGFILE}
+}
 
 # Variable declarition
 RECIPE="${UTILITY}_rec.m"
@@ -52,26 +49,70 @@ RECIPE_RESULT="${UTILITY}_rec.csv"
 UNIQ_PREM="${UTILITY}_premises.txt"
 PREDICTION="${UTILITY}_pred_most.m"
 PREDICTION_RESULT="${UTILITY}_pred_most.csv"
+LOGFILE="./log/${UTILITY}.log"
+OVERWRITE=0;
+
+RESULT_DIR=./results/
 COMPARE="pred_compare.m"
 COMPARE_RESULT="${UTILITY}_pred_compare.csv"
 
+
+
+:<<'END'
+# If clean directory
+if [ "${OVERWRITE}" ]; then
+    find . -type f -not \( -name "*.m" -o -name "*.sh" \) -print0 | xargs -0 rm -f 
+fi
+END
+
 # Does the recipe and prediction scripts exist?
-if [ ! -e "${RECIPE}" ] && [ ! -e "${PREDICTION}" ] && [ ! -e "${COMPARE}" ] ; then
-    echo "$(add_date) Scripts not found."
+if [ ! -e "${RECIPE}" ] && [ ! -e "${PREDICTION}" ] ; then
+    $(record "No scripts found")
     exit
 fi
 
+
+$(record "Start")
 # Has the recipe been run?
 if [ ! -e "${RECIPE_RESULT}" ]; then 
     # run recipe and store result
-    echo "$(add_date) Running ${RECIPE}."
+    echo "recipe start"
+    $(record "Recipe start")
     MathKernel -script ${RECIPE} > ${RECIPE_RESULT}
     # store unique premises
-    echo "$(add_date) Storing unique premises for prediction"
-    cat ${RECIPE_RESULT} | awk -F ',' '{print $1 }' | uniq > ${UNIQ_PREM}
-    echo "$(add_date) $(cat ${UNIQ_PREM} | wc -l) unique premises"
+    $(record "Recipe end")
+    echo "recipe end; split data"
+    cat ${RECIPE_RESULT} | awk -F ',' '{print $3}' | uniq > ${UNIQ_PREM}
+    $(record "Unique premises: $(wc -l < ${UNIQ_PREM})")
 fi
 
+# Split the premise data and run predictions 
+if [ -e "${UNIQ_PREM}" ] ; then
+    echo "pred start"
+    $(record "Prediction start")
+    $(record "Splitting premises")
+    sh split_premises.sh ${UNIQ_PREM}
+    touch ${PREDICTION_RESULT}
+    find . -maxdepth 1 -name "prem_*" -print | xargs -I {} sh -c "MathKernel -script ${PREDICTION} {} >> ${PREDICTION_RESULT}"
+    # check to ensure WolframKernels have terminated; remove split premise files; prem_*
+    if [ ! "$(pgrep Wolfram)" ]; then
+        rm prem_*
+    fi
+    echo "pred end"
+    $(record "Prediction end")
+fi
+
+# Move results to ./Results
+if [ ! -d "${RESULT_DIR}" ]; then
+   $(record "Create ${RESULT_DIR}; move *.csv *.txt")
+   mkdir ${RESULT_DIR} && mv -u *.csv *.txt ${RESULT_DIR}
+else
+    $(record "Move *.csv *.txt to ${RESULT_DIR}")
+    mv -u *.csv *.txt ${RESULT_DIR}
+fi
+
+$(record "END")
+:<<'END'
 # Run the prediction script on unique premises
 if [ ! -e "${PREDICTION_RESULT}" ]; then 
     echo "$(add_date) Running ${PREDICTION}"
@@ -83,7 +124,7 @@ if [ ! -e "${COMPARE_RESULT}" ] ||  [ "${PREDICTION_RESULT}" -nt  "${COMPARE_RES
     echo "$(add_date) Running ${COMPARE}"
     MathKernel -script ${COMPARE} > ${COMPARE_RESULT} 
 fi
+END
 
-echo "$(add_date) ${UTILITY} Recipe complete."
-echo
-ls -lth
+echo >> ${LOGFILE}
+tree
