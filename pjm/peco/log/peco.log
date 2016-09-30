@@ -38,3 +38,78 @@ CST:2016_09_29_20_36_44 UTILITY=peco DESC=Prediction end
 CST:2016_09_29_20_36_44 UTILITY=peco DESC=Move *.csv *.txt to ./results/
 CST:2016_09_29_20_36_44 UTILITY=peco DESC=Complete
 
+CST:2016_09_30_13_59_47 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_14_00_15 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_14_00_15 UTILITY=peco DESC=Unique premises: 1667
+CST:2016_09_30_14_00_15 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_14_00_17 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_14_00_17 UTILITY=peco DESC=Unique premises: 4
+CST:2016_09_30_14_00_17 UTILITY=peco DESC=Prediction start
+CST:2016_09_30_14_00_17 UTILITY=peco DESC=Splitting premises
+CST:2016_09_30_14_00_17 UTILITY=peco DESC=Prediction start
+CST:2016_09_30_14_00_17 UTILITY=peco DESC=Splitting premises
+CST:2016_09_30_14_00_17 UTILITY=peco DESC=Move *.csv *.txt to ./results/
+CST:2016_09_30_14_00_17 UTILITY=peco DESC=Complete
+
+CST:2016_09_30_14_05_48 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_14_06_16 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_14_06_16 UTILITY=peco DESC=Unique premises: 
+CST:2016_09_30_14_06_16 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_14_06_17 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_14_06_17 UTILITY=peco DESC=Unique premises: 
+CST:2016_09_30_14_06_17 UTILITY=peco DESC=Move *.csv *.txt to ./results/
+CST:2016_09_30_14_06_17 UTILITY=peco DESC=Complete
+
+CST:2016_09_30_14_13_13 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_14_13_43 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_14_13_43 UTILITY=peco DESC=Unique premises: 
+CST:2016_09_30_14_13_43 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_14_13_44 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_14_13_44 UTILITY=peco DESC=Unique premises: 
+CST:2016_09_30_14_13_44 UTILITY=peco DESC=Move *.csv *.txt to ./results/
+CST:2016_09_30_14_13_44 UTILITY=peco DESC=Complete
+
+CST:2016_09_30_14_16_23 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_14_16_51 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_14_16_51 UTILITY=peco DESC=Unique premises: 
+CST:2016_09_30_14_16_51 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_14_16_53 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_14_16_53 UTILITY=peco DESC=Unique premises: 
+CST:2016_09_30_14_16_53 UTILITY=peco DESC=Move *.csv *.txt to ./results/
+CST:2016_09_30_14_16_53 UTILITY=peco DESC=Complete
+
+CST:2016_09_30_14_31_43 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_14_35_44 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_14_35_44 UTILITY=peco DESC=Unique premises: 1667
+CST:2016_09_30_14_35_44 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_14_35_48 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_14_35_48 UTILITY=peco DESC=Unique premises: 4
+CST:2016_09_30_14_35_48 UTILITY=peco DESC=Move *.csv *.txt to ./results/
+CST:2016_09_30_14_35_48 UTILITY=peco DESC=Complete
+
+CST:2016_09_30_14_41_11 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_14_45_17 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_14_45_17 UTILITY=peco DESC=Unique premises: 1667
+CST:2016_09_30_14_45_17 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_14_45_20 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_14_45_20 UTILITY=peco DESC=Unique premises: 4
+CST:2016_09_30_14_45_20 UTILITY=peco DESC=Prediction start
+CST:2016_09_30_14_45_20 UTILITY=peco DESC=Splitting premises
+CST:2016_09_30_14_55_21 UTILITY=peco DESC=Prediction start
+CST:2016_09_30_14_55_21 UTILITY=peco DESC=Splitting premises
+CST:2016_09_30_14_55_21 UTILITY=peco DESC=Prediction end
+CST:2016_09_30_14_55_21 UTILITY=peco DESC=Move *.csv *.txt to ./results/
+CST:2016_09_30_14_55_21 UTILITY=peco DESC=Complete
+
+CST:2016_09_30_14_56_07 UTILITY=peco DESC=Move *.csv *.txt to ./results/
+CST:2016_09_30_14_56_07 UTILITY=peco DESC=Complete
+
+CST:2016_09_30_14_57_12 UTILITY=peco DESC=Recipe start
+CST:2016_09_30_15_01_07 UTILITY=peco DESC=Recipe end
+CST:2016_09_30_15_01_07 UTILITY=peco DESC=Unique premises: 1667
+CST:2016_09_30_15_01_07 UTILITY=peco DESC=Prediction start
+CST:2016_09_30_15_01_07 UTILITY=peco DESC=Splitting premises
+CST:2016_09_30_15_01_07 UTILITY=peco DESC=Prediction end
+CST:2016_09_30_15_01_07 UTILITY=peco DESC=Move *.csv *.txt to ./results/
+CST:2016_09_30_15_01_07 UTILITY=peco DESC=Complete
+

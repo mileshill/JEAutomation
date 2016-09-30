@@ -13,8 +13,8 @@ function add_date(){
 
 
 
-if [ -f "$1" ]; then
+if [ -f "$1" ] && [[ ! -z "${2}" ]] ; then
     LINE_COUNT="$(wc -l < ${1})"
-    SPLIT_SIZE="$(( ${LINE_COUNT} / 2 ))"
-    split -a 1 -l ${SPLIT_SIZE} $1 prem_
+    SPLIT_SIZE="$((( ${LINE_COUNT} / 2) + 1))"
+    split -a 1 -l ${SPLIT_SIZE} ${1} ${2}
 fi
