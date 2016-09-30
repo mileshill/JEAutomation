@@ -74,7 +74,7 @@ Do[
     
     iCap = Mean[ usageVec * localRF * localLF ];
 
-    writeFunc @ {runDate, runTime, premId, year, rateClass, strata, iCap}
+    writeFunc @ {runDate, runTime, premId, ToExpression[year] + 1, rateClass, strata, iCap}
     
     ,{premItr, records}]
 
