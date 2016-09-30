@@ -52,7 +52,7 @@ INT_REC_RES="${UTILITY}_rec_int.csv"
 INT_PRED="${UTILITY}_pred_most.m"
 INT_PRED_RES="${UTILITY}_pred_most.csv"
 INT_UNIQ="${UTILITY}_premises_int.txt"
-INT_ALIAS="INT_TEMP_"
+INT_ALIAS="INT"
 
 # Monthly demand
 DMD_REC="${UTILITY}_rec_dmd.m"
@@ -60,7 +60,7 @@ DMD_REC_RES="${UTILITY}_rec_dmd.csv"
 DMD_PRED="${UTILITY}_pred_dmd.m"
 DMD_PRED_RES="${UTILITY}_pred_dmd.csv"
 DMD_UNIQ="${UTILITY}_premises_dmd.txt"
-DMD_ALIAS="DMD_TEMP_"
+DMD_ALIAS="DMD"
 
 :<<'END'
 # Monthly consumption
@@ -69,7 +69,7 @@ CON_REC_RES="${UTILITY}_rec_con.csv"
 CON_PRED="${UTILITY}_pred_con.m"
 CON_PRED_RES="${UTILITY}_pred_con.csv"
 CON_UNIQ="${UTILITY}_premises_con.txt"
-CON_ALIAS="CON_TEMP_"
+CON_ALIAS="CON"
 END
 
 # Could this be junked?
@@ -113,12 +113,7 @@ function predict {
         $(record "Splitting premises")
         sh split_premises.sh ${UNQ} ${ALIAS}
         touch ${RESULT}
-        find . -maxdepth 1 -name "${ALIAS}*" -print0 | xargs -n 1 -P 2 -I {} sh -c "MathKernel -script ${PRED} {} >> ${RESULT}" 
-        # check to ensure WolframKernels have terminated; remove split premise files; prem_*
-        if [ ! "$(pgrep Wolfram)" ]; then
-            rm "${ALIAS}*"
-            find . -maxdepth 1 -name "${ALIAS}*" -print0 | xargs -0 rm
-        fi
+        find . -maxdepth 1 -name "${ALIAS}*.tmp" -print0 | xargs -0 -n 1 -P 2 -I {} sh -c "MathKernel -script ${PRED} {} >> ${RESULT}" 
         $(record "Prediction end")
     fi
 }
@@ -161,6 +156,7 @@ if [ ! -d "${RESULT_DIR}" ]; then
 else
     $(record "Move *.csv *.txt to ${RESULT_DIR}")
     mv -u *.csv *.txt ${RESULT_DIR}
+    rm ./*.tmp
 fi
 
 $(record "Complete")

@@ -9,6 +9,13 @@ If[ Length @ $CommandLine != 4,
 
 fileName = $CommandLine[[4]];
 
+(* 
+Premises are generated from the recipe calculations. BASH script determines
+all unique premises ids and stores them in local file.
+*) 
+premises = Rest @ StringSplit @ Import[fileName, "Text"];
+
+
 
 conn =  JEConnection[];
 If[ Not@ MatchQ[ conn, _SQLConnection ],
@@ -37,12 +44,6 @@ SQLExecute[conn,"select
     Map[#NCRatio * (1 + #RateClassLoss[[1]] / 100.)&]//
     (utilParams=#)&;
 
-(* 
-Premises are generated from the recipe calculations. BASH script determines
-all unique premises ids and stores them in local file.
-*) 
-premises = Rest @ StringSplit @ Import[fileName, "Text"];
-
 (* Template accepts PremiseID as parameter. Selects all years of summer usage data *)
 queryTemp = StringTemplate[
     "select YEAR(h.UsageDate), 
@@ -62,13 +63,12 @@ queryTemp = StringTemplate[
 
 (* Assign the stdout stream and Row 1 for the CSV outputfile *)
 stdout = Streams[][[1]];
+writeFunc = Write[stdout, StringRiffle[#,","]]&;
 labels = {
     "Premise", "Year", "RateClass", "Strata", 
     "PredictedICap", "Uncertainty", "TrainingYears", "TrainingSamples"};
 
-Write[stdout, StringRiffle[ labels, ", "]]; 
-
-
+writeFunc @ labels;
 
 (* Loop over premises; train predictor and predict summer values *)
 Do[
@@ -78,7 +78,7 @@ Do[
     yearCount = Length @ Union @ records[[All,1]];
     
     (* only train for premises with 2 years *)
-    If[ yearCount >=  2, Continue[]];
+    If[Not @ (yearCount >  1), Continue[]];
 
     maxYear = Union[ records[[All, 1]] ][[-1]]; 
     {rateClass, strata} = records[[1, -2;;]];
@@ -97,6 +97,7 @@ Do[
     trainingData = N[ #[[All,;;5]] -> #[[All,6]] ]& @  newRecords;
     yearCount = Length @ Union @ newRecords[[All, 1]];
 
+    writeFunc /@ traningData;
     (* Build predictors *)
     predictTREE = Predict[ trainingData, Method -> "RandomForest", PerformanceGoal->"TrainingSpeed"];
 
@@ -133,7 +134,8 @@ Do[
     (*Mean[ {icapTREE, icapNN} ];*)
 
     results = {premItr, maxYear+1, rateClass, Sequence @ strata, Sequence @ icap, icapUnc, yearCount, sampleCount};
-    Write[stdout, StringRiffle[ results, ", " ]];
+
+    writeFunc @ results;
 
 ,{premItr, premises}]
 
