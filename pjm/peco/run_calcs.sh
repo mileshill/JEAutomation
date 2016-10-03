@@ -116,15 +116,6 @@ function predict {
     fi
 }
 
-:<<'END'
-#################### Initialization Logic #################### 
-# Does the recipe and prediction scripts exist?
-if [ ! -e "${RECIPE}" ] && [ ! -e "${PREDICTION}" ] ; then
-    $(record "No scripts found")
-    exit
-fi
-END
-
 #################### Recipe #################### 
 # Interval recipe and uniq premises
 $(recipe_calc ${INT_REC} ${INT_REC_RES} ${INT_UNIQ})
@@ -133,7 +124,7 @@ $(recipe_calc ${INT_REC} ${INT_REC_RES} ${INT_UNIQ})
 $(recipe_calc ${DMD_REC} ${DMD_REC_RES} ${DMD_UNIQ})
 
 # Monthly consumption and uniq premises
-$(recipe_calc ${CON_REC} ${RECIPE_RESULT} ${CON_UNIQ})
+$(recipe_calc ${CON_REC} ${CON_REC_RES} ${CON_UNIQ})
 
 #################### Predictions #################### 
 # Interval 
@@ -154,23 +145,8 @@ if [ ! -d "${RESULT_DIR}" ]; then
 else
     $(record "Move *.csv *.txt to ${RESULT_DIR}")
     mv -u *.csv *.txt ${RESULT_DIR}
-    rm ./*.tmp
+    find . -maxdepth 1 -type f -name "*.tmp" -print0 | xargs -0 -I {} sh -c "rm {}"
 fi
 
 $(record "Complete")
-
-:<<'END'
-# Run the prediction script on unique premises
-if [ ! -e "${PREDICTION_RESULT}" ]; then 
-    echo "$(add_date) Running ${PREDICTION}"
-    MathKernel -script ${PREDICTION} > ${PREDICTION_RESULT}
-fi
-
-# Comparison against available historical
-if [ ! -e "${COMPARE_RESULT}" ] ||  [ "${PREDICTION_RESULT}" -nt  "${COMPARE_RESULT}" ]; then
-    echo "$(add_date) Running ${COMPARE}"
-    MathKernel -script ${COMPARE} > ${COMPARE_RESULT} 
-fi
-END
-
 echo >> ${LOGFILE}
