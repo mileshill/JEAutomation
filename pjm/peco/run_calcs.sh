@@ -62,7 +62,6 @@ DMD_PRED_RES="${UTILITY}_pred_dmd.csv"
 DMD_UNIQ="${UTILITY}_premises_dmd.txt"
 DMD_ALIAS="DMD"
 
-:<<'END'
 # Monthly consumption
 CON_REC="${UTILITY}_rec_con.m"
 CON_REC_RES="${UTILITY}_rec_con.csv"
@@ -70,7 +69,6 @@ CON_PRED="${UTILITY}_pred_con.m"
 CON_PRED_RES="${UTILITY}_pred_con.csv"
 CON_UNIQ="${UTILITY}_premises_con.txt"
 CON_ALIAS="CON"
-END
 
 # Could this be junked?
 COMPARE="pred_compare.m"
@@ -132,14 +130,14 @@ END
 $(recipe_calc ${INT_REC} ${INT_REC_RES} ${INT_UNIQ})
 
 # Monthly with demand and uniq premises
-#$(recipe_calc ${DMD_REC} ${DMD_REC_RES} ${DMD_UNIQ})
+$(recipe_calc ${DMD_REC} ${DMD_REC_RES} ${DMD_UNIQ})
 
 # Monthly consumption and uniq premises
-#$(recipe_calc ${CON_REC} ${RECIPE_RESULT} ${CON_UNIQ})
+$(recipe_calc ${CON_REC} ${RECIPE_RESULT} ${CON_UNIQ})
 
 #################### Predictions #################### 
 # Interval 
-$(predict ${INT_PRED} ${INT_PRED_RES} ${INT_UNIQ} ${INT_ALIAS})
+#$(predict ${INT_PRED} ${INT_PRED_RES} ${INT_UNIQ} ${INT_ALIAS})
 
 # Monthly with demand
 #$(predict ${DMD_PRED} ${DMD_PRED_RES} ${DMD_UNIQ})
