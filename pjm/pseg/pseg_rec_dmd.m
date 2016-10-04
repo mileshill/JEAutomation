@@ -49,8 +49,7 @@ records = SQLExecute[conn, recordQuery]//
 	Map[Merge[Identity]] //
 	Map[(#BDxD / #NumDays)&]// Quiet //
 	Normal //
-	# /. Rule[key_, usage_] :> Flatten[{key, usage}]& //
-	Select[#, Length @ # == 8&]&;
+	# /. Rule[key_, usage_] :> Flatten[{key, usage}]&;
 
 
 (* {year, rateclass, strata} -> paramvalue *)
@@ -78,7 +77,8 @@ writeFunc @ labels;
 Do[
 
     {premId, year, rc, st, usage} = {#, #2, StringSplit[#3,"-"][[1]], #4, {##5}}& @@ record; 
-	
+    If[Length @ usage != 4, Continue[]];
+
 	utilFactor = Lookup[util, {{year, rc}}, 0.] // If[MatchQ[#, _List], First @ #]&;
 	sysFactor = Lookup[sys, year, 0.];
 	missingFactor = Lookup[missingUtil, year, 0.];

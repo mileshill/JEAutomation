@@ -1,0 +1,12 @@
+CST:2016_10_04_19_05_01 UTILITY=pseg DESC=Recipe start
+CST:2016_10_04_19_05_09 UTILITY=pseg DESC=Recipe end
+CST:2016_10_04_19_05_09 UTILITY=pseg DESC=Unique premises: 5
+CST:2016_10_04_19_05_09 UTILITY=pseg DESC=Recipe start
+CST:2016_10_04_19_05_12 UTILITY=pseg DESC=Recipe end
+CST:2016_10_04_19_05_12 UTILITY=pseg DESC=Unique premises: 6
+CST:2016_10_04_19_05_12 UTILITY=pseg DESC=Recipe start
+CST:2016_10_04_19_05_17 UTILITY=pseg DESC=Recipe end
+CST:2016_10_04_19_05_17 UTILITY=pseg DESC=Unique premises: 53
+CST:2016_10_04_19_05_17 UTILITY=pseg DESC=Move *.csv *.txt to ./results/
+CST:2016_10_04_19_05_17 UTILITY=pseg DESC=Complete
+
