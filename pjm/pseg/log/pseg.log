@@ -10,3 +10,39 @@ CST:2016_10_04_19_05_17 UTILITY=pseg DESC=Unique premises: 53
 CST:2016_10_04_19_05_17 UTILITY=pseg DESC=Move *.csv *.txt to ./results/
 CST:2016_10_04_19_05_17 UTILITY=pseg DESC=Complete
 
+CST:2016_10_11_12_56_47 UTILITY=pseg DESC=Recipe start
+CST:2016_10_11_12_56_55 UTILITY=pseg DESC=Recipe end
+CST:2016_10_11_12_56_55 UTILITY=pseg DESC=Unique premises: 5
+CST:2016_10_11_12_56_55 UTILITY=pseg DESC=Recipe start
+CST:2016_10_11_12_56_58 UTILITY=pseg DESC=Recipe end
+CST:2016_10_11_12_56_58 UTILITY=pseg DESC=Unique premises: 6
+CST:2016_10_11_12_56_58 UTILITY=pseg DESC=Recipe start
+CST:2016_10_11_12_57_03 UTILITY=pseg DESC=Recipe end
+CST:2016_10_11_12_57_03 UTILITY=pseg DESC=Unique premises: 53
+CST:2016_10_11_12_57_03 UTILITY=pseg DESC=Move *.csv *.txt to ./results/
+CST:2016_10_11_12_57_03 UTILITY=pseg DESC=Complete
+
+CST:2016_10_11_13_05_21 UTILITY=pseg DESC=Recipe start
+CST:2016_10_11_13_05_27 UTILITY=pseg DESC=Recipe end
+CST:2016_10_11_13_05_27 UTILITY=pseg DESC=Unique premises: 4
+CST:2016_10_11_13_05_27 UTILITY=pseg DESC=Recipe start
+CST:2016_10_11_13_05_29 UTILITY=pseg DESC=Recipe end
+CST:2016_10_11_13_05_29 UTILITY=pseg DESC=Unique premises: 5
+CST:2016_10_11_13_05_29 UTILITY=pseg DESC=Recipe start
+CST:2016_10_11_13_05_35 UTILITY=pseg DESC=Recipe end
+CST:2016_10_11_13_05_35 UTILITY=pseg DESC=Unique premises: 52
+CST:2016_10_11_13_05_35 UTILITY=pseg DESC=Move *.csv *.txt to ./results/
+CST:2016_10_11_13_05_35 UTILITY=pseg DESC=Complete
+
+CST:2016_10_11_14_12_43 UTILITY=pseg DESC=Recipe start
+CST:2016_10_11_14_12_52 UTILITY=pseg DESC=Recipe end
+CST:2016_10_11_14_12_52 UTILITY=pseg DESC=Unique premises: 4
+CST:2016_10_11_14_12_52 UTILITY=pseg DESC=Recipe start
+CST:2016_10_11_14_12_54 UTILITY=pseg DESC=Recipe end
+CST:2016_10_11_14_12_54 UTILITY=pseg DESC=Unique premises: 5
+CST:2016_10_11_14_12_54 UTILITY=pseg DESC=Recipe start
+CST:2016_10_11_14_13_00 UTILITY=pseg DESC=Recipe end
+CST:2016_10_11_14_13_00 UTILITY=pseg DESC=Unique premises: 51
+CST:2016_10_11_14_13_00 UTILITY=pseg DESC=Move *.csv *.txt to ./results/
+CST:2016_10_11_14_13_00 UTILITY=pseg DESC=Complete
+

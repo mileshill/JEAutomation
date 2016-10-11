@@ -2,4 +2,3 @@ GLP
 HTS
 LPLP
 LPLS
-RateClass

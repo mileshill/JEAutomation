@@ -28,10 +28,13 @@ utilityQuery = "select distinct
 	where u.UtilityId = 'PSEG'
 		and u.RateClass like '%-INT'";
 
-systemQuery = "select Cast(CPYearId as varchar), ParameterValue
-	from SystemLoad
-	where UtilityId = 'PSEG'
-		and ParameterId = 'CapObligScale'";
+systemQuery = "select 
+	Cast(CPYearId as varchar) as Year, 
+	Exp(Sum(Log(ParameterValue))) as PFactor
+from SystemLoad
+where UtilityId = 'PSEG'
+	and ParameterId in ('CapObligScale', 'ForecastPoolResv', 'FinalRPMZonal')
+group by Cast(CPYearId as varchar)"
 
 (* #################### Execute Queries #################### *)
 conn = JEConnection[];
@@ -68,21 +71,39 @@ sys = SQLExecute[conn, systemQuery]//
 missingUtil = <| "2014" -> (1.0913 * 1.02800111), "2015"-> (1.0952 * 1.06246338)|>;
 
 (* #################### Compute ICap #################### *)
-stdout = Streams[][[1]];
-writeFunc = Write[stdout, StringRiffle[#, ","]]&;
+(* time stamp *)
+runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
+runTime = DateString[{"Hour24", ":", "Minute"}];
 
-labels = {"PremiseId", "Year", "RateClass", "Strata", "ICap"};
-writeFunc @ labels;
-
+labels = {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+stdout=Streams[][[1]];
+writeFunc = Write[stdout, StringRiffle[#,","]]&;
 Do[
-    {premId, year, rc, st, usage} = {#, #2, StringSplit[#3,"-"][[1]], #4, {##5}}& @@ record; 
+    {premId, year, rc, st, usage} = {#, #2, StringSplit[#3,"-"][[1]], #4, {##5}}& @@ record // Quiet; 
     If[Length @ usage != 4, Continue[]];
     
 	utilFactor = Lookup[util, {{year, rc}}, 0.] // If[MatchQ[#, _List], First @ #]&;
 	sysFactor = Lookup[sys, year, 0.];
-	missingFactor = Lookup[missingUtil, year, 0.];
+    (*missingFactor = Lookup[missingUtil, year, 0.];*)
 	
-	scalar = Times @@ {utilFactor, sysFactor, missingFactor};
+	scalar = Times @@ {utilFactor, sysFactor};
+	
+	icap = Mean[usage * scalar];
+	results = {premId, year, rc, st, icap};
+	
+	writeFunc @ results;
+
+    ,{record, records}];
+
+EndPackage[];
+
+    If[Length @ usage != 4, Continue[]];
+    
+	utilFactor = Lookup[util, {{year, rc}}, 0.] // If[MatchQ[#, _List], First @ #]&;
+	sysFactor = Lookup[sys, year, 0.];
+    (*missingFactor = Lookup[missingUtil, year, 0.];*)
+	
+	scalar = Times @@ {utilFactor, sysFactor};
 	
 	icap = Mean[usage * scalar];
 	results = {premId, year, rc, st, icap};
