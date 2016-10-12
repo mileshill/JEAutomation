@@ -1,0 +1,6 @@
+CST:2016_10_12_20_08_42 UTILITY=centhud DESC=Recipe start
+CST:2016_10_12_20_08_43 UTILITY=centhud DESC=Recipe end
+CST:2016_10_12_20_08_43 UTILITY=centhud DESC=Unique premises: 4
+CST:2016_10_12_20_08_43 UTILITY=centhud DESC=Move *.csv *.txt to ./results/
+CST:2016_10_12_20_08_43 UTILITY=centhud DESC=Complete
+
