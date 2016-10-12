@@ -4,44 +4,10 @@
 
 # Logging and overwrite vars
 
-:<<'END'
-while [[ $# -gt 0 ]]
-do
-    key="$1"
-    case $key in
-        -o |--overwrite)
-            OVERWRITE=1
-            shift
-            ;;
-        -p|--predict)
-            ONLY_PREDICT=1
-            shift
-            ;;
-        -r|--recipe)
-            ONLY_RECIPE=1
-            shift
-            ;;
-        -u |--utility)
-            UTILITY="$2"
-            shift
-            ;;
-        *)
-            ;;
-    esac
-    shift
-done
-
-# If no utility given
-
-if [ -z "${UTILITY}" ]; then
-    UTILITY=$(basename $(pwd))
-fi
-END
 #################### Var Declaration #################### 
 # Utility Level Vars
 UTILITY=$(basename $(pwd))
 LOGFILE="./log/${UTILITY}.log"
-OVERWRITE=0;
 RESULT_DIR=./results/
 
 RECIPE_RESULTS="${UTILITY}_rec.csv"
@@ -109,7 +75,7 @@ function predict {
     if [ -e "${UNQ}" ] ; then
         $(record "Prediction start")
         $(record "Splitting premises")
-        sh split_premises.sh ${UNQ} ${ALIAS}
+        sh split_premises.sh ${UNQ} ${ALIAS} 
         touch ${RESULT}
         find . -maxdepth 1 -name "${ALIAS}*.tmp" -print0 | xargs -0 -n 1 -P 2 -I {} sh -c "MathKernel -script ${PRED} {} >> ${RESULT}" 
         $(record "Prediction end")
@@ -118,7 +84,8 @@ function predict {
 
 #################### Recipe #################### 
 # Interval recipe and uniq premises
-$(recipe_calc ${INT_REC} ${INT_REC_RES} ${INT_UNIQ})
+# No interval values for CENTHUD
+#$(recipe_calc ${INT_REC} ${INT_REC_RES} ${INT_UNIQ})
 
 # Monthly with demand and uniq premises
 $(recipe_calc ${DMD_REC} ${DMD_REC_RES} ${DMD_UNIQ})

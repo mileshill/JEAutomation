@@ -26,7 +26,7 @@ utilityQuery = "select distinct
 	inner join CoincidentPeak as c
 		on c.CPID = u.CPID
 	where u.UtilityId = 'PSEG'
-		and u.RateClass like '%-INT'";
+		and u.RateClass like '%-NON'";
 
 systemQuery = "select 
 	Cast(CPYearId as varchar) as Year, 
