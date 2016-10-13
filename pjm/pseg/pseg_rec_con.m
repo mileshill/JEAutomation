@@ -75,27 +75,12 @@ missingUtil = <| "2014" -> (1.0913 * 1.02800111), "2015"-> (1.0952 * 1.06246338)
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
 
-labels = {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+labels = {"RunDate", "RunTime", "Utility", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
 Do[
     {premId, year, rc, st, usage} = {#, #2, StringSplit[#3,"-"][[1]], #4, {##5}}& @@ record // Quiet; 
-    If[Length @ usage != 4, Continue[]];
-    
-	utilFactor = Lookup[util, {{year, rc}}, 0.] // If[MatchQ[#, _List], First @ #]&;
-	sysFactor = Lookup[sys, year, 0.];
-    (*missingFactor = Lookup[missingUtil, year, 0.];*)
-	
-	scalar = Times @@ {utilFactor, sysFactor};
-	
-	icap = Mean[usage * scalar];
-	results = {premId, year, rc, st, icap};
-	
-	writeFunc @ results;
-
-    ,{record, records}];
-
-EndPackage[];
+    utility = "PSEG";
 
     If[Length @ usage != 4, Continue[]];
     
@@ -106,7 +91,7 @@ EndPackage[];
 	scalar = Times @@ {utilFactor, sysFactor};
 	
 	icap = Mean[usage * scalar];
-	results = {premId, year, rc, st, icap};
+	results = {runDate, runTime, utility, premId, year, rc, st, icap};
 	
 	writeFunc @ results;
 
@@ -114,3 +99,4 @@ EndPackage[];
 
 EndPackage[];
 
+Quit[];

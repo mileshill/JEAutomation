@@ -1,0 +1,7 @@
+(* time stamp *)
+runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
+runTime = DateString[{"Hour24", ":", "Minute"}];
+
+labels = {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+stdout=Streams[][[1]];
+writeFunc = Write[stdout, StringRiffle[#,","]]&;

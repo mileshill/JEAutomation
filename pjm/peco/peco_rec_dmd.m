@@ -101,20 +101,18 @@ plcf = SQLExecute[conn, plcScaleFactorQuery]//
     <|"Year" -> #, "PLC" -> #2|>& @@@ #&//
     GroupBy[#, #Year&]&//
     Map[(#PLC& @ First @ #)&];
+(* #################### Compute ICap ####################  *)
+(* time stamp *)
+runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
+runTime = DateString[{"Hour24", ":", "Minute"}];
 
-(*
-records//
-    #/.{
-    {premId_,yr_, rc_, st_,avdDmd_} :> {premId, yr, rc, st, avgDmd * wcf[{yr, rc, st}] * rclf[{yr, rc, st}}
-    }//
-    (icapValues = #)&;
-*)
-stdout = Streams[][[1]];
-writeFunc = Write[stdout, StringRiffle[#, ","]]&;
-
-writeFunc @ {"PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+labels = {"RunDate", "RunTime", "Utility", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+stdout=Streams[][[1]];
+writeFunc = Write[stdout, StringRiffle[#,","]]&;
 Do[
-    {premId, yr, rc, st, avgDmd} = premItr;
+    {premId, yr, rc, st, avgDmd} = record;
+    utility = "PECO";
+    
     localWcf = Lookup[wcf, {{yr, rc, st}}, 0.];
     localRclf = Lookup[rclf, {{yr, rc, st}}, 0.];
     localPlcf = Lookup[plcf, yr, 0.];
@@ -122,9 +120,9 @@ Do[
     iCap = First[avgDmd * localWcf * localRclf * localPlcf];
 
     (* premId, year, rateClass, strata, icap *)
-    writeFunc @ {premId, yr, rc, st, iCap};
+    writeFunc @ {runDate, runTime, utility, premId, yr, rc, st, iCap};
 
-    ,{premItr, records}];
+    ,{record, records}];
 
 EndPackage[];
 Quit[];

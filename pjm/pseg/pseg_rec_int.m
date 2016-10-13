@@ -82,7 +82,8 @@ writeFunc = Write[stdout, StringRiffle[#,","]]&;
 Do[
 
     {premId, year, rc, st, usage} = {#, #2, StringSplit[#3,"-"][[1]], #4, {##5}}& @@ record // Quiet;
-	
+    utility = "PSEG";
+
 	utilFactor = Lookup[util, {{year, rc}}, 0.] // If[MatchQ[#, _List], First @ #]&;
 	sysFactor = Lookup[sys, year, 0.];
     (*missingFactor = Lookup[missingUtil, year, 0.];i*)
@@ -90,15 +91,11 @@ Do[
 	scalar = Times @@ {utilFactor, sysFactor};
 	
 	icap = Mean[usage * scalar];
-	results = {premId, year, rc, st, icap};
+	results = {runDate, runTime, utility, premId, year, rc, st, icap};
 	
 	writeFunc @ results;
 
     ,{record, records}];
-
-
-
-   
 
 EndPackage[];
 

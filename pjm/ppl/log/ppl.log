@@ -123,3 +123,12 @@ CST:2016_09_30_00_12_27 UTILITY=ppl DESC=Prediction end
 CST:2016_09_30_00_12_27 UTILITY=ppl DESC=Move *.csv *.txt to ./results/
 CST:2016_09_30_00_12_27 UTILITY=ppl DESC=Complete
 
+CST:2016_10_13_15_57_25 UTILITY=ppl DESC=Recipe start
+CST:2016_10_13_15_59_41 UTILITY=ppl DESC=Recipe end
+CST:2016_10_13_15_59_41 UTILITY=ppl DESC=Unique premises: 2
+CST:2016_10_13_15_59_41 UTILITY=ppl DESC=Prediction start
+CST:2016_10_13_15_59_41 UTILITY=ppl DESC=Splitting premises
+CST:2016_10_13_15_59_42 UTILITY=ppl DESC=Prediction end
+CST:2016_10_13_15_59_42 UTILITY=ppl DESC=Move *.csv *.txt to ./results/
+CST:2016_10_13_15_59_42 UTILITY=ppl DESC=Complete
+

@@ -89,8 +89,9 @@ Do[
 	scalar = Times[avg, utilFactor];
 	
 	icap = scalar + loadFactor;
-	results = {premId, year, rc, st, icap};
 	
+    utility = "CENTHUD";
+	results = {runDate, runTime, utility, premId, year, rc, st, icap};
 	writeFunc @ results;
 
     ,{record, records}];

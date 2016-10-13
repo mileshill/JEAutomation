@@ -74,20 +74,20 @@ util = SQLExecute[conn, utilityQuery]//
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
 
-labels = {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+labels = {"RunDate", "RunTime", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
 Do[
 
     {premId, year, rc, st, loadProfile} = record;
 
-
 	utilFactor = Lookup[util, {{year, rc, st}}, 0.] // If[MatchQ[#, _List], First @ #, #]&;
     (*loadFactor = Lookup[loadProfile, st, 0.];	*)
 	scalar = Times[loadProfile, utilFactor];
 	
     (*icap = scalar + loadFactor;*)
-	results = {premId, year, rc, st, scalar};
+    utility = "CENTHUD";
+	results = {runDate, runTime, utility, premId, year, rc, st, scalar};
 	
 	writeFunc @ results;
 

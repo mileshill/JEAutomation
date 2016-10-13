@@ -71,19 +71,20 @@ records//
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
 
-labels = {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+labels = {"RunDate", "RunTime", "Utility", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
 Do[
     
-    {premId, year, rateClass, strata, usage} = {#, #2, #3, #4, {##5}}& @@ premItr;
+    {premId, year, rateClass, strata, usage} = {#, #2, #3, #4, {##5}}& @@ record;
+    utility = "PECO";
 
     localUtil = Lookup[ utilParams, {{year, rateClass, strata}}, ConstantArray[0.,5]] // Flatten;
 
     iCap = Mean @ (usage * localUtil);
 
-    writeFunc @ {runDate, runTime, premId, ToExpression[year] + 1, rateClass, strata, iCap};
-    ,{premItr, records}]
+    writeFunc @ {runDate, runTime, utility, premId, ToExpression[year] + 1, rateClass, strata, iCap};
+    ,{record, records}]
 
 
 JECloseConnection[];

@@ -1,8 +1,10 @@
 RunDate, RunTime, Premise, Year, RateClass, Strata, PredictedICap, Uncertainty, TrainingYears, TrainingSamples
+
+Part::take: Cannot take positions 1 through 10 in {}.
+
+Do::iterb: Iterator {premItr, premises[[1 ;; 10]]} does not have appropriate bounds.
 RunDate, RunTime, Premise, Year, RateClass, Strata, PredictedICap, Uncertainty, TrainingYears, TrainingSamples
-2016-09-30, 00:07, 5074107006, 2015, GS1, GS1, 8.35612, 4.23214, 1, 5842
-2016-09-30, 00:07, 0004577020, 2015, GS3, GS3, 39.9869, 7.06865, 1, 5856
-2016-09-30, 00:07, 5075012015, 2015, GS3, GS3, 59.1759, 4.39951, 1, 3326
-2016-09-30, 00:07, 0018680003, 2015, GS1, GS1, 6.99491, 0.644476, 1, 5856
-2016-09-30, 00:07, 0029578005, 2015, GS3, GS3, 209.292, 69.4762, 1, 5374
-2016-09-30, 00:07, 0030093004, 2015, GH2, GH2, 4.68048, 0.799409, 1, 5846
+
+Part::take: Cannot take positions 1 through 10 in {}.
+
+Do::iterb: Iterator {premItr, premises[[1 ;; 10]]} does not have appropriate bounds.

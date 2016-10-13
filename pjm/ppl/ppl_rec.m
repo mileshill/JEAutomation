@@ -66,15 +66,17 @@ runTime = DateString[{"Hour24", ":", "Minute"}];
 (* out stream and write function *)
 stdout = Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#, ","]]&;
-writeFunc @ {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+writeFunc @ {"RunDate", "RunTime", "Utility", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 Do[
     {premId, year, rateClass, strata, usageVec} = {#, #2, #3, #4, {##5}}& @@ premItr;
+    utility = "PECO";
+
     localRF = Lookup[reconFactor, year, ConstantArray[0., 5]] // Flatten; 
     localLF = Lookup[lossFactor, {{year, rateClass}}, 0.] // First;
     
     iCap = Mean[ usageVec * localRF * localLF ];
 
-    writeFunc @ {runDate, runTime, premId, ToExpression[year] + 1, rateClass, strata, iCap}
+    writeFunc @ {runDate, runTime, utility, premId, ToExpression[year] + 1, rateClass, strata, iCap}
     
     ,{premItr, records}]
 

@@ -107,8 +107,17 @@ stdout = Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#, ","]]&;
 
 (* compute icap *)
+
+(* time stamp *)
+runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
+runTime = DateString[{"Hour24", ":", "Minute"}];
+
+labels = {"RunDate", "RunTime", "Utility", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+stdout=Streams[][[1]];
+writeFunc = Write[stdout, StringRiffle[#,","]]&;
 Do[
 	{premId, yr, rc, st} = record;
+    utility = "PECO";
 
 	localSLS = Lookup[strataLoadShape, {{rc, st}}, 0.] // First;
 	localRCLF = Lookup[rclf, {{yr, rc, st}}, 0.] // First; 
@@ -117,7 +126,7 @@ Do[
 
 	
  	icap = localSLS * localRCLF * localSS * localPLC;
-	results = {premId, yr, rc, st, icap};
+	results = {runDate, runTime, utility, premId, yr, rc, st, icap};
 	
 	writeFunc @ results;
 	
