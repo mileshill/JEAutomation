@@ -187,8 +187,10 @@ Do[
        select KW1, KW2, KW3, KW4 ,KW5 ,KW6 ,KW7 ,KW8 , KW9, KW10, KW11, KW12,
             KW13, KW14, KW15, KW16, KW17, KW18, KW19, KW20, KW21, KW22, KW23, KW24
        from CONED_LoadShapeTempAdj
-       where `conditions`
+       where STRATA != ''
+         and (`conditions`)
     "][<|"conditions" -> boundsTempString|>];
+
 
     SQLExecute[conn, loadAdjTableTemp]//
         (loadProfile = #)&;
