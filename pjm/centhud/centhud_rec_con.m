@@ -1,28 +1,39 @@
 #!/usr/bin/local/WolframScript -script
 
+(*
+2016/10/13
+Still missing the customer usage factor! Without that factor, the numbers will be off.
+The current usage factor in the test case was obtained from the Central Hudson website by Earl.
+We have not yet resolved this issue.
+*)
+
+
 BeginPackage["CENTHUD`", {"DatabaseLink`", "DBConnect`"}];
-
-
 (* #################### Queries #################### *)
-
-(* !!! Still waiting on CUSTOMER USAGE FACTOR. This may be an invalid query !!!
 recordQuery = "select m.PremiseId, 
 		Cast(Year(m.EndDate) as varchar) as Year,
-		RTrim(p.RateClass), RTrim(p.Strata),
-		Avg(m.Demand)
+		RTrim(p.RateClass) as RateClass, RTrim(p.Strata) as Strata,
+		lp.AvgHourlyLoad_kw as LoadProfile
 	from MonthlyUsage as m
 	inner join Premise as p
 		on p.UtilityId = m.UtilityId
 		and p.PremiseId = m.PremiseId
-	where m.UtilityId = 'CENTHUD'
-		and (m.Demand > 0 and m.Demand is not NULL)
-		and Month(m.EndDate) in (6,7,8)
-		--and m.PremiseId = '5616019800'    /* test case; 2015 = 91.6 */
-	group by m.PremiseId, Cast(Year(m.EndDate) as varchar), 
-		RTrim(p.RateClass), RTrim(p.Strata)
-	having Count(m.EndDate) = 3
-	order by m.PremiseId, Year";
-*)
+	inner join CoincidentPeak as cp
+		on cp.UtilityId = m.UtilityId
+	inner join CENTHUD_Load_Profile as lp
+		on p.Strata = lp.Stratum
+		and Month(cp.CPDate) = Cast(lp.Month as int)
+		and cp.HourEnding = Cast(lp.Hour as int)
+	where m.UtilityID = 'CENTHUD'
+		and (m.Demand is NULL or m.Demand = 0)
+		and (
+			select CPDate
+			from CoincidentPeak
+			where UtilityId = 'CENTHUD'
+		) between m.StartDate and m.EndDate
+		and lp.DayType = 'WKDAY'
+        --and m.PremiseId = '5609061901' /* test case: icap = 7.790 */";
+
 utilityQuery = "select distinct Cast(cp.CPYearID-1 as varchar), 
 		RTrim(upv.RateClass), RTrim(upv.Strata), 
 		Exp(Sum(Log(upv.ParameterValue)))
@@ -33,23 +44,7 @@ utilityQuery = "select distinct Cast(cp.CPYearID-1 as varchar),
 	group by Cast(cp.CPYearID-1 as varchar), 
 		RTrim(upv.RateClass), RTrim(upv.Strata)";
 
-(*utilityQuery = "select distinct Cast(cp.CPYearID-1 as varchar),
-	RTrim(upv.RateClass), RTrim(upv.Strata),
-	upv.ParameterValue
-from UtilityParameterValue as upv
-inner join CoincidentPeak as cp
-	on cp.CPID = upv.CPID
-where upv.UtilityId = 'CENTHUD'
-	and upv.ParameterId = 'WeatherNormalFactor'";
-*)
-
-loadProfileQuery = "select RTrim(lp.Strata), lp.AVGKwHourlyLoad
-	from CENTHUD_AVGkWHourly as lp
-	inner join CoincidentPeak as cp
-		on cp.UtilityID = 'CENTHUD'
-		and Month(cp.CPDate) = lp.Month
-		and cp.HourEnding = lp.Hour
-	where DayType = 'WKDAY'";
+loadProfileQuery = "waiting on logic for this!";
 
 (* #################### Execute Queries #################### *)
 conn = JEConnection[];
@@ -58,8 +53,8 @@ If[Not @ MatchQ[conn, _SQLConnection],
     Nothing
 ];
 
-(* {{prem, year, rateclass, strata, avgDmd},...} *)
-(*records = SQLExecute[conn, recordQuery];*)
+(* {{prem, year, rateclass, strata, loadProfile},...} *)
+records = SQLExecute[conn, recordQuery];
 
 
 (* <|{year, rateClass, strata}-> factor, ... |> *)
@@ -69,9 +64,10 @@ util = SQLExecute[conn, utilityQuery]//
     Map[#Factor&[First @ #]&];
 
 (* <| rateClass -> loadFactor |> *)
-loadProfile = SQLExecute[conn, loadProfileQuery]//
+(*loadProfile = SQLExecute[conn, loadProfileQuery]//
 	Rule @@@ #& //
 	Association;
+    *)
 
 (* #################### Compute ICap #################### *)
 (* time stamp *)
@@ -83,15 +79,15 @@ stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
 Do[
 
-    {premId, year, rc, st, avg} = record;
+    {premId, year, rc, st, loadProfile} = record;
 
 
 	utilFactor = Lookup[util, {{year, rc, st}}, 0.] // If[MatchQ[#, _List], First @ #, #]&;
-    loadFactor = Lookup[loadProfile, st, 0.];	
-	scalar = Times[avg, utilFactor];
+    (*loadFactor = Lookup[loadProfile, st, 0.];	*)
+	scalar = Times[loadProfile, utilFactor];
 	
-	icap = scalar + loadFactor;
-	results = {premId, year, rc, st, icap};
+    (*icap = scalar + loadFactor;*)
+	results = {premId, year, rc, st, scalar};
 	
 	writeFunc @ results;
 

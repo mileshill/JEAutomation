@@ -91,7 +91,7 @@ function predict {
 $(recipe_calc ${DMD_REC} ${DMD_REC_RES} ${DMD_UNIQ})
 
 # Monthly consumption and uniq premises
-#$(recipe_calc ${CON_REC} ${CON_REC_RES} ${CON_UNIQ})
+$(recipe_calc ${CON_REC} ${CON_REC_RES} ${CON_UNIQ})
 
 #################### Predictions #################### 
 # Interval 

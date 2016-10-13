@@ -13,7 +13,7 @@ recordQuery = "select m.PremiseId,
 		on p.UtilityId = m.UtilityId
 		and p.PremiseId = m.PremiseId
 	where m.UtilityId = 'CENTHUD'
-		and (m.Demand > 0 and m.Demand is not NULL)
+		and (m.Demand > 0 or m.Demand is not NULL)
 		and Month(m.EndDate) in (6,7,8)
 		--and m.PremiseId = '5616019800'    /* test case; 2015 = 91.6 */
 		--and m.PremiseId = '5609061901'    /* consumption test case; should not come through */
@@ -34,14 +34,13 @@ utilityQuery = "select distinct Cast(cp.CPYearID-1 as varchar),
 		RTrim(upv.RateClass), RTrim(upv.Strata)";
 *)
 utilityQuery = "select distinct Cast(cp.CPYearID-1 as varchar),
-	RTrim(upv.RateClass), RTrim(upv.Strata),
-	upv.ParameterValue
-from UtilityParameterValue as upv
-inner join CoincidentPeak as cp
-	on cp.CPID = upv.CPID
-where upv.UtilityId = 'CENTHUD'
-	and upv.ParameterId = 'WeatherNormalFactor'";
-
+        RTrim(upv.RateClass), RTrim(upv.Strata),
+        upv.ParameterValue
+    from UtilityParameterValue as upv
+    inner join CoincidentPeak as cp
+        on cp.CPID = upv.CPID
+    where upv.UtilityId = 'CENTHUD'
+        and upv.ParameterId = 'WeatherNormalFactor'";
 
 loadProfileQuery = "select RTrim(lp.Strata), lp.AVGKwHourlyLoad
 	from CENTHUD_AVGkWHourly as lp
@@ -60,7 +59,6 @@ If[Not @ MatchQ[conn, _SQLConnection],
 
 (* {{prem, year, rateclass, strata, avgDmd},...} *)
 records = SQLExecute[conn, recordQuery];
-
 
 (* <|{year, rateClass, strata}-> factor, ... |> *)
 util = SQLExecute[conn, utilityQuery]//
