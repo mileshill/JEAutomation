@@ -168,6 +168,8 @@ runTime = DateString[{"Hour24", ":", "Minute"}];
 labels = {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
+
+Print @ Position[tempVariant, {cpDate, __}];
 Do[
     (* premItr is an entire record!
         1) premid   2) rateClass    3) strata (don't use)   4) zone code
@@ -190,9 +192,8 @@ Do[
         Position[tempVariant, {Alternatives @@ billCycle, __}]//
             Take[tempVariant, Flatten @ #]&
     );
-    Print @ billCycle;
-    Print @ ( Position[tempVariant, {Alternatives @@ billCycle, __}]);
-    Print @  Position[tempVariant, {cpDate,__}];
+    writeFunc @ {premId, tod, billStart, billEnd, useOrMType};
+    Print @ Position[tempVariant, {billStart, __}|{billEnd, __}];
     Print[];
     Continue[];
     
