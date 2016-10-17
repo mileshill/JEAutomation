@@ -91,7 +91,8 @@ Do[
 	icap = scalar + loadFactor;
 	
     utility = "CENTHUD";
-	results = {runDate, runTime, utility, premId, year, rc, st, icap};
+    yearADJ = ToExpression[year] + 1;
+	results = {runDate, runTime, utility, premId, yearADJ, rc, st, scalar};
 	writeFunc @ results;
 
     ,{record, records}];
