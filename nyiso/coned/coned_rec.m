@@ -175,13 +175,14 @@ runTime = DateString[{"Hour24", ":", "Minute"}];
 
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
-labels = {"RunDate", "RunTime", "Utility", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+labels = {"RunDate", "RunTime", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 
 writeFunc @ labels;
 utility = "CONED";
 
 normalizedMCDCalc = {};
 Do[
+    (*#################### Initialization #################### *)
     (* premItr is an entire record!
         1) premid   2) rateClass    3) strata (don't use)   4) zone code
         5) stratum  6) tod code     7) year                 8) bill cycle start
@@ -199,7 +200,8 @@ Do[
     (* pull the correct CPDate/Hour from the association *)
     localCPDate = coincidentPeakASC[year]["Date"];
     localCPHour = coincidentPeakASC[year]["HourEnding"];
-    
+
+    (*#################### Temperature variant Table ####################*) 
     (* select temperature variants by bill cycle  *)
     billCycle = {billStart, billEnd};
     tempVarSelect =  ( 
@@ -210,13 +212,16 @@ Do[
             ]&
     );
     If[ FailureQ @ tempVarSelect, Continue[]];
-
+    
     (* if localCP in tempVarSelect for premise, the store the index; else continue to next premise *)
     localCPIdx = If[# =!= {}, First @ #, Continue[]]& @ (Flatten @ Position[tempVarSelect, {localCPDate, __}]);
-	
+
+    (*#################### Load Profile from Temperature Variant Table ####################*)
 	(* loop over each day in tempVarSelect to create load profile correctly *)
 	todCondition = If[tod == 1, "Strata = 'T'", "Strata != 'T'"];
-	loadProfileQuery = StringTemplate["select *
+	loadProfileQuery = StringTemplate["select 
+        kw1,kw2,kw3,kw4,kw5,kw6,kw7,kw8,kw9,kw10,kw11,kw12,
+        kw13,kw14,kw15,kw16,kw17,kw18,kw19,kw20,kw21,kw22,kw23,kw24
 	from CONED_LoadShapeTempAdj
 	where
 		Strata != ''
@@ -229,12 +234,15 @@ Do[
     loadProfile = {}; 
 	Do[
 		{dayType, temp} = day[[2;;]];
- 		result = SQLExecute[conn, loadProfileQuery[dayType, temp]][[1, 10;;]];
+ 		result = SQLExecute[conn, loadProfileQuery[dayType, temp]] // Flatten;
 		AppendTo[loadProfile, result];
 	,{day, tempVarSelect}];
-   
+    
+    (*#################### Compute Normalized Usage ####################*)
 	(* compute factors for normalized usage *) 
     csf = billUsage / N[Total @ Flatten @ loadProfile];
+    If[ Not @ NumericQ @ csf, Continue[]];
+
     lp = loadProfile[[ localCPIdx, localCPHour ]];
 	normalizedUsage = csf * lp;
 	localMCD = If[ useOrMType === "Scalar", normalizedUsage, Min[normalizedUsage, billDemand]];
@@ -247,6 +255,8 @@ Do[
 	Print["Normalized Usage: ", normalizedUsage];
 	Print["Demand: ", billDemand];
 *)
+
+    (*#################### Subzone and Forecast Trueup Factors ####################*)
 	MeterLogic[_, 1] := "VTOU";
 	MeterLogic[x_String, 0]/; StringMatchQ[x, Alternatives @@ {"Demand","Scalar"}]:= x;
 	MeterLogic[x_?NumericQ, 0] := "Interval";

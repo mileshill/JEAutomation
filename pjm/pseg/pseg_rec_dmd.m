@@ -6,7 +6,7 @@ BeginPackage["PSEG`", {"DatabaseLink`", "DBConnect`"}];
 (* #################### Queries #################### *)
 recordQuery = "select m.PremiseId, 
 	Cast(Year(m.EndDate) as varchar), 
-	p.RateClass, p.Strata,
+	RTrim(p.RateClass), RTrim(p.Strata),
 	(DateDiff(day, m.StartDate, m.EndDate) * m.Demand) as BDxD,
 	DateDiff(day, m.StartDate, m.EndDate) as NumDays
 from MonthlyUsage as m
@@ -25,11 +25,11 @@ utilityQuery = "select distinct
 	from UtilityParameterValue as u
 	inner join CoincidentPeak as c
 		on c.CPID = u.CPID
-	where u.UtilityId = 'PSEG'
-		and u.RateClass like '%-NON'";
+        and c.UtilityId = u.UtilityId
+	where u.UtilityId = 'PSEG'";
 
 systemQuery = "select 
-	Cast(CPYearId as varchar) as Year, 
+	Cast(CPYearId-1  as varchar) as Year, 
 	Exp(Sum(Log(ParameterValue))) as PFactor
 from SystemLoad
 where UtilityId = 'PSEG'
@@ -82,7 +82,7 @@ writeFunc = Write[stdout, StringRiffle[#,","]]&;
 
 Do[
 
-    {premId, year, rc, st, usage} = {#, #2, StringSplit[#3,"-"][[1]], #4, {##5}}& @@ record // Quiet;
+    {premId, year, rc, st, usage} = {#, #2, #3, #4, {##5}}& @@ record // Quiet;
     utility = "PSEG";
 
     If[Length @ usage != 4, Continue[]];

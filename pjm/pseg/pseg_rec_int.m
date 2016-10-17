@@ -27,11 +27,11 @@ utilityQuery = "select distinct
 	from UtilityParameterValue as u
 	inner join CoincidentPeak as c
 		on c.CPID = u.CPID
-	where u.UtilityId = 'PSEG'
-		and u.RateClass like '%-INT'";
+        and c.UtilityId = u.UtilityId
+	where u.UtilityId = 'PSEG'";
 
 systemQuery = "select 
-	Cast(CPYearId as varchar) as Year, 
+	Cast(CPYearId-1 as varchar) as Year, 
 	Exp(Sum(Log(ParameterValue))) as PFactor
 from SystemLoad
 where UtilityId = 'PSEG'
@@ -57,7 +57,7 @@ records = SQLExecute[conn, recordQuery]//
 
 (* {year, rateclass, strata} -> paramvalue *)
 util = SQLExecute[conn, utilityQuery]//
-	MapAt[First @ StringSplit[#,"-"]&, #, {All, 2}]& //
+    (*MapAt[First @ StringSplit[#,"-"]&, #, {All, 2}]& //*)
 	<|"Year" -> #1, "RateClass" -> #2, "Strata" -> #3, "PV" -> ToExpression @ #4|>& @@@ #& //
 	GroupBy[#, {#Year, #RateClass}&]& //
 	Map[Merge[Identity]]//
@@ -75,13 +75,13 @@ sys = SQLExecute[conn, systemQuery]//
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
 
-labels = {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+labels = {"RunDate", "RunTime", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
 
 Do[
 
-    {premId, year, rc, st, usage} = {#, #2, StringSplit[#3,"-"][[1]], #4, {##5}}& @@ record // Quiet;
+    {premId, year, rc, st, usage} = {#, #2, #3, #4, {##5}}& @@ record // Quiet;
     utility = "PSEG";
 
 	utilFactor = Lookup[util, {{year, rc}}, 0.] // If[MatchQ[#, _List], First @ #]&;
@@ -98,4 +98,3 @@ Do[
     ,{record, records}];
 
 EndPackage[];
-
