@@ -19,7 +19,7 @@ where m.UtilityId = 'PSEG'
 	--and (m.Demand = 0 or m.Demand is Null)
 	and (m.Demand > 0 and m.Demand is not Null)
 	and Month(m.EndDate) in (6,7,8,9)
-    and m.PremiseId = 'PE000011707310605787'  /* test case: icap 2016 = 128.080 */
+    --and m.PremiseId = 'PE000011707310605787'  /* test case: icap 2016 = 128.080 */
 order by m.PremiseId, Year, Month";
 
 
