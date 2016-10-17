@@ -17,6 +17,7 @@ recordQuery = "select h.PremiseId,
 		on p.UtilityID = h.UtilityId
 		and p.PremiseId = h.PremiseID
 	where h.UtilityId = 'PSEG'
+        --and h.PremiseId = 'PE000010636569547789'
 	order by h.PremiseId, Year";
 
 
@@ -28,7 +29,8 @@ utilityQuery = "select distinct
 	inner join CoincidentPeak as c
 		on c.CPID = u.CPID
         and c.UtilityId = u.UtilityId
-	where u.UtilityId = 'PSEG'";
+	where u.UtilityId = 'PSEG'
+        and u.ParameterId in ('GenCapScale', 'LossExpanFactor')";
 
 systemQuery = "select 
 	Cast(CPYearId-1 as varchar) as Year, 
@@ -36,7 +38,7 @@ systemQuery = "select
 from SystemLoad
 where UtilityId = 'PSEG'
 	and ParameterId in ('CapObligScale', 'ForecastPoolResv', 'FinalRPMZonal')
-group by Cast(CPYearId as varchar)"
+group by Cast(CPYearId-1 as varchar)"
 
 (* #################### Execute Queries #################### *)
 conn = JEConnection[];
@@ -87,11 +89,14 @@ Do[
 	utilFactor = Lookup[util, {{year, rc}}, 0.] // If[MatchQ[#, _List], First @ #]&;
 	sysFactor = Lookup[sys, year, 0.];
     (*missingFactor = Lookup[missingUtil, year, 0.];i*)
-	
+
+
 	scalar = Times @@ {utilFactor, sysFactor};
-	
-	icap = Mean[usage * scalar];
-	results = {runDate, runTime, utility, premId, year, rc, st, icap};
+
+
+	icap = scalar * Mean @ usage ;
+    yearADJ = ToExpression[year] + 1; (* correcting for CPYearID *)
+	results = {runDate, runTime, utility, premId, yearADJ, rc, st, icap};
 	
 	writeFunc @ results;
 

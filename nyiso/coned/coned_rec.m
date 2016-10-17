@@ -272,8 +272,8 @@ Do[
 	
 	icap = localMCD * utilProduct;
 	
-	yearADJ = ToExpression[year] - 1;
-	results = {runDate, runTime, utility, premId, yearADJ, rateClass, stratum, icap};
+    (*yearADJ = ToExpression[year]*)
+	results = {runDate, runTime, utility, premId, year, rateClass, stratum, icap};
 	writeFunc @ results;
 
 ,{premItr, allPremisesForNormalizedUsage}
