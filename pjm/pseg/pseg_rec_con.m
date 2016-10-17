@@ -17,7 +17,7 @@ inner join Premise as p
 where m.UtilityId = 'PSEG'
     and (m.Demand = 0 or m.Demand is Null)
 	and Month(m.EndDate) in (6,7,8,9)
-    and m.PremiseId = 'PE000008120852292456'";
+    --and m.PremiseId = 'PE000008120852292456'";
 
 utilityQuery = "select distinct 
 		CAST((c.CPYearID - 1) as varchar), 

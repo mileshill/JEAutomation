@@ -87,7 +87,7 @@ Do[
 
     {premId, year, rc, st, demand, days} = {#, #2, #3, #4, #5, #6}& @@ record; 
     numMonths = Length @ demand;
-    avgDailyDemand = Mean[demand / days];
+    avgDailyDemand = Mean[demand / days] // Quiet;
     totalDays = Total @ days;
     genCapLoad = (avgDailyDemand * totalDays) / numMonths;
 
