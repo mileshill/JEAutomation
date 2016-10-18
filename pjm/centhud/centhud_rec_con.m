@@ -30,6 +30,7 @@ recordQuery = "select m.PremiseId,
 			select CPDate
 			from CoincidentPeak
 			where UtilityId = 'CENTHUD'
+                and Year(CPDate) = Year(m.EndDate)
 		) between m.StartDate and m.EndDate
 		and lp.DayType = 'WKDAY'
         --and m.PremiseId = '5609061901' /* test case: icap = 7.790 */";
@@ -73,10 +74,14 @@ util = SQLExecute[conn, utilityQuery]//
 (* time stamp *)
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
-
-labels = {"RunDate", "RunTime", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
+
+labels = {"RunDate", "RunTime", "ISO", "Utility", "PremiseId", "Year", "RateClass", "Strata", "MeterType", "RecipeICap"};
+iso = "PJM";
+utility = "CENTHUD";
+mType = "CON";
+
 Do[
 
     {premId, year, rc, st, loadProfile} = record;
@@ -88,7 +93,7 @@ Do[
     (*icap = scalar + loadFactor;*)
     utility = "CENTHUD";
     yearADJ = ToExpression[year] + 1;
-	results = {runDate, runTime, utility, premId, yearADJ, rc, st, scalar};
+	results = {runDate, runTime, iso, utility, premId, yearADJ, rc, st, mType, scalar};
 	
 	writeFunc @ results;
 

@@ -49,35 +49,29 @@ SQLExecute[conn,"select CAST(c.CPYearID-1 as VARCHAR), u.RateClass, u.Strata,
     Map[#LossFactor&@First@#&]//
     (Clear@lossFactor;lossFactor=#)&;
 
-(*
-records//Normal//
-    (#/.{
-        Rule[key:{prem_,year_,rateClass_,strata_},usage_]:>Flatten@{key,Mean[usage*reconFactor[year]*lossFactor[{year,rateClass}]]}
-    })&//
-    DeleteMissing[#,1,Infinity]&//
-    Prepend[#,{"PremiseId","Year","RateClass","Strata", "Icap"}]&//
-    (pplICap = #)&;
-*)
-
 (* time stamp *)
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
+stdout=Streams[][[1]];
+writeFunc = Write[stdout, StringRiffle[#,","]]&;
 
-(* out stream and write function *)
-stdout = Streams[][[1]];
-writeFunc = Write[stdout, StringRiffle[#, ","]]&;
-writeFunc @ {"RunDate", "RunTime", "Utility", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+labels = {"RunDate", "RunTime", "ISO", "Utility", "PremiseId", "Year", "RateClass", "Strata", "MeterType", "RecipeICap"};
+iso = "PJM";
+utility = "PPL";
+mType = "INT";
+
 Do[
     {premId, year, rateClass, strata, usageVec} = {#, #2, #3, #4, {##5}}& @@ premItr;
-    utility = "PECO";
 
     localRF = Lookup[reconFactor, year, ConstantArray[0., 5]] // Flatten; 
     localLF = Lookup[lossFactor, {{year, rateClass}}, 0.] // First;
     
-    iCap = Mean[ usageVec * localRF * localLF ];
+    icap = Mean[ usageVec * localRF * localLF ];
 
-    writeFunc @ {runDate, runTime, utility, premId, ToExpression[year] + 1, rateClass, strata, iCap}
+    yearADJ = ToExpression[year] + 1;
+    results = {runDate, runTime, iso, utility, premId, yearADJ, rateClass, strata, mType, icap};
     
+    writeFunc @ results;
     ,{premItr, records}]
 
 Quit[];

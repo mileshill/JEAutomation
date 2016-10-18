@@ -76,11 +76,14 @@ missingUtil = <| "2014" -> (1.0913 * 1.02800111), "2015"-> (1.0952 * 1.06246338)
 (* time stamp *)
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
-
-labels = {"RunDate", "RunTime", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
+
+labels = {"RunDate", "RunTime", "ISO", "Utility", "PremiseId", "Year", "RateClass", "Strata", "MeterType", "RecipeICap"};
+iso = "PJM";
 utility = "PSEG";
+mType = "CON";
+
 Do[
     {premId, year, rc, st, usage, numHours} = record // Quiet; 
 
@@ -96,7 +99,7 @@ Do[
 	
 	icap = normalizedUsage * scalar;
     yearADJ = ToExpression[year] + 1;
-	results = {runDate, runTime, utility, premId, yearADJ, rc, st, icap};
+	results = {runDate, runTime, iso, utility, premId, yearADJ, rc, st, mType, icap};
 	
 	writeFunc @ results;
 

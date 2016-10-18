@@ -76,12 +76,13 @@ sys = SQLExecute[conn, systemQuery]//
 (* time stamp *)
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
-
-labels = {"RunDate", "RunTime", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
 
+labels = {"RunDate", "RunTime", "ISO", "Utility", "PremiseId", "Year", "RateClass", "Strata", "MeterType", "RecipeICap"};
+iso = "PJM";
 utility = "PSEG";
+mType = "DMD";
 
 Do[
     Off[Infinity::indet];
@@ -101,7 +102,7 @@ Do[
     icap = If[MatchQ[#, Alternatives@@{Indeterminate, Infinity}], 0., #]& @ (genCapLoad * scalar);
     
     yearADJ = ToExpression[year] + 1;
-	results = {runDate, runTime, utility, premId, yearADJ, rc, st, icap};
+	results = {runDate, runTime, iso, utility, premId, yearADJ, rc, st, mType, icap};
 	
 	writeFunc @ results;
 

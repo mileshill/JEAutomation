@@ -76,15 +76,17 @@ sys = SQLExecute[conn, systemQuery]//
 (* time stamp *)
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
-
-labels = {"RunDate", "RunTime", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
+
+labels = {"RunDate", "RunTime", "ISO", "Utility", "PremiseId", "Year", "RateClass", "Strata", "MeterType", "RecipeICap"};
+iso = "PJM";
+utility = "PSEG";
+mType = "INT";
 
 Do[
 
     {premId, year, rc, st, usage} = {#, #2, #3, #4, {##5}}& @@ record // Quiet;
-    utility = "PSEG";
 
 	utilFactor = Lookup[util, {{year, rc}}, 0.] // If[MatchQ[#, _List], First @ #]&;
 	sysFactor = Lookup[sys, year, 0.];
@@ -96,7 +98,7 @@ Do[
 
 	icap = scalar * Mean @ usage ;
     yearADJ = ToExpression[year] + 1; (* correcting for CPYearID *)
-	results = {runDate, runTime, utility, premId, yearADJ, rc, st, icap};
+	results = {runDate, runTime, iso, utility, premId, yearADJ, rc, st, mType, icap};
 	
 	writeFunc @ results;
 

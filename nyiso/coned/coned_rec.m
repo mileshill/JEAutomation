@@ -176,8 +176,7 @@ runTime = DateString[{"Hour24", ":", "Minute"}];
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
 labels = {"RunDate", "RunTime", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
-
-writeFunc @ labels;
+iso = "NYISO";
 utility = "CONED";
 
 normalizedMCDCalc = {};
@@ -256,7 +255,12 @@ Do[
 	MeterLogic[_, 1] := "VTOU";
 	MeterLogic[x_String, 0]/; StringMatchQ[x, Alternatives @@ {"Demand","Scalar"}]:= x;
 	MeterLogic[x_?NumericQ, 0] := "Interval";
- 
+
+    MeterLogic[_, 1,"OUTPUT"] := "VTOU";
+    MeterLogic["Demand", 0, "OUTPUT"] := "DMD";
+    MeterLogic["Scalar", 0, "OUTPUT"]:= "CON";
+    MeterLogic[x_?NumericQ, 0, "OUTPUT"]:= "INT";
+
 	utilityFactorQuery = StringTemplate["select  Factor
 		from CONED_UtilityParameters
 		where 
@@ -269,7 +273,7 @@ Do[
 	icap = localMCD * utilProduct;
 	
     (*yearADJ = ToExpression[year]*)
-	results = {runDate, runTime, utility, premId, year, rateClass, stratum, icap};
+	results = {runDate, runTime, iso, utility, premId, year, rateClass, stratum, MeterLogic[useOrMType, tod, "OUTPUT"], icap};
 	writeFunc @ results;
 
 ,{premItr, allPremisesForNormalizedUsage}

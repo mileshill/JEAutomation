@@ -105,23 +105,28 @@ plcf = SQLExecute[conn, plcScaleFactorQuery]//
 (* time stamp *)
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
-
-labels = {"RunDate", "RunTime", "Utility", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
+
+
+labels = {"RunDate", "RunTime", "ISO", "Utility", "PremiseId", "Year", "RateClass", "Strata", "MeterType", "RecipeICap"};
+iso = "PJM";
+utility = "PECO";
+mType = "DMD";
+
 Do[
-    {premId, yr, rc, st, avgDmd} = record;
-    utility = "PECO";
+    {premId, year, rateClass, strata, avgDmd} = record;
     
-    localWcf = Lookup[wcf, {{yr, rc, st}}, 0.];
-    localRclf = Lookup[rclf, {{yr, rc, st}}, 0.];
-    localPlcf = Lookup[plcf, yr, 0.];
+    localWcf = Lookup[wcf, {{year, rateClass, strata}}, 0.];
+    localRclf = Lookup[rclf, {{year, rateClass, strata}}, 0.];
+    localPlcf = Lookup[plcf, year, 0.];
 
-    iCap = First[avgDmd * localWcf * localRclf * localPlcf];
+    icap = First[avgDmd * localWcf * localRclf * localPlcf];
 
-    (* premId, year, rateClass, strata, icap *)
-    writeFunc @ {runDate, runTime, utility, premId, yr, rc, st, iCap};
+    yearADJ = ToExpression[year] + 1; 
+    results = {runDate, runTime, iso, utility, premId, yearADJ, rateClass, strata, mType, icap};
 
+    writeFunc @ results;
     ,{record, records}];
 
 EndPackage[];

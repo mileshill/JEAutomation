@@ -111,25 +111,28 @@ writeFunc = Write[stdout, StringRiffle[#, ","]]&;
 (* time stamp *)
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
-
-labels = {"RunDate", "RunTime", "Utility", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
+
+labels = {"RunDate", "RunTime", "ISO", "Utility", "PremiseId", "Year", "RateClass", "Strata", "MeterType", "RecipeICap"};
+iso = "PJM";
+utility = "PECO";
+mType = "CON";
+
 Do[
-	{premId, yr, rc, st} = record;
-    utility = "PECO";
+	{premId, year, rateClass, strata} = record;
 
-	localSLS = Lookup[strataLoadShape, {{rc, st}}, 0.] // First;
-	localRCLF = Lookup[rclf, {{yr, rc, st}}, 0.] // First; 
-	localSS = Lookup[summerScaling, {{yr,rc,st}}, 0.] // First; 
-	localPLC = Lookup[plcScaling, yr, 0.]; 
+	localSLS = Lookup[strataLoadShape, {{rateClass, strata}}, 0.] // First;
+	localRCLF = Lookup[rclf, {{year, rateClass, strata}}, 0.] // First; 
+	localSS = Lookup[summerScaling, {{year,rateClass,strata}}, 0.] // First; 
+	localPLC = Lookup[plcScaling, year, 0.]; 
+    
+    icap = localSLS * localRCLF * localSS * localPLC;
 
-	
- 	icap = localSLS * localRCLF * localSS * localPLC;
-	results = {runDate, runTime, utility, premId, yr, rc, st, icap};
-	
-	writeFunc @ results;
-	
+    yearADJ = ToExpression[year] + 1; 
+    results = {runDate, runTime, iso, utility, premId, yearADJ, rateClass, strata, mType, icap};
+
+    writeFunc @ results;
 	,{record, records}];
 
 

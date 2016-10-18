@@ -60,30 +60,29 @@ SQLExecute[conn,"select
 		Map[#NCRatio * (1 + #RateClassLoss[[1]] / 100.)&]//
 		(utilParams=#)&;
  
-(*
-records//
- 	Normal//
-	#/.Rule[{prem_,yr_,rc_,st_}, usage_List] :> {prem, ToExpression[yr]+1, rc, st, Mean[usage * Lookup[utilParams, {{yr,rc,st}}, ConstantArray[0., 5]][[1]]]}&//
-	(icapValues = #)&;
-*)
-
 (* time stamp *)
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
-
-labels = {"RunDate", "RunTime", "Utility", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
+
+labels = {"RunDate", "RunTime", "ISO", "Utility", "PremiseId", "Year", "RateClass", "Strata", "MeterType", "RecipeICap"};
+iso = "PJM";
+utility = "PECO";
+mType = "INT";
+
 Do[
     
     {premId, year, rateClass, strata, usage} = {#, #2, #3, #4, {##5}}& @@ record;
-    utility = "PECO";
 
     localUtil = Lookup[ utilParams, {{year, rateClass, strata}}, ConstantArray[0.,5]] // Flatten;
 
-    iCap = Mean @ (usage * localUtil);
+    icap = Mean @ (usage * localUtil);
 
-    writeFunc @ {runDate, runTime, utility, premId, ToExpression[year] + 1, rateClass, strata, iCap};
+    yearADJ = ToExpression[year] + 1; 
+    results = {runDate, runTime, iso, utility, premId, yearADJ, rateClass, strata, mType, icap};
+
+    writeFunc @ results;
     ,{record, records}]
 
 
