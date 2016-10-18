@@ -20,11 +20,11 @@ Filter[{first__, last_}]:= {first, ToExpression @ last}
 newData = Map[Filter, allData];
 (*#################### Transform into Records and Group for Export #################### *)
 
-header = {"RunDate", "RunTime", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+header = {"RunDate", "RunTime", "ISO", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "MeterType", "RecipeICap"};
 records = Map[AssociationThread[header -> #]&, newData];
 
-exportString = GroupBy[records, {#UtilityId&, #PremiseId&, #Year&}]//
-    ExportString[<|"PJM" -> #|>, "JSON", "Compact" -> True]&;
+exportString = GroupBy[records, {#ISO&, #UtilityId&, #PremiseId&, #Year&}]//
+    ExportString[#, "JSON", "Compact" -> True]&;
 
 Print @ exportString;
 
