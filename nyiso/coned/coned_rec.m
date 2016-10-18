@@ -123,7 +123,6 @@ intervalMeters = SQLExecute[conn, intervalQry];
 intervalVarTrue = Select[intervalMeters, #[[-1]] == 1& ];
 intervalVarFalse = Complement[intervalMeters, intervalVarTrue ][[All,;;-2]];
 
-
 (* demand and consumption meters *)
 Clear[demandMeters, consumpMeters];
 SQLExecute[conn, monthlyQry]//
@@ -166,6 +165,17 @@ SQLExecute[conn, dailyAvgQry]//
     (* {dateString, daytype} -> tempAdj *)
     (tempVariant = #)&;  
 
+(*#################### Aux: Meter Logic ####################*)
+(* SQL templates *)
+MeterLogic[_, 1] := "VTOU";
+MeterLogic[x_String, 0]/; StringMatchQ[x, Alternatives @@ {"Demand","Scalar"}]:= x;
+MeterLogic[x_?NumericQ, 0] := "Interval";
+
+(* OUTPUT *)
+MeterLogic[_, 1,"OUTPUT"] := "VTOU";
+MeterLogic["Demand", 0, "OUTPUT"] := "DMD";
+MeterLogic["Scalar", 0, "OUTPUT"]:= "CON";
+MeterLogic[x_?NumericQ, 0, "OUTPUT"]:= "INT";
 
 (*#################### Logic Loop ####################*)
 (* Build load shape adjustment table; per premise id *)
@@ -175,13 +185,17 @@ runTime = DateString[{"Hour24", ":", "Minute"}];
 
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
-labels = {"RunDate", "RunTime", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
+labels = {"RunDate", "RunTime", "ISO", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap"};
 iso = "NYISO";
 utility = "CONED";
 
 writeFunc @ labels;
 
-normalizedMCDCalc = {};
+(* Loop handles all values that require use of Normalized Usage. That is Consumption, Demand, and
+Interval Meters; interval meters must have varinace from billed usage > 4% else they are handled
+in the second logic loop below.
+*)
+(* loadProfileASC caches daily load profiles; see inner `Do` *)
 loadProfileASC = <||>;
 Do[
     (*#################### Initialization #################### *)
@@ -253,16 +267,9 @@ Do[
 	normalizedUsage = csf * lp;
 	localMCD = If[ useOrMType === "Scalar", normalizedUsage, Min[normalizedUsage, billDemand]];
 
+    
     (*#################### Subzone and Forecast Trueup Factors ####################*)
-	MeterLogic[_, 1] := "VTOU";
-	MeterLogic[x_String, 0]/; StringMatchQ[x, Alternatives @@ {"Demand","Scalar"}]:= x;
-	MeterLogic[x_?NumericQ, 0] := "Interval";
-
-    MeterLogic[_, 1,"OUTPUT"] := "VTOU";
-    MeterLogic["Demand", 0, "OUTPUT"] := "DMD";
-    MeterLogic["Scalar", 0, "OUTPUT"]:= "CON";
-    MeterLogic[x_?NumericQ, 0, "OUTPUT"]:= "INT";
-
+	
 	utilityFactorQuery = StringTemplate["select  Factor
 		from CONED_UtilityParameters
 		where 
@@ -274,17 +281,48 @@ Do[
 	
 	icap = localMCD * utilProduct;
 	
-    (*yearADJ = ToExpression[year]*)
-	results = {runDate, runTime, iso, utility, premId, year, rateClass, stratum, MeterLogic[useOrMType, tod, "OUTPUT"], icap};
+    yearADJ = ToExpression[year] + 1;
+	results = {runDate, runTime, iso, utility, premId, yearADJ, rateClass, stratum, MeterLogic[useOrMType, tod, "OUTPUT"], icap};
 	writeFunc @ results;
 
 ,{premItr, allPremisesForNormalizedUsage}
+](* end Normalized Usage Loop *);
+
+(* loop to handle the interval meters where variance is < 0.04 from billed usage. *)
+Do[
+	(*#################### Initialization #################### *)
+    (* premItr is an entire record!
+        1) premid   2) rateClass    3) strata (don't use)   4) zone code
+        5) stratum  6) tod code     7) year                 8) bill cycle start
+        9) bill cycle end           10) billed usage        11) billed demand
+        12) if interval then CPHourUsage else Scalar || Demand
+    *)
+    {   premId, rateClass, zoneCode, 
+        stratum, tod, year, billStart, billEnd,
+        billUsage, billDemand, useOrMType
+    } = {
+            #, rateClassMap[#2]["Mapping"], #4, ToExpression @  #5, rateClassMap[#2]["TODQ"], 
+            ToString[#7], #8, #9, #10, #11, #12
+        }& @@ premItr[[;;-2]];
+
+	utilityFactorQuery = StringTemplate["select  Factor
+		from CONED_UtilityParameters
+		where 
+			Cast(CPYear-1 as varchar) = '`year`'
+			and (MeterType = '`meterType`' or MeterType = 'All-Meter-Types')
+			and Zone = '`zone`'"][<|"year"-> year, "meterType" -> MeterLogic[useOrMType, tod], "zone" -> zoneCode |>];	
+    utilFactors = SQLExecute[conn, utilityFactorQuery]// Flatten;
+	utilProduct = If[ Length @ utilFactors == 2, Times @@(utilFactors + 1.), 0.];
+
+    localMCD = useOrMType;
+	icap = localMCD * utilProduct;
+	
+    yearADJ = ToExpression[year] + 1;
+	results = {runDate, runTime, iso, utility, premId, yearADJ, rateClass, stratum, MeterLogic[useOrMType, tod, "OUTPUT"], icap};
+	writeFunc @ results;
+
+,{premItr, intervalVarTrue}
 ];
-
-(* MCD - Interval/Demand - MIN(Normalized Usage, Billed Demand) *)
-
-(* MCD - Consumpiton - Normalized Usage *)
-
 JECloseConnection[];
 EndPackage[];
 Quit[];
