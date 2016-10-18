@@ -60,6 +60,7 @@ iso = "PJM";
 utility = "PPL";
 mType = "INT";
 
+writeFunc @ labels;
 Do[
     {premId, year, rateClass, strata, usageVec} = {#, #2, #3, #4, {##5}}& @@ premItr;
 

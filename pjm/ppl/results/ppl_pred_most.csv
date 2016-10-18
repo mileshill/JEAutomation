@@ -1,0 +1,24 @@
+
+Mathematica cannot find a valid password.
+
+For automatic Web Activation enter your activation key
+(enter return to skip Web Activation): 
+You will need to get a password from your
+license certificate or from Wolfram Research
+(http://register.wolfram.com).
+Machine name:	ip-172-31-52-216
+MathID:	6509-57993-07470
+
+You will need a valid activation key and password in order
+to proceed. Go to http://user.wolfram.com to
+register your activation key and obtain the password.
+
+Enter your Activation key [format xxxx-xxxx-xxxxxx]: 
+Enter your password: 
+The password you entered is not valid.
+Please press Enter to quit.
+RunDate, RunTime, Premise, Year, RateClass, Strata, PredictedICap, Uncertainty, TrainingYears, TrainingSamples
+
+Part::take: Cannot take positions 1 through 10 in {}.
+
+Do::iterb: Iterator {premItr, premises[[1 ;; 10]]} does not have appropriate bounds.

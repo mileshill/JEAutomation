@@ -114,6 +114,8 @@ iso = "PJM";
 utility = "PECO";
 mType = "DMD";
 
+
+writeFunc @ labels;
 Do[
     {premId, year, rateClass, strata, avgDmd} = record;
     

@@ -179,6 +179,8 @@ labels = {"RunDate", "RunTime", "UtilityId", "PremiseId", "Year", "RateClass", "
 iso = "NYISO";
 utility = "CONED";
 
+writeFunc @ labels;
+
 normalizedMCDCalc = {};
 loadProfileASC = <||>;
 Do[

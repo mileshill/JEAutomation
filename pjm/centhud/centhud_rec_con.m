@@ -82,6 +82,7 @@ iso = "PJM";
 utility = "CENTHUD";
 mType = "CON";
 
+writeFunc @ labels;
 Do[
 
     {premId, year, rc, st, loadProfile} = record;

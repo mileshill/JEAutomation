@@ -84,6 +84,7 @@ iso = "PJM";
 utility = "PSEG";
 mType = "CON";
 
+writeFunc @ labels;
 Do[
     {premId, year, rc, st, usage, numHours} = record // Quiet; 
 

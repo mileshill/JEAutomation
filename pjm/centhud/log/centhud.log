@@ -89,3 +89,12 @@ CST:2016_10_18_16_12_48 UTILITY=centhud DESC=Unique premises: 1
 CST:2016_10_18_16_12_48 UTILITY=centhud DESC=Move *.csv *.txt to ./results/
 CST:2016_10_18_16_12_48 UTILITY=centhud DESC=Complete
 
+CST:2016_10_18_17_22_57 UTILITY=centhud DESC=Recipe start
+CST:2016_10_18_17_22_59 UTILITY=centhud DESC=Recipe end
+CST:2016_10_18_17_22_59 UTILITY=centhud DESC=Unique premises: 2
+CST:2016_10_18_17_22_59 UTILITY=centhud DESC=Recipe start
+CST:2016_10_18_17_23_01 UTILITY=centhud DESC=Recipe end
+CST:2016_10_18_17_23_01 UTILITY=centhud DESC=Unique premises: 2
+CST:2016_10_18_17_23_01 UTILITY=centhud DESC=Move *.csv *.txt to ./results/
+CST:2016_10_18_17_23_01 UTILITY=centhud DESC=Complete
+

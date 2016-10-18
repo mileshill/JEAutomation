@@ -71,6 +71,7 @@ iso = "PJM";
 utility = "PECO";
 mType = "INT";
 
+writeFunc @ labels;
 Do[
     
     {premId, year, rateClass, strata, usage} = {#, #2, #3, #4, {##5}}& @@ record;

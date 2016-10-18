@@ -84,6 +84,7 @@ iso = "PJM";
 utility = "PSEG";
 mType = "DMD";
 
+writeFunc @ labels;
 Do[
     Off[Infinity::indet];
 

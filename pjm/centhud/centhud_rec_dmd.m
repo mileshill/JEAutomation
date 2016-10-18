@@ -83,6 +83,7 @@ iso = "PJM";
 utility = "CENTHUD";
 mType = "DMD";
 
+writeFunc @ labels;
 Do[
 
     {premId, year, rc, st, avg} = record;
