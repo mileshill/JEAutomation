@@ -1,0 +1,21 @@
+12:51:08 coned calculations started
+12:51:08 Removing previous results.
+rm: cannot remove ‘*.txt’: No such file or directory
+12:51:08 Running recipe calculations.
+12:51:48 Storing unique premises for prediction
+12:51:48 2 unique premises
+12:51:48 Running predictions on unique premises
+12:51:49 coned Recipe complete.
+
+total 56K
+-rw------- 1 ec2-user ec2-user  323 Oct 18 12:51 nohup.out
+-rw-rw-r-- 1 ec2-user ec2-user  406 Oct 18 12:51 coned_pred.csv
+-rw-rw-r-- 1 ec2-user ec2-user   19 Oct 18 12:51 coned_premises.txt
+-rw-rw-r-- 1 ec2-user ec2-user 1.7K Oct 18 12:51 coned_rec.csv
+-rw-rw-r-- 1 ec2-user ec2-user  11K Oct 18 12:48 coned_rec.m
+drwxrwxr-x 2 ec2-user ec2-user 4.0K Oct 14 19:20 results
+-rw-rw-r-- 1 ec2-user ec2-user 5.2K Oct 13 17:13 load_profile.sql
+-rw-rw-r-- 1 ec2-user ec2-user  890 Sep 27 19:39 service_class.m
+-rw-rw-r-- 1 ec2-user ec2-user 3.3K Sep 26 20:31 coned_pred.m
+-rw-rw-r-- 1 ec2-user ec2-user  731 Sep 23 13:11 DBConnect.m
+-rwxrwxr-x 1 ec2-user ec2-user 2.0K Sep 23 13:11 run_calcs.sh

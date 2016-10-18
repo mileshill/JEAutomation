@@ -181,6 +181,7 @@ writeFunc @ labels;
 utility = "CONED";
 
 normalizedMCDCalc = {};
+loadProfileASC = <||>;
 Do[
     (*#################### Initialization #################### *)
     (* premItr is an entire record!
@@ -234,27 +235,22 @@ Do[
     loadProfile = {}; 
 	Do[
 		{dayType, temp} = day[[2;;]];
- 		result = SQLExecute[conn, loadProfileQuery[dayType, temp]] // Flatten;
+        If[ KeyExistsQ[loadProfileASC, {dayType, temp}],
+            result = loadProfileASC[{dayType,temp}],
+ 		    result = SQLExecute[conn, loadProfileQuery[dayType, temp]] // Flatten;
+            AssociateTo[loadProfileASC, {dayType,temp} -> result]
+        ];
 		AppendTo[loadProfile, result];
 	,{day, tempVarSelect}];
     
     (*#################### Compute Normalized Usage ####################*)
 	(* compute factors for normalized usage *) 
-    csf = billUsage / N[Total @ Flatten @ loadProfile];
+    csf = billUsage / N[Total @ Flatten @ loadProfile]//Quiet;
     If[ Not @ NumericQ @ csf, Continue[]];
 
     lp = loadProfile[[ localCPIdx, localCPHour ]];
 	normalizedUsage = csf * lp;
 	localMCD = If[ useOrMType === "Scalar", normalizedUsage, Min[normalizedUsage, billDemand]];
-
-(*
-	Print["TempVarDimes: ", Dimensions @ tempVarSelect];
-    Print["LP Dimensions : ",  Dimensions @ loadProfile];
-    Print["CSF: ", csf];
-    Print["Load profile: ",lp];
-	Print["Normalized Usage: ", normalizedUsage];
-	Print["Demand: ", billDemand];
-*)
 
     (*#################### Subzone and Forecast Trueup Factors ####################*)
 	MeterLogic[_, 1] := "VTOU";

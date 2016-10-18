@@ -1,0 +1,9 @@
+
+Import::nffil: File not found during Import.
+
+StringSplit::strse: String or list of strings expected at position 1 in StringSplit[$Failed].
+
+StringSplit::argb: StringSplit called with 0 arguments; between 1 and 3 arguments are expected.
+Premise, Year, RateClass, Strata, PredictedICap, Uncertainty, TrainingYears, TrainingSamples
+
+Do::iterb: Iterator {premItr, premises} does not have appropriate bounds.
