@@ -98,7 +98,7 @@ Do[
     
 	scalar = Times @@ {utilFactor, sysFactor};
 	
-    icap = If[MatchQ[#, Indeterminate], 0., #]& @ (genCapLoad * scalar);
+    icap = If[MatchQ[#, Alternatives@@{Indeterminate, Infinity}], 0., #]& @ (genCapLoad * scalar);
     
     yearADJ = ToExpression[year] + 1;
 	results = {runDate, runTime, utility, premId, yearADJ, rc, st, icap};
