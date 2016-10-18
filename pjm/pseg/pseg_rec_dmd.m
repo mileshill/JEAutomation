@@ -51,11 +51,11 @@ If[Not @ MatchQ[conn, _SQLConnection],
 records = SQLExecute[conn, recordQuery]//
 	<|
 		"Premise" -> #, "Year" -> #2, "RateClass" -> #4, "Strata" -> #5, 
-		"demand" -> #6, "NumDays" -> #7 
+		"Demand" -> #6, "NumDays" -> #7 
 	|>& @@@ #&// Quiet //
 	GroupBy[#, {#Premise, #Year, #RateClass, #Strata}&]& //
 	Map[Merge[Identity]] //
-	Map[{#demand, #NumDays}&] //
+	Map[{#Demand, #NumDays}&] //
 	Normal //
 	# /. Rule[key_, values_] :> Flatten[{key, values}, 1]&;
 
@@ -84,20 +84,22 @@ writeFunc = Write[stdout, StringRiffle[#,","]]&;
 utility = "PSEG";
 
 Do[
+    Off[Infinity::indet];
 
     {premId, year, rc, st, demand, days} = {#, #2, #3, #4, #5, #6}& @@ record; 
+    
     numMonths = Length @ demand;
     avgDailyDemand = Mean[demand / days] // Quiet;
     totalDays = Total @ days;
-    genCapLoad = (avgDailyDemand * totalDays) / numMonths;
+    genCapLoad = (avgDailyDemand * totalDays) / numMonths// Quiet;
 
 	utilFactor = Lookup[util, {{year, rc}}, 0.] // If[MatchQ[#, _List], First @ #]&;
 	sysFactor = Lookup[sys, year, 0.];
     
 	scalar = Times @@ {utilFactor, sysFactor};
 	
-	icap = genCapLoad * scalar;
-
+    icap = If[MatchQ[#, Indeterminate], 0., #]& @ (genCapLoad * scalar);
+    
     yearADJ = ToExpression[year] + 1;
 	results = {runDate, runTime, utility, premId, yearADJ, rc, st, icap};
 	
