@@ -8,7 +8,7 @@ fileNames =  FileNames["*.csv"];
 
 allData = Map[CSVImport, fileNames]//
     Flatten[#, 1]& //
-    Select[#, Length @ # == 8&]&;
+    Select[#, Length @ # == 10&]&;
 
 (* ExportString is restrictive with output. Filter is used to clean up
 the last argument of each record. Anything that is non-numeric will be
