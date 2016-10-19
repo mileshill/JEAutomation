@@ -285,8 +285,9 @@ Do[
 	results = {runDate, runTime, iso, utility, premId, yearADJ, rateClass, stratum, MeterLogic[useOrMType, tod, "OUTPUT"], icap};
 	writeFunc @ results;
 
-,{premItr, allPremisesForNormalizedUsage}
+,{premItr, allPremisesForNormalizedUsage[[;;50]]}
 ](* end Normalized Usage Loop *);
+Quit[];
 
 (* loop to handle the interval meters where variance is < 0.04 from billed usage. *)
 Do[
