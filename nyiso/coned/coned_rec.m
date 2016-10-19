@@ -185,8 +185,8 @@ runTime = DateString[{"Hour24", ":", "Minute"}];
 
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
-labels = {"RunDate", "RunTime", "ISO", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", "RecipeICap",
-    "Zone", "BilledUsage", "BilledDemand", "IDRSum_or_MeterType", "MCD"};
+labels = {"RunDate", "RunTime", "ISO", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", 
+    "MType", "RecipeICap", "Zone", "BilledUsage", "BilledDemand", "IDRSum_or_MeterType", "MCD"};
 iso = "NYISO";
 utility = "CONED";
 
