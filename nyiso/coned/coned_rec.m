@@ -186,7 +186,7 @@ runTime = DateString[{"Hour24", ":", "Minute"}];
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
 labels = {"RunDate", "RunTime", "ISO", "UtilityId", "PremiseId", "Year", "RateClass", "Strata", 
-    "MType", "RecipeICap", "Zone", "BilledUsage", "BilledDemand", "IDRSum_or_MeterType", "MCD"};
+    "MType", "RecipeICap"};
 iso = "NYISO";
 utility = "CONED";
 
@@ -283,8 +283,7 @@ Do[
 	icap = localMCD * utilProduct;
 	
     yearADJ = ToExpression[year] + 1;
-	results = {runDate, runTime, iso, utility, premId, yearADJ, rateClass, 
-        stratum, MeterLogic[useOrMType, tod, "OUTPUT"], icap, zoneCode, billUsage, billDemand, useOrMType, localMCD};
+	results = {runDate, runTime, iso, utility, premId, yearADJ, rateClass, stratum, MeterLogic[useOrMType, tod, "OUTPUT"], icap};
 	writeFunc @ results;
 
 ,{premItr, allPremisesForNormalizedUsage}

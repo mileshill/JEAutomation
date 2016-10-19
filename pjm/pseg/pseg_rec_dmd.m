@@ -20,6 +20,7 @@ where m.UtilityId = 'PSEG'
 	and (m.Demand > 0 and m.Demand is not Null)
 	and Month(m.EndDate) in (6,7,8,9)
     --and m.PremiseId = 'PE000011707310605787'  /* test case: icap 2016 = 128.080 */
+    --and m.PremiseId = 'PE000007932336623641'
 order by m.PremiseId, Year, Month";
 
 
@@ -89,7 +90,7 @@ Do[
     Off[Infinity::indet];
 
     {premId, year, rc, st, demand, days} = {#, #2, #3, #4, #5, #6}& @@ record; 
-    
+
     numMonths = Length @ demand;
     avgDailyDemand = Mean[demand / days] // Quiet;
     totalDays = Total @ days;
@@ -97,7 +98,6 @@ Do[
 
 	utilFactor = Lookup[util, {{year, rc}}, 0.] // If[MatchQ[#, _List], First @ #]&;
 	sysFactor = Lookup[sys, year, 0.];
-    
 	scalar = Times @@ {utilFactor, sysFactor};
 	
     icap = If[MatchQ[#, Alternatives@@{Indeterminate, Infinity}], 0., #]& @ (genCapLoad * scalar);
@@ -106,7 +106,6 @@ Do[
 	results = {runDate, runTime, iso, utility, premId, yearADJ, rc, st, mType, icap};
 	
 	writeFunc @ results;
-
     ,{record, records}];
 
 EndPackage[];

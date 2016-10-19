@@ -17,7 +17,9 @@ inner join Premise as p
 where m.UtilityId = 'PSEG'
     and (m.Demand = 0 or m.Demand is Null)
 	and Month(m.EndDate) in (6,7,8,9)
-    --and m.PremiseId = 'PE000008120852292456'";
+    --and m.PremiseId = 'PE000008120852292456'
+    --and m.PremiseId = 'PE000007912140663664'
+    --and m.PremiseId = 'PE000008711916061850'";
 
 utilityQuery = "select distinct 
 		CAST((c.CPYearID - 1) as varchar), 
@@ -87,23 +89,20 @@ mType = "CON";
 writeFunc @ labels;
 Do[
     {premId, year, rc, st, usage, numHours} = record // Quiet; 
-
     (*If[Length @ usage != 4, Continue[]];*)
     
 	utilFactor = Lookup[util, {{year, rc}}, 0.] // If[MatchQ[#, _List], First @ #]&;
 	sysFactor = Lookup[sys, year, 0.];
     (*missingFactor = Lookup[missingUtil, year, 0.];*)
 
-
+     
     normalizedUsage = Total[usage] / Total[numHours];
 	scalar = Times @@ {utilFactor, sysFactor};
-	
 	icap = normalizedUsage * scalar;
     yearADJ = ToExpression[year] + 1;
 	results = {runDate, runTime, iso, utility, premId, yearADJ, rc, st, mType, icap};
 	
 	writeFunc @ results;
-
     ,{record, records}];
 
 EndPackage[];

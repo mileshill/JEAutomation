@@ -4,39 +4,6 @@
 
 # Logging and overwrite vars
 
-:<<'END'
-while [[ $# -gt 0 ]]
-do
-    key="$1"
-    case $key in
-        -o |--overwrite)
-            OVERWRITE=1
-            shift
-            ;;
-        -p|--predict)
-            ONLY_PREDICT=1
-            shift
-            ;;
-        -r|--recipe)
-            ONLY_RECIPE=1
-            shift
-            ;;
-        -u |--utility)
-            UTILITY="$2"
-            shift
-            ;;
-        *)
-            ;;
-    esac
-    shift
-done
-
-# If no utility given
-
-if [ -z "${UTILITY}" ]; then
-    UTILITY=$(basename $(pwd))
-fi
-END
 UTILITY=$(basename $(pwd))
 # Auxiliary functions
 function record {
@@ -89,7 +56,8 @@ if [ -e "${UNIQ_PREM}" ] ; then
     $(record "Splitting premises")
     sh split_premises.sh ${UNIQ_PREM}
     touch ${PREDICTION_RESULT}
-    find . -maxdepth 1 -name "prem_*" -print | xargs -n 1 -P 2 -I {} sh -c "MathKernel -script ${PREDICTION} {} >> ${PREDICTION_RESULT}" 
+    find . -maxdepth 1 -name "prem_*" -print \
+        | xargs -n 1 -P 2 -I {} sh -c "MathKernel -script ${PREDICTION} {} >> ${PREDICTION_RESULT}" 
     # check to ensure WolframKernels have terminated; remove split premise files; prem_*
     if [ ! "$(pgrep Wolfram)" ]; then
         rm prem_*
@@ -108,19 +76,5 @@ else
 fi
 
 $(record "Complete")
-
-:<<'END'
-# Run the prediction script on unique premises
-if [ ! -e "${PREDICTION_RESULT}" ]; then 
-    echo "$(add_date) Running ${PREDICTION}"
-    MathKernel -script ${PREDICTION} > ${PREDICTION_RESULT}
-fi
-
-# Comparison against available historical
-if [ ! -e "${COMPARE_RESULT}" ] ||  [ "${PREDICTION_RESULT}" -nt  "${COMPARE_RESULT}" ]; then
-    echo "$(add_date) Running ${COMPARE}"
-    MathKernel -script ${COMPARE} > ${COMPARE_RESULT} 
-fi
-END
 
 echo >> ${LOGFILE}
