@@ -2,15 +2,6 @@
 
 BeginPackage["PecoConsumption`",{"DatabaseLink`", "DBConnect`"}];
 
-(*
-Consumption meters require four factors to compute the Icap.
-Factors are keyed by RateClass, Strata, and Year.
-
-icap = strataLoadShape * rateClassLossFactor * summerScaling * PLCScaling 
-
-*)
-
-
 (* connect to the database *)
 conn = JEConnection[];
 If[Not @ MatchQ[conn, _SQLConnection],
@@ -102,9 +93,6 @@ plcScaling = SQLExecute[conn, plcScalingQ]//
 
 records = SQLExecute[conn, recordsQ] //
 	Map[StringTrim @ ToString @ #&, #, {-1}]&;
-
-stdout = Streams[][[1]];
-writeFunc = Write[stdout, StringRiffle[#, ","]]&;
 
 (* compute icap *)
 
