@@ -202,3 +202,27 @@ CST:2016_10_18_17_24_53 UTILITY=pseg DESC=Unique premises: 2
 CST:2016_10_18_17_24_53 UTILITY=pseg DESC=Move *.csv *.txt to ./results/
 CST:2016_10_18_17_24_53 UTILITY=pseg DESC=Complete
 
+CST:2016_10_21_16_00_01 UTILITY=pseg DESC=Recipe start
+CST:2016_10_21_16_00_01 UTILITY=pseg DESC=Recipe end
+CST:2016_10_21_16_00_01 UTILITY=pseg DESC=Unique premises: 0
+CST:2016_10_21_16_00_01 UTILITY=pseg DESC=Recipe start
+CST:2016_10_21_16_00_01 UTILITY=pseg DESC=Recipe end
+CST:2016_10_21_16_00_01 UTILITY=pseg DESC=Unique premises: 0
+CST:2016_10_21_16_00_01 UTILITY=pseg DESC=Recipe start
+CST:2016_10_21_16_00_01 UTILITY=pseg DESC=Recipe end
+CST:2016_10_21_16_00_01 UTILITY=pseg DESC=Unique premises: 0
+CST:2016_10_21_16_00_01 UTILITY=pseg DESC=Move *.csv *.txt to ./results/
+CST:2016_10_21_16_00_01 UTILITY=pseg DESC=Complete
+
+CST:2016_10_21_17_24_34 UTILITY=pseg DESC=Recipe start
+CST:2016_10_21_17_24_43 UTILITY=pseg DESC=Recipe end
+CST:2016_10_21_17_24_43 UTILITY=pseg DESC=Unique premises: 2
+CST:2016_10_21_17_24_43 UTILITY=pseg DESC=Recipe start
+CST:2016_10_21_17_24_46 UTILITY=pseg DESC=Recipe end
+CST:2016_10_21_17_24_46 UTILITY=pseg DESC=Unique premises: 2
+CST:2016_10_21_17_24_46 UTILITY=pseg DESC=Recipe start
+CST:2016_10_21_17_24_49 UTILITY=pseg DESC=Recipe end
+CST:2016_10_21_17_24_49 UTILITY=pseg DESC=Unique premises: 2
+CST:2016_10_21_17_24_49 UTILITY=pseg DESC=Move *.csv *.txt to ./results/
+CST:2016_10_21_17_24_49 UTILITY=pseg DESC=Complete
+

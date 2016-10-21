@@ -1,2 +1,20 @@
 WolframKernels currently active: 1
 Must wait until kernel(s) completes
+run_calcs.sh: line 80: ./log/coned.log: No such file or directory
+run_calcs.sh: line 80: ./log/coned.log: No such file or directory
+run_calcs.sh: line 80: ./log/coned.log: No such file or directory
+run_calcs.sh: line 80: ./log/coned.log: No such file or directory
+run_calcs.sh: line 80: ./log/coned.log: No such file or directory
+run_calcs.sh: line 80: ./log/coned.log: No such file or directory
+run_calcs.sh: line 80: ./log/coned.log: No such file or directory
+run_calcs.sh: line 80: ./log/coned.log: No such file or directory
+run_calcs.sh: line 80: ./log/coned.log: No such file or directory
+run_calcs.sh: line 80: ./log/coned.log: No such file or directory
+run_calcs.sh: line 80: ./log/coned.log: No such file or directory
+run_calcs.sh: line 156: ./log/coned.log: No such file or directory
+cp: ‘./api_results/ppl_pred_most.csv’ and ‘./api_results/ppl_pred_most.csv’ are the same file
+cp: ‘./api_results/peco_pred_most.csv’ and ‘./api_results/peco_pred_most.csv’ are the same file
+upload: api_results/coned_rec.csv to s3://just-energy-capacity/results/coned_rec.csv
+Completed 1 of 3 part(s) with 2 file(s) remainingupload: api_results/centhud_rec.csv to s3://just-energy-capacity/results/centhud_rec.csv
+Completed 2 of 3 part(s) with 1 file(s) remainingupload: api_results/pseg_rec.csv to s3://just-energy-capacity/results/pseg_rec.csv
+/home/ec2-user/Projects/JustEnergyCalcs
