@@ -24,7 +24,8 @@ for RUN_SCRIPT in $SCRIPTS
 do
     FILE_PATH=$(dirname $RUN_SCRIPT)   # the full directory path
     FILE_NAME=$(basename $RUN_SCRIPT)  # the file name  
-
+    
+    cd $JE_DIR
     cd $FILE_PATH           # move into utility directory
     bash $FILE_NAME         # run the 'run_calc.sh' script in utility directory
 done
