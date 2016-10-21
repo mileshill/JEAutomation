@@ -177,3 +177,60 @@ CST:2016_10_19_22_00_05 UTILITY=ppl DESC=Prediction end
 CST:2016_10_19_22_00_05 UTILITY=ppl DESC=Move *.csv *.txt to ./results/
 CST:2016_10_19_22_00_05 UTILITY=ppl DESC=Complete
 
+CST:2016_10_20_13_55_11 UTILITY=ppl DESC=Recipe start
+CST:2016_10_20_13_55_58 UTILITY=ppl DESC=Recipe end
+CST:2016_10_20_13_55_58 UTILITY=ppl DESC=Unique premises: 2
+CST:2016_10_20_13_55_58 UTILITY=ppl DESC=Prediction start
+CST:2016_10_20_13_55_58 UTILITY=ppl DESC=Splitting premises
+CST:2016_10_20_13_56_00 UTILITY=ppl DESC=Prediction end
+CST:2016_10_20_13_56_00 UTILITY=ppl DESC=Move *.csv *.txt to ./results/
+CST:2016_10_20_13_56_00 UTILITY=ppl DESC=Complete
+
+CST:2016_10_20_14_00_00 UTILITY=ppl DESC=Recipe start
+CST:2016_10_20_14_00_30 UTILITY=ppl DESC=Recipe end
+CST:2016_10_20_14_00_30 UTILITY=ppl DESC=Unique premises: 3286
+CST:2016_10_20_14_00_30 UTILITY=ppl DESC=Recipe start
+CST:2016_10_20_14_00_30 UTILITY=ppl DESC=Recipe end
+CST:2016_10_20_14_00_30 UTILITY=ppl DESC=Unique premises: 1
+CST:2016_10_20_14_00_30 UTILITY=ppl DESC=Recipe start
+CST:2016_10_20_14_00_31 UTILITY=ppl DESC=Recipe end
+CST:2016_10_20_14_00_31 UTILITY=ppl DESC=Unique premises: 1
+CST:2016_10_20_14_00_31 UTILITY=ppl DESC=Move *.csv *.txt to ./results/
+CST:2016_10_20_14_00_31 UTILITY=ppl DESC=Complete
+
+CST:2016_10_20_14_05_30 UTILITY=ppl DESC=Recipe start
+CST:2016_10_20_14_06_01 UTILITY=ppl DESC=Recipe end
+CST:2016_10_20_14_06_01 UTILITY=ppl DESC=Unique premises: 3286
+CST:2016_10_20_14_06_01 UTILITY=ppl DESC=Prediction start
+CST:2016_10_20_14_06_01 UTILITY=ppl DESC=Splitting premises
+CST:2016_10_20_14_06_01 UTILITY=ppl DESC=Prediction end
+CST:2016_10_20_14_06_01 UTILITY=ppl DESC=Move *.csv *.txt to ./results/
+CST:2016_10_20_14_06_01 UTILITY=ppl DESC=Complete
+
+CST:2016_10_20_14_15_30 UTILITY=ppl DESC=Recipe start
+CST:2016_10_20_14_16_01 UTILITY=ppl DESC=Recipe end
+CST:2016_10_20_14_16_01 UTILITY=ppl DESC=Unique premises: 3286
+CST:2016_10_20_14_16_01 UTILITY=ppl DESC=Prediction start
+CST:2016_10_20_14_16_01 UTILITY=ppl DESC=Splitting premises
+CST:2016_10_20_15_30_55 UTILITY=ppl DESC=Move *.csv *.txt to ./results/
+CST:2016_10_20_15_30_55 UTILITY=ppl DESC=Complete
+
+CST:2016_10_20_15_31_33 UTILITY=ppl DESC=Recipe start
+CST:2016_10_20_15_33_13 UTILITY=ppl DESC=Recipe start
+CST:2016_10_20_15_35_37 UTILITY=ppl DESC=Recipe end
+CST:2016_10_20_15_35_37 UTILITY=ppl DESC=Unique premises: 3286
+CST:2016_10_20_15_35_37 UTILITY=ppl DESC=Prediction start
+CST:2016_10_20_15_35_37 UTILITY=ppl DESC=Splitting premises
+CST:2016_10_20_15_44_19 UTILITY=ppl DESC=Prediction end
+CST:2016_10_20_15_44_19 UTILITY=ppl DESC=Move *.csv *.txt to ./results/
+CST:2016_10_20_15_44_19 UTILITY=ppl DESC=Complete
+
+CST:2016_10_20_15_46_12 UTILITY=ppl DESC=Recipe start
+CST:2016_10_20_15_48_32 UTILITY=ppl DESC=Recipe end
+CST:2016_10_20_15_48_32 UTILITY=ppl DESC=Unique premises: 3286
+CST:2016_10_20_15_48_32 UTILITY=ppl DESC=Prediction start
+CST:2016_10_20_15_48_32 UTILITY=ppl DESC=Splitting premises
+CST:2016_10_21_13_34_59 UTILITY=ppl DESC=Prediction end
+CST:2016_10_21_13_34_59 UTILITY=ppl DESC=Move *.csv *.txt to ./results/
+CST:2016_10_21_13_34_59 UTILITY=ppl DESC=Complete
+

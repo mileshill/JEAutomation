@@ -97,7 +97,7 @@ Do[
     records = SQLExecute[conn, queryTemp[<|"premise" -> premItr|>]];
     sampleCount = Length @ records;
     yearCount = Length @ Union @ records[[All, 1]];
-    
+   
     If[Not @ (yearCount >= 2), Continue[]];
     
     maxYear = Last @ Union @ records[[All, 1]];
@@ -131,7 +131,7 @@ Do[
     results = {runDate, runTime, premItr, maxYear+1, rateClass,  strata, icap, icapUnc, yearCount, sampleCount};
     writeFunc @ results;
 
-    ,{premItr, premises[[;;10]]}
+    ,{premItr, premises}
  ];
     
 EndPackage[];
