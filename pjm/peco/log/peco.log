@@ -443,3 +443,24 @@ CST:2016_10_21_17_23_41 UTILITY=peco DESC=Unique premises: 2
 CST:2016_10_21_17_23_41 UTILITY=peco DESC=Move *.csv *.txt to ./results/
 CST:2016_10_21_17_23_41 UTILITY=peco DESC=Complete
 
+CST:2016_10_21_17_54_22 UTILITY=peco DESC=Recipe start
+CST:2016_10_21_17_55_01 UTILITY=peco DESC=Recipe end
+CST:2016_10_21_17_55_01 UTILITY=peco DESC=Unique premises: 2
+CST:2016_10_21_17_55_01 UTILITY=peco DESC=Recipe start
+CST:2016_10_21_17_55_02 UTILITY=peco DESC=Recipe end
+CST:2016_10_21_17_55_02 UTILITY=peco DESC=Unique premises: 2
+CST:2016_10_21_17_55_02 UTILITY=peco DESC=Recipe start
+CST:2016_10_21_17_55_06 UTILITY=peco DESC=Recipe end
+CST:2016_10_21_17_55_06 UTILITY=peco DESC=Unique premises: 2
+CST:2016_10_21_17_55_06 UTILITY=peco DESC=Prediction start
+CST:2016_10_21_17_55_06 UTILITY=peco DESC=Splitting premises
+CST:2016_10_21_17_55_08 UTILITY=peco DESC=Prediction end
+CST:2016_10_21_17_55_08 UTILITY=peco DESC=Prediction start
+CST:2016_10_21_17_55_08 UTILITY=peco DESC=Splitting premises
+CST:2016_10_21_17_55_09 UTILITY=peco DESC=Prediction end
+CST:2016_10_21_17_55_09 UTILITY=peco DESC=Prediction start
+CST:2016_10_21_17_55_09 UTILITY=peco DESC=Splitting premises
+CST:2016_10_21_17_55_09 UTILITY=peco DESC=Prediction end
+CST:2016_10_21_17_55_09 UTILITY=peco DESC=Move *.csv *.txt to ./results/
+CST:2016_10_21_17_55_09 UTILITY=peco DESC=Complete
+

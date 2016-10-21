@@ -49,8 +49,8 @@ RECIPE_RESULTS="${UTILITY}_rec.csv"
 # Interval
 INT_REC="${UTILITY}_rec_int.m"
 INT_REC_RES="${UTILITY}_rec_int.csv"
-INT_PRED="${UTILITY}_pred_most.m"
-INT_PRED_RES="${UTILITY}_pred_most.csv"
+INT_PRED="${UTILITY}_pred.m"
+INT_PRED_RES="${UTILITY}_pred.csv"
 INT_UNIQ="${UTILITY}_premises_int.txt"
 INT_ALIAS="INT"
 
@@ -106,7 +106,7 @@ $(recipe_calc ${INT_REC} ${INT_REC_RES} ${INT_UNIQ})
 
 #################### Predictions #################### 
 # Interval 
-#$(predict ${INT_PRED} ${INT_PRED_RES} ${INT_UNIQ} ${INT_ALIAS})
+$(predict ${INT_PRED} ${INT_PRED_RES} ${INT_UNIQ} ${INT_ALIAS})
 
 # Monthly with demand
 #$(predict ${DMD_PRED} ${DMD_PRED_RES} ${DMD_UNIQ})
