@@ -22,3 +22,36 @@ upload: api_results/coned_rec.csv to s3://just-energy-capacity/results/coned_rec
 Completed 1 of 3 part(s) with 2 file(s) remainingupload: api_results/pseg_rec.csv to s3://just-energy-capacity/results/pseg_rec.csv
 Completed 2 of 3 part(s) with 1 file(s) remainingupload: api_results/centhud_rec.csv to s3://just-energy-capacity/results/centhud_rec.csv
 /home/ec2-user/Projects/JustEnergyCalcs
+[master 4070feb] 2016/10/25/05/1456 Automated push
+ Committer: Miles Hill <ec2-user@ip-172-31-52-216.ec2.internal>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 22 files changed, 91994 insertions(+), 102228 deletions(-)
+ rewrite api_results/centhud_rec.csv (97%)
+ rewrite api_results/pseg_rec.csv (75%)
+ rewrite nohup.out (83%)
+ rewrite pjm/centhud/results/centhud_rec.csv (97%)
+ rewrite pjm/centhud/results/centhud_rec_con.csv (97%)
+ rewrite pjm/centhud/results/centhud_rec_dmd.csv (99%)
+ rewrite pjm/peco/results/peco_rec.csv (89%)
+ rewrite pjm/peco/results/peco_rec_con.csv (89%)
+ rewrite pjm/peco/results/peco_rec_dmd.csv (99%)
+ rewrite pjm/peco/results/peco_rec_int.csv (100%)
+ rewrite pjm/ppl/results/ppl_rec_int.csv (100%)
+ rewrite pjm/pseg/results/pseg_rec.csv (75%)
+ rewrite pjm/pseg/results/pseg_rec_con.csv (81%)
+ rewrite pjm/pseg/results/pseg_rec_dmd.csv (79%)
+ rewrite pjm/pseg/results/pseg_rec_int.csv (82%)
+To git@github.com:mileshill/JEAutomation
+   04606f2..4070feb  master -> master
+/home/ec2-user/Projects/JustEnergyCalcs/api_results
