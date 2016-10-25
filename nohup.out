@@ -1,129 +1,5 @@
-WolframKernels currently active: 1
-Must wait until kernel(s) completes
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 156: ./log/coned.log: No such file or directory
-cp: ‘./api_results/ppl_pred_most.csv’ and ‘./api_results/ppl_pred_most.csv’ are the same file
-cp: ‘./api_results/peco_pred_most.csv’ and ‘./api_results/peco_pred_most.csv’ are the same file
-upload: api_results/coned_rec.csv to s3://just-energy-capacity/results/coned_rec.csv
-Completed 1 of 3 part(s) with 2 file(s) remainingupload: api_results/centhud_rec.csv to s3://just-energy-capacity/results/centhud_rec.csv
-Completed 2 of 3 part(s) with 1 file(s) remainingupload: api_results/pseg_rec.csv to s3://just-energy-capacity/results/pseg_rec.csv
-/home/ec2-user/Projects/JustEnergyCalcs
-[master 14f46b6] 2016/10/21/17/2503 Automated push
- Committer: Miles Hill <ec2-user@ip-172-31-52-216.ec2.internal>
-Your name and email address were configured automatically based
-on your username and hostname. Please check that they are accurate.
-You can suppress this message by setting them explicitly. Run the
-following command and follow the instructions in your editor to edit
-your configuration file:
-
-    git config --global --edit
-
-After doing this, you may fix the identity used for this commit with:
-
-    git commit --amend --reset-author
-
- 30 files changed, 106032 insertions(+), 132482 deletions(-)
- rewrite api_results/centhud_rec.csv (97%)
- rewrite api_results/coned_rec.csv (99%)
- rewrite api_results/pseg_rec.csv (75%)
- rename nyiso/coned/{ => results}/coned_premises.txt (100%)
- create mode 100644 nyiso/coned/results/coned_premises_con.txt
- create mode 100644 nyiso/coned/results/coned_premises_dmd.txt
- create mode 100644 nyiso/coned/results/coned_premises_int.txt
- rewrite nyiso/coned/results/coned_rec.csv (99%)
- create mode 100644 nyiso/coned/results/coned_rec_con.csv
- create mode 100644 nyiso/coned/results/coned_rec_dmd.csv
- create mode 100644 nyiso/coned/results/coned_rec_int.csv
- rewrite pjm/centhud/results/centhud_rec.csv (97%)
- rewrite pjm/centhud/results/centhud_rec_con.csv (97%)
- rewrite pjm/centhud/results/centhud_rec_dmd.csv (99%)
- delete mode 100644 pjm/peco/peco_rec_int.csv
- rewrite pjm/peco/results/peco_rec.csv (87%)
- rewrite pjm/peco/results/peco_rec_con.csv (88%)
- rewrite pjm/peco/results/peco_rec_dmd.csv (98%)
- rewrite pjm/peco/results/peco_rec_int.csv (98%)
- rewrite pjm/ppl/results/ppl_rec.csv (94%)
- rewrite pjm/ppl/results/ppl_rec_int.csv (94%)
- rewrite pjm/pseg/results/pseg_rec.csv (75%)
- rewrite pjm/pseg/results/pseg_rec_con.csv (81%)
- rewrite pjm/pseg/results/pseg_rec_dmd.csv (79%)
- rewrite pjm/pseg/results/pseg_rec_int.csv (82%)
-To git@github.com:mileshill/JEAutomation
-   16fd9a1..14f46b6  master -> master
-/home/ec2-user/Projects/JustEnergyCalcs/api_results
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 80: ./log/coned.log: No such file or directory
-run_calcs.sh: line 156: ./log/coned.log: No such file or directory
-cp: ‘./api_results/ppl_pred_most.csv’ and ‘./api_results/ppl_pred_most.csv’ are the same file
-cp: ‘./api_results/peco_pred_most.csv’ and ‘./api_results/peco_pred_most.csv’ are the same file
-upload: api_results/peco_pred_dmd.csv to s3://just-energy-capacity/results/peco_pred_dmd.csv
-Completed 1 of 7 part(s) with 6 file(s) remainingupload: api_results/ppl_pred.csv to s3://just-energy-capacity/results/ppl_pred.csv
-Completed 2 of 7 part(s) with 5 file(s) remainingupload: api_results/coned_rec.csv to s3://just-energy-capacity/results/coned_rec.csv
-Completed 3 of 7 part(s) with 4 file(s) remainingupload: api_results/peco_pred_con.csv to s3://just-energy-capacity/results/peco_pred_con.csv
-Completed 4 of 7 part(s) with 3 file(s) remainingupload: api_results/pseg_rec.csv to s3://just-energy-capacity/results/pseg_rec.csv
-Completed 5 of 7 part(s) with 2 file(s) remainingupload: api_results/centhud_rec.csv to s3://just-energy-capacity/results/centhud_rec.csv
-Completed 6 of 7 part(s) with 1 file(s) remainingupload: api_results/peco_pred.csv to s3://just-energy-capacity/results/peco_pred.csv
-/home/ec2-user/Projects/JustEnergyCalcs
-[master 2304b0a] 2016/10/21/17/5632 Automated push
- Committer: Miles Hill <ec2-user@ip-172-31-52-216.ec2.internal>
-Your name and email address were configured automatically based
-on your username and hostname. Please check that they are accurate.
-You can suppress this message by setting them explicitly. Run the
-following command and follow the instructions in your editor to edit
-your configuration file:
-
-    git config --global --edit
-
-After doing this, you may fix the identity used for this commit with:
-
-    git commit --amend --reset-author
-
- 30 files changed, 106114 insertions(+), 105926 deletions(-)
- rewrite api_results/centhud_rec.csv (97%)
- create mode 100644 api_results/peco_pred.csv
- create mode 100644 api_results/peco_pred_con.csv
- create mode 100644 api_results/peco_pred_dmd.csv
- create mode 100644 api_results/ppl_pred.csv
- rewrite api_results/pseg_rec.csv (75%)
- rewrite pjm/centhud/results/centhud_rec.csv (97%)
- rewrite pjm/centhud/results/centhud_rec_con.csv (98%)
- rewrite pjm/centhud/results/centhud_rec_dmd.csv (99%)
- create mode 100644 pjm/peco/results/peco_pred.csv
- create mode 100644 pjm/peco/results/peco_pred_con.csv
- create mode 100644 pjm/peco/results/peco_pred_dmd.csv
- rewrite pjm/peco/results/peco_rec.csv (87%)
- rewrite pjm/peco/results/peco_rec_con.csv (88%)
- rewrite pjm/peco/results/peco_rec_dmd.csv (99%)
- rewrite pjm/peco/results/peco_rec_int.csv (98%)
- create mode 100644 pjm/ppl/results/ppl_pred.csv
- rewrite pjm/ppl/results/ppl_rec.csv (95%)
- rewrite pjm/ppl/results/ppl_rec_int.csv (95%)
- rewrite pjm/pseg/results/pseg_rec.csv (75%)
- rewrite pjm/pseg/results/pseg_rec_con.csv (80%)
- rewrite pjm/pseg/results/pseg_rec_dmd.csv (79%)
- rewrite pjm/pseg/results/pseg_rec_int.csv (82%)
-To git@github.com:mileshill/JEAutomation
-   14f46b6..2304b0a  master -> master
-/home/ec2-user/Projects/JustEnergyCalcs/api_results
+nohup: ignoring input
+mv: cannot stat ‘*.txt’: No such file or directory
 run_calcs.sh: line 80: ./log/coned.log: No such file or directory
 run_calcs.sh: line 80: ./log/coned.log: No such file or directory
 run_calcs.sh: line 80: ./log/coned.log: No such file or directory
@@ -142,44 +18,7 @@ cp: ‘./api_results/ppl_pred.csv’ and ‘./api_results/ppl_pred.csv’ are th
 cp: ‘./api_results/peco_pred.csv’ and ‘./api_results/peco_pred.csv’ are the same file
 cp: ‘./api_results/peco_pred_dmd.csv’ and ‘./api_results/peco_pred_dmd.csv’ are the same file
 cp: ‘./api_results/peco_pred_most.csv’ and ‘./api_results/peco_pred_most.csv’ are the same file
-upload: api_results/peco_pred_dmd.csv to s3://just-energy-capacity/results/peco_pred_dmd.csv
-Completed 1 of 7 part(s) with 6 file(s) remainingupload: api_results/ppl_pred.csv to s3://just-energy-capacity/results/ppl_pred.csv
-Completed 2 of 7 part(s) with 5 file(s) remainingupload: api_results/peco_pred_con.csv to s3://just-energy-capacity/results/peco_pred_con.csv
-Completed 3 of 7 part(s) with 4 file(s) remainingupload: api_results/coned_rec.csv to s3://just-energy-capacity/results/coned_rec.csv
-Completed 4 of 7 part(s) with 3 file(s) remainingupload: api_results/centhud_rec.csv to s3://just-energy-capacity/results/centhud_rec.csv
-Completed 5 of 7 part(s) with 2 file(s) remainingupload: api_results/pseg_rec.csv to s3://just-energy-capacity/results/pseg_rec.csv
-Completed 6 of 7 part(s) with 1 file(s) remainingupload: api_results/peco_pred.csv to s3://just-energy-capacity/results/peco_pred.csv
+upload: api_results/coned_rec.csv to s3://just-energy-capacity/results/coned_rec.csv
+Completed 1 of 3 part(s) with 2 file(s) remainingupload: api_results/pseg_rec.csv to s3://just-energy-capacity/results/pseg_rec.csv
+Completed 2 of 3 part(s) with 1 file(s) remainingupload: api_results/centhud_rec.csv to s3://just-energy-capacity/results/centhud_rec.csv
 /home/ec2-user/Projects/JustEnergyCalcs
-[master c1fd9c9] 2016/10/21/18/0307 Automated push
- Committer: Miles Hill <ec2-user@ip-172-31-52-216.ec2.internal>
-Your name and email address were configured automatically based
-on your username and hostname. Please check that they are accurate.
-You can suppress this message by setting them explicitly. Run the
-following command and follow the instructions in your editor to edit
-your configuration file:
-
-    git config --global --edit
-
-After doing this, you may fix the identity used for this commit with:
-
-    git commit --amend --reset-author
-
- 20 files changed, 106036 insertions(+), 105918 deletions(-)
- rewrite api_results/centhud_rec.csv (97%)
- rewrite api_results/pseg_rec.csv (75%)
- rewrite pjm/centhud/results/centhud_rec.csv (97%)
- rewrite pjm/centhud/results/centhud_rec_con.csv (97%)
- rewrite pjm/centhud/results/centhud_rec_dmd.csv (99%)
- rewrite pjm/peco/results/peco_rec.csv (87%)
- rewrite pjm/peco/results/peco_rec_con.csv (89%)
- rewrite pjm/peco/results/peco_rec_dmd.csv (99%)
- rewrite pjm/peco/results/peco_rec_int.csv (98%)
- rewrite pjm/ppl/results/ppl_rec.csv (95%)
- rewrite pjm/ppl/results/ppl_rec_int.csv (95%)
- rewrite pjm/pseg/results/pseg_rec.csv (75%)
- rewrite pjm/pseg/results/pseg_rec_con.csv (81%)
- rewrite pjm/pseg/results/pseg_rec_dmd.csv (79%)
- rewrite pjm/pseg/results/pseg_rec_int.csv (81%)
-To git@github.com:mileshill/JEAutomation
-   2304b0a..c1fd9c9  master -> master
-/home/ec2-user/Projects/JustEnergyCalcs/api_results
