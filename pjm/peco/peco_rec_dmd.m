@@ -65,7 +65,7 @@ rateClassLossFactorQuery = "
     select distinct 
         Cast(Year(upv.StartDate)-1 as varchar), 
         RTrim(upv.RateClass), RTrim(upv.Strata),
-        (1 - upv.ParameterValue/100.)
+        (1 + upv.ParameterValue/100.)
     from UtilityParameterValue as upv
     inner join CoincidentPeak as cp
         on cp.UtilityId = upv.UtilityId
