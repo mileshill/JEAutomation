@@ -603,3 +603,15 @@ CST:2016_10_25_20_15_10 UTILITY=peco DESC=Prediction end
 CST:2016_10_25_20_15_10 UTILITY=peco DESC=Move *.csv *.txt to ./results/
 CST:2016_10_25_20_15_10 UTILITY=peco DESC=Complete
 
+CST:2016_10_27_14_48_39 UTILITY=peco DESC=Recipe start
+CST:2016_10_27_14_52_24 UTILITY=peco DESC=Recipe end
+CST:2016_10_27_14_52_24 UTILITY=peco DESC=Unique premises: 0
+CST:2016_10_27_14_54_58 UTILITY=peco DESC=Recipe start
+CST:2016_10_27_14_55_04 UTILITY=peco DESC=Recipe end
+CST:2016_10_27_14_55_04 UTILITY=peco DESC=Unique premises: 2
+CST:2016_10_27_14_55_04 UTILITY=peco DESC=Recipe start
+CST:2016_10_27_14_55_12 UTILITY=peco DESC=Recipe end
+CST:2016_10_27_14_55_12 UTILITY=peco DESC=Unique premises: 2
+CST:2016_10_27_14_55_12 UTILITY=peco DESC=Move *.csv *.txt to ./results/
+CST:2016_10_27_14_55_12 UTILITY=peco DESC=Complete
+
