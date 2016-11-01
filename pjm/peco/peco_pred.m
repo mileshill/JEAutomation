@@ -11,7 +11,6 @@ If[ Length @ $CommandLine != 4,
 
 fileName = $CommandLine[[4]]
 
-
 Needs @ "DatabaseLink`";
 Get @ "DBConnect.m";
 
@@ -63,15 +62,18 @@ queryTemp = StringTemplate[
         and h.PremiseId = '`premise`'
         and MONTH(h.UsageDate) in (6,7,8,9)"];
 
-(* Assign the stdout stream and Row 1 for the CSV outputfile *)
-stdout = Streams[][[1]];
-labels = {
-    "Premise", "Year", "RateClass", "Strata", 
-    "PredictedICap", "Uncertainty", "TrainingYears", "TrainingSamples"};
+(* time stamp *)
+runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
+runTime = DateString[{"Hour24", ":", "Minute"}];
+stdout=Streams[][[1]];
+writeFunc = Write[stdout, StringRiffle[#,","]]&;
 
-Write[stdout, StringRiffle[ labels, ", "]]; 
+labels = {"RunDate", "RunTime", "ISO", "Utility", "PremiseId", "Year", "RateClass", "Strata", "MeterType", "RecipeICap"};
+iso = "PJM";
+utility = "PECO";
+mType = "INT";
 
-
+writeFunc @ labels;
 
 (* Loop over premises; train predictor and predict summer values *)
 Do[
@@ -82,9 +84,10 @@ Do[
     maxYear = Union[ records[[All,1]] ] // Last;
     {rateClass, strata} = records[[1,-2;;]];
     
+
     trainingData = N[ #[[All,;;5]] -> #[[All,6]] ]& @ records;
     predictTREE = Predict[ trainingData, Method -> "RandomForest", PerformanceGoal->"TrainingSpeed" ];
-    predictNN   = Predict[ trainingData, Method -> "NeuralNetwork", PerformanceGoal->"TrainingSpeed"]; 
+    (*predictNN   = Predict[ trainingData, Method -> "NeuralNetwork", PerformanceGoal->"TrainingSpeed"]; *)
 
     ClearAll @ buildSummer;
     Attributes[buildSummer] = HoldFirst;
@@ -99,19 +102,26 @@ Do[
     {summerTREEPred, summerTREEUnc} = buildSummer[ predictTREE ] // 
         Flatten // TakeLargestBy[#, First, 5]& // List @@@ # & // Transpose ;
 
-    {summerNNPred, summerNNUnc}  = buildSummer[ predictNN   ] // 
-        Flatten // TakeLargestBy[#, First, 5]& // List @@@ # & // Transpose ;
+    (*{summerNNPred, summerNNUnc}  = buildSummer[ predictNN   ] // 
+        Flatten // TakeLargestBy[#, First, 5]& // List @@@ # & // Transpose ;*)
     
     (* Utility Vector *)
     utilVector = utilParams[ToString /@ {maxYear-2, rateClass, strata}];
 
     (* Compute *)
     icapTREE = Mean /@ {summerTREEPred * utilVector, summerTREEUnc * utilVector};
-    icapNN  = Mean  /@ {summerNNPred * utilVector, summerNNUnc * utilVector };
+    (*icapNN  = Mean  /@ {summerNNPred * utilVector, summerNNUnc * utilVector };*)
 
-    {icap, icapUnc} = If[Head@#===Times,First@#,#]& /@ Mean[ {icapTREE, icapNN} ];
+    (*{icap, icapUnc} = If[Head@#===Times,First@#,#]& /@ Mean[ {icapTREE, icapNN} ];*)
+    {icap, icapUnc} = If[Head@#===Times,First@#,#]& /@ icapTREE;
+    
+    strata = Sequence @ strata;
+    mType = "INT";
+    icap = Sequence @ icap;
+    results = {runDate, runTime, iso, utility, premItr, maxYear+1, rateClass, strata, mType, 
+        icap, icapUnc, yearCount, sampleCount};
+    (*results = {premItr, maxYear+1, rateClass, strata, icap, icapUnc, yearCount, sampleCount};*)
 
-    results = {premItr, maxYear+1, rateClass, Sequence @ strata, Sequence @ icap, icapUnc, yearCount, sampleCount};
     Write[stdout, StringRiffle[ results, ", " ]];
 
 ,{premItr, premises}]

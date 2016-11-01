@@ -93,7 +93,7 @@ function recipe_calc {
         # store unique premises
         $(record "Recipe end")
         # print premise id and store uniques
-        cat ${RESULT} | awk -F ',' '{print $3}' | sort -n | uniq  > ${UNQ}
+        cat ${RESULT} | awk -F ',' '{print $5}' | sort -n | uniq  > ${UNQ}
         $(record "Unique premises: $(wc -l < ${UNQ})")
         cat ${RESULT} >> ${RECIPE_RESULTS}
     fi
@@ -128,7 +128,7 @@ $(recipe_calc ${CON_REC} ${CON_REC_RES} ${CON_UNIQ})
 
 #################### Predictions #################### 
 # Interval 
-#$(predict ${INT_PRED} ${INT_PRED_RES} ${INT_UNIQ} ${INT_ALIAS})
+$(predict ${INT_PRED} ${INT_PRED_RES} ${INT_UNIQ} ${INT_ALIAS})
 
 # Monthly with demand
 #$(predict ${DMD_PRED} ${DMD_PRED_RES} ${DMD_UNIQ})
