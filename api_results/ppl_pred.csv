@@ -1,16 +1,454 @@
-RunDate,RunTime,PremiseId,Year,RateClass,Strata,PredictedIcap,IcapUnc,YearCount,SampleCount
-RunDate,RunTime,PremiseId,Year,RateClass,Strata,PredictedIcap,IcapUnc,YearCount,SampleCount
-2016-11-01,12:37,5195451029,2017,GS1,GS1,0.,0.,2,3430
-2016-11-01,12:37,0013074005,2017,GS1,GS1,0.,0.,2,5147
-2016-11-01,12:37,5199093005,2017,GS1,GS1,0.,0.,2,5044
-2016-11-01,12:37,0018680003,2017,GS1,GS1,0.,0.,3,8573
-2016-11-01,12:37,0028069007,2017,GS1,GS1,0.,0.,2,4798
-2016-11-01,12:37,5214003009,2017,GS1,GS1,0.,0.,3,8387
-2016-11-01,12:37,5217819018,2017,GS1,GS1,0.,0.,2,4776
-2016-11-01,12:37,0030093004,2017,GH2,GH2,0.,0.,3,8677
-2016-11-01,12:37,5224090032,2017,GS1,GS1,0.,0.,2,4319
-2016-11-01,12:37,0031608009,2017,GS3,GS3,0.,0.,2,5398
-2016-11-01,12:37,5227064007,2017,GS1,GS1,0.,0.,2,4822
-2016-11-01,12:37,0037074034,2017,GS1,GS1,0.,0.,2,5000
-2016-11-01,12:37,5227850003,2017,GS3,GS3,0.,0.,2,5312
-2016-11-01,12:37,0047076004,2017,GS3,OP3,0.,0.,2,5542
+RunDate,RunTime,ISO,Utility,PremiseId,Year,RateClass,Strata,PredictedICap,ICapUnc,YearCount,NumSamples
+RunDate,RunTime,ISO,Utility,PremiseId,Year,RateClass,Strata,PredictedICap,ICapUnc,YearCount,NumSamples
+2016-11-01,15:57,PJM,PPL,5227850003,2017,GS3,GS3,250.797,28.2081,3,5
+2016-11-01,15:57,PJM,PPL,0047076004,2017,GS3,OP3,282.747,18.4108,2,3547
+2016-11-01,15:57,PJM,PPL,5237442004,2017,GS3,OP3,300.176,24.067,2,576
+2016-11-01,15:57,PJM,PPL,0075002014,2017,GS3,GS3,197.609,9.43395,2,468
+2016-11-01,15:57,PJM,PPL,0133130015,2017,GS3,GS3,196.203,8.42645,3,49
+2016-11-01,15:57,PJM,PPL,5277070019,2017,LP4,LP4,444.556,40.8325,2,2189
+2016-11-01,15:57,PJM,PPL,0151138019,2017,GS3,GS3,204.336,29.5667,2,57
+2016-11-01,15:57,PJM,PPL,5374067012,2017,GS3,GS3,282.319,20.0087,2,4225
+2016-11-01,15:57,PJM,PPL,0188767008,2017,GS3,GS3,298.851,22.0783,2,1560
+2016-11-01,15:57,PJM,PPL,5478083014,2017,GS3,GS3,752.28,46.3736,2,5689
+2016-11-01,15:57,PJM,PPL,0248001005,2017,GS3,GS3,219.941,34.8859,1,14
+2016-11-01,15:57,PJM,PPL,5481113003,2017,GS3,GS3,397.931,113.441,3,1980
+2016-11-01,15:57,PJM,PPL,0255140008,2017,GS3,OP3,208.183,16.6339,2,23
+2016-11-01,15:57,PJM,PPL,5518098091,2017,GS3,GS3,283.712,13.6247,3,78
+2016-11-01,15:57,PJM,PPL,0377074005,2017,GS3,OP3,233.272,22.5116,2,371
+2016-11-01,15:57,PJM,PPL,5557802002,2017,GS3,GS3,316.132,18.6309,2,6280
+2016-11-01,15:57,PJM,PPL,0381166007,2017,GS3,GS3,217.038,12.9203,2,201
+2016-11-01,15:57,PJM,PPL,5623022001,2017,LP4,L4L,103.542,28.6804,2,305
+2016-11-01,15:57,PJM,PPL,0413308004,2017,GS3,GS3,193.921,5.91336,2,18
+2016-11-01,15:57,PJM,PPL,5643056012,2017,GS3,GS3,229.421,17.1831,3,1750
+2016-11-01,15:57,PJM,PPL,0432326371,2017,GS3,GS3,193.504,9.14381,1,11
+2016-11-01,15:57,PJM,PPL,5725101016,2017,GS3,GS3,231.143,27.1955,2,1000
+2016-11-01,15:57,PJM,PPL,0463721011,2017,GS3,GS3,243.661,20.6431,2,192
+2016-11-01,15:57,PJM,PPL,5761931001,2017,GS3,GS3,230.771,23.2271,3,691
+2016-11-01,15:57,PJM,PPL,0507007007,2017,GS3,GS3,197.314,6.05178,2,17
+2016-11-01,15:57,PJM,PPL,5930082004,2017,GS3,GS3,197.206,5.83056,2,423
+2016-11-01,15:57,PJM,PPL,0543170010,2017,GS3,GS3,278.758,23.069,3,8653
+2016-11-01,15:57,PJM,PPL,6001066008,2017,GS3,OP3,459.202,103.203,2,16
+2016-11-01,15:57,PJM,PPL,0632026003,2017,GS3,GS3,193.75,8.14589,1,11
+2016-11-01,15:57,PJM,PPL,6003880060,2017,GS3,GS3,230.694,12.0274,3,1553
+2016-11-01,15:57,PJM,PPL,0763729004,2017,GS3,GS3,279.714,32.6098,2,969
+2016-11-01,15:57,PJM,PPL,6049109011,2017,GS3,GS3,275.182,15.8294,2,5656
+2016-11-01,15:57,PJM,PPL,0831029004,2017,GS3,GS3,332.977,32.1855,2,434
+2016-11-01,15:57,PJM,PPL,6083081007,2017,GS3,GS3,218.056,19.5704,2,340
+2016-11-01,15:57,PJM,PPL,0871029006,2017,LP4,LP4,665.961,99.9503,2,322
+2016-11-01,15:57,PJM,PPL,6202444000,2017,GS3,OP3,284.081,34.4817,2,16
+2016-11-01,15:57,PJM,PPL,0899084005,2017,GS3,GS3,253.487,16.992,2,685
+2016-11-01,15:57,PJM,PPL,6247479005,2017,GS3,GS3,205.65,15.3875,2,45
+2016-11-01,15:57,PJM,PPL,0976712080,2017,GS3,OP3,283.735,11.5147,2,6291
+2016-11-01,15:57,PJM,PPL,6281004024,2017,GS3,GS3,297.147,17.59,3,1006
+2016-11-01,15:57,PJM,PPL,1118134027,2017,GS3,GS3,268.249,19.7431,2,1870
+2016-11-01,15:57,PJM,PPL,6313091035,2017,LP4,L4L,642.206,48.5531,3,8391
+2016-11-01,15:57,PJM,PPL,1171065027,2017,GS3,OP3,742.588,46.1459,3,4795
+2016-11-01,15:57,PJM,PPL,6461329015,2017,GS3,GS3,624.037,114.596,2,1919
+2016-11-01,15:57,PJM,PPL,1236070019,2017,GS3,GS3,226.791,15.2178,2,13
+2016-11-01,15:57,PJM,PPL,6485059029,2017,GS3,GS3,249.384,29.0878,2,237
+2016-11-01,15:57,PJM,PPL,1248009057,2017,GS3,GS3,328.563,17.9691,2,2741
+2016-11-01,15:57,PJM,PPL,6521009027,2017,GS3,GS3,264.038,28.349,3,487
+2016-11-01,15:57,PJM,PPL,1258059014,2017,GS3,GS3,216.61,30.1153,2,56
+
+StandardDeviation::shlen: The argument {{2016., 5., 29., 16., 1.}} should have at least two elements.
+
+                                                                                                                                                                                           -12            -15            -14            -14            -15
+MapThread::mptd: Object StandardDeviation[{{2016., 5., 29., 16., 1.}}] at position {2, 1} in MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{2016., 5., 29., 16., 1.}}], {1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   }}] has only 0 of required 1 dimensions.
+
+StandardDeviation::shlen: The argument {{208.64}} should have at least two elements.
+
+                                                                                                                                                         -13
+MapThread::mptd: Object StandardDeviation[{{208.64}}] at position {2, 1} in MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{208.64}}], {1.11022 10   }}] has only 0 of required 1 dimensions.
+
+                                                                                                                         1.
+Transpose::nmtx: The first two levels of {MachineLearning`MatrixRowTimes[{{0.}}, -----------------------------------------------------------------------------------]} cannot be transposed.
+                                                                                                                                                              -13
+                                                                                 MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{208.64}}], {1.11022 10   }}]
+
+Transpose::nmtx: The first two levels of {1} cannot be transposed.
+
+Partition::ilsmn: Single or list of non-negative machine-sized integers expected at position 2 of Partition[{1}, Transpose[1], Transpose[1], 1, Null].
+
+RandomSample::lrwl: The set of items to sample from, Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]], should be a non-empty list or a rule weights -> choices.
+
+Part::pkspec1: The expression Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]] cannot be used as a part specification.
+
+                                                                                                                                                                                                                                                                 1.
+Values::invrl: The argument MachineLearning`MLDataset[<|(f1f2f3f4f5) -> <|Type -> NumericalVector, Weight -> 5., Values -> MachineLearning`MatrixRowTimes[{{0., 0., 0., 0., 0.}}, ----------------------------------------------------------------------------------------------------------------------------------------------------------------], ID -> 1901983031993012071|>|>, <|ExampleNumber -> 1, ExampleWeights -> 1|>][[1,All,Values,Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]]]] is not a valid Association or a list of rules.
+                                                                                                                                                                                                                                                                                -12            -15            -14            -14            -15
+                                                                                                                                                                                  MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{2016., 5., 29., 16., 1.}}], {1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   }}]
+
+Part::pkspec1: The expression Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]] cannot be used as a part specification.
+
+                                                                                                                                                                                         1.
+Values::invrl: The argument MachineLearning`MLDataset[<|f1 -> <|Type -> Numerical, Weight -> 1, Values -> MachineLearning`MatrixRowTimes[{{0.}}, -----------------------------------------------------------------------------------], ID -> 1115724424171624443|>|>, <|ExampleNumber -> 1, ExampleWeights -> 1|>][[1,All,Values,Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]]]] is not a valid Association or a list of rules.
+                                                                                                                                                                                                                              -13
+                                                                                                                                                 MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{208.64}}], {1.11022 10   }}]
+
+                                                                                                                                                                                                                                                                                                                              1.
+Table::iterb: Iterator {MachineLearning`file65Vectors`PackagePrivate`vectorLength[Values[MachineLearning`MLDataset[<|(f1f2f3f4f5) -> <|Type -> NumericalVector, Weight -> 5., Values -> MachineLearning`MatrixRowTimes[{{0., 0., 0., 0., 0.}}, ----------------------------------------------------------------------------------------------------------------------------------------------------------------], ID -> 1901983031993012071|>|>, <|ExampleNumber -> 1, ExampleWeights -> 1|>][[1,All,Values,Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]]]]]]} does not have appropriate bounds.
+                                                                                                                                                                                                                                                                                                                                             -12            -15            -14            -14            -15
+                                                                                                                                                                                                                                               MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{2016., 5., 29., 16., 1.}}], {1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   }}]
+
+Part::pkspec1: The expression Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]] cannot be used as a part specification.
+
+General::stop: Further output of Part::pkspec1 will be suppressed during this calculation.
+
+                                                                                                                                                                                                                                                                 1.                                                                                                  18
+Values::invrl: The argument MachineLearning`MLDataset[<|(f1f2f3f4f5) -> <|Type -> NumericalVector, Weight -> 5., Values -> MachineLearning`MatrixRowTimes[{{0., 0., 0., 0., 0.}}, ----------------------------------------------------------------------------------------------------------------------------------------------------------------], ID -> 1.90198 10  |>|>, <|ExampleNumber -> 1., ExampleWeights -> 1.|>][[1,All,Values,Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]]]] is not a valid Association or a list of rules.
+                                                                                                                                                                                                                                                                                -12            -15            -14            -14            -15
+                                                                                                                                                                                  MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{2016., 5., 29., 16., 1.}}], {1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   }}]
+
+General::stop: Further output of Values::invrl will be suppressed during this calculation.
+
+                                                                                                                                                                                                                                                                                                                              1.                                                                                                  18
+Table::iterb: Iterator {MachineLearning`file65Vectors`PackagePrivate`vectorLength[Values[MachineLearning`MLDataset[<|(f1f2f3f4f5) -> <|Type -> NumericalVector, Weight -> 5., Values -> MachineLearning`MatrixRowTimes[{{0., 0., 0., 0., 0.}}, ----------------------------------------------------------------------------------------------------------------------------------------------------------------], ID -> 1.90198 10  |>|>, <|ExampleNumber -> 1., ExampleWeights -> 1.|>][[1,All,Values,Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]]]]]]} does not have appropriate bounds.
+                                                                                                                                                                                                                                                                                                                                             -12            -15            -14            -14            -15
+                                                                                                                                                                                                                                               MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{2016., 5., 29., 16., 1.}}], {1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   }}]
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                        1.                                                                                                  18
+Table::iterb: Iterator {MachineLearning`file65Vectors`PackagePrivate`vectorLength[Values[MachineLearning`MLDataset[MachineLearning`file52DataProcessing`PackagePrivate`ah[(f1f2f3f4f5) -> MachineLearning`file52DataProcessing`PackagePrivate`ah[Type -> NumericalVector, Weight -> 5., Values -> MachineLearning`MatrixRowTimes[{{0., 0., 0., 0., 0.}}, ----------------------------------------------------------------------------------------------------------------------------------------------------------------], ID -> 1.90198 10  ]], MachineLearning`file52DataProcessing`PackagePrivate`ah[ExampleNumber -> 1., ExampleWeights -> 1.]][[1,All,Values,Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]]]]]]} does not have appropriate bounds.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                       -12            -15            -14            -14            -15
+                                                                                                                                                                                                                                                                                                                                                         MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{2016., 5., 29., 16., 1.}}], {1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   }}]
+
+General::stop: Further output of Table::iterb will be suppressed during this calculation.
+
+Set::shape: Lists {MachineLearning`file53DimensionalityReduction`PackagePrivate`m$7485331, MachineLearning`file53DimensionalityReduction`PackagePrivate`n$7485331} and {1} are not the same shape.
+
+Set::shape: Lists {MachineLearning`file68DimensionReduction`PackagePrivate`m$7485334, MachineLearning`file68DimensionReduction`PackagePrivate`n$7485334} and {1} are not the same shape.
+
+Set::shape: Lists {MachineLearning`file68DimensionReduction`PackagePrivate`m$7485335, MachineLearning`file68DimensionReduction`PackagePrivate`n$7485335} and {1} are not the same shape.
+
+General::stop: Further output of Set::shape will be suppressed during this calculation.
+
+Total::normal: Nonatomic expression expected at position 1 in Total[MachineLearning`file68DimensionReduction`PackagePrivate`cov$7485335, 2].
+
+ConstantArray::ilsmn: Single or list of non-negative machine-sized integers expected at position 2 of ConstantArray[1, MachineLearning`file27RandomForest`PackagePrivate`n].
+
+LibraryFunction::datanoexist: -- Message text not found --
+
+LibraryFunction::memerr: -- Message text not found -- (makeTree)
+
+LibraryFunction::datanoexist: -- Message text not found --
+
+LibraryFunction::memerr: -- Message text not found -- (makeTree)
+
+LibraryFunction::datanoexist: -- Message text not found --
+
+General::stop: Further output of LibraryFunction::datanoexist will be suppressed during this calculation.
+
+LibraryFunction::memerr: -- Message text not found -- (makeTree)
+
+General::stop: Further output of LibraryFunction::memerr will be suppressed during this calculation.
+
+                                                                                                                                                                                            -13
+Transpose::nmtx: The first two levels of {MachineLearning`MatrixRowPlus[MachineLearning`MatrixRowTimes[{{#1}}, MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{208.64}}], {1.11022 10   }}]], {208.64}]} cannot be transposed.
+
+General::stop: Further output of Transpose::nmtx will be suppressed during this calculation.
+
+                                                                                                                                                         -13
+MapThread::mptd: Object StandardDeviation[{{208.64}}] at position {2, 1} in MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{208.64}}], {1.11022 10   }}] has only 0 of required 1 dimensions.
+
+General::stop: Further output of MapThread::mptd will be suppressed during this calculation.
+
+StandardDeviation::shlen: The argument {{208.64}} should have at least two elements.
+
+General::stop: Further output of StandardDeviation::shlen will be suppressed during this calculation.
+
+CompiledFunction::cfct: Number of arguments 3 does not match the length 5 of the argument template.
+
+CompiledFunction::cfct: Number of arguments 3 does not match the length 5 of the argument template.
+
+CompiledFunction::cfct: Number of arguments 3 does not match the length 5 of the argument template.
+
+General::stop: Further output of CompiledFunction::cfct will be suppressed during this calculation.
+2016-11-01,15:57,PJM,PPL,6619081075,2017,GS3,MG3,206.374,9.93195,2,75
+2016-11-01,15:57,PJM,PPL,1283069037,2017,GS3,GS3,1.22093,0.2,1,1
+2016-11-01,15:57,PJM,PPL,6687908010,2017,GS3,GS3,202.015,18.7003,3,49
+2016-11-01,15:57,PJM,PPL,1361296005,2017,GS3,OP3,236.207,15.3337,2,115
+2016-11-01,15:57,PJM,PPL,6803110005,2017,GS3,GS3,187.719,2.60218,3,220
+2016-11-01,15:57,PJM,PPL,1416070017,2017,GS3,GS3,276.888,15.0215,3,952
+2016-11-01,15:57,PJM,PPL,6839097000,2017,GS3,GS3,196.961,6.09276,2,48
+2016-11-01,15:57,PJM,PPL,1448013028,2017,GS3,GS3,244.612,62.46,3,69
+2016-11-01,15:57,PJM,PPL,6867068028,2017,GS3,GS3,216.522,29.0004,1,3
+2016-11-01,15:57,PJM,PPL,1458198001,2017,GS3,OP3,241.372,20.5979,2,205
+2016-11-01,15:57,PJM,PPL,6927882019,2017,GS3,GS3,269.866,12.5853,3,5067
+
+StandardDeviation::shlen: The argument {{2016., 8., 13., 1., 7.}} should have at least two elements.
+
+                                                                                                                                                                                         -12            -15            -14            -15            -15
+MapThread::mptd: Object StandardDeviation[{{2016., 8., 13., 1., 7.}}] at position {2, 1} in MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{2016., 8., 13., 1., 7.}}], {1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   }}] has only 0 of required 1 dimensions.
+
+StandardDeviation::shlen: The argument {{156.48}} should have at least two elements.
+
+                                                                                                                                                         -13
+MapThread::mptd: Object StandardDeviation[{{156.48}}] at position {2, 1} in MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{156.48}}], {1.11022 10   }}] has only 0 of required 1 dimensions.
+
+                                                                                                                         1.
+Transpose::nmtx: The first two levels of {MachineLearning`MatrixRowTimes[{{0.}}, -----------------------------------------------------------------------------------]} cannot be transposed.
+                                                                                                                                                              -13
+                                                                                 MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{156.48}}], {1.11022 10   }}]
+
+Transpose::nmtx: The first two levels of {1} cannot be transposed.
+
+Partition::ilsmn: Single or list of non-negative machine-sized integers expected at position 2 of Partition[{1}, Transpose[1], Transpose[1], 1, Null].
+
+RandomSample::lrwl: The set of items to sample from, Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]], should be a non-empty list or a rule weights -> choices.
+
+Part::pkspec1: The expression Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]] cannot be used as a part specification.
+
+                                                                                                                                                                                                                                                                1.
+Values::invrl: The argument MachineLearning`MLDataset[<|(f1f2f3f4f5) -> <|Type -> NumericalVector, Weight -> 5., Values -> MachineLearning`MatrixRowTimes[{{0., 0., 0., 0., 0.}}, ---------------------------------------------------------------------------------------------------------------------------------------------------------------], ID -> 1901983031993012071|>|>, <|ExampleNumber -> 1, ExampleWeights -> 1|>][[1,All,Values,Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]]]] is not a valid Association or a list of rules.
+                                                                                                                                                                                                                                                                               -12            -15            -14            -15            -15
+                                                                                                                                                                                  MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{2016., 8., 13., 1., 7.}}], {1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   }}]
+
+Part::pkspec1: The expression Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]] cannot be used as a part specification.
+
+                                                                                                                                                                                         1.
+Values::invrl: The argument MachineLearning`MLDataset[<|f1 -> <|Type -> Numerical, Weight -> 1, Values -> MachineLearning`MatrixRowTimes[{{0.}}, -----------------------------------------------------------------------------------], ID -> 1115724424171624443|>|>, <|ExampleNumber -> 1, ExampleWeights -> 1|>][[1,All,Values,Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]]]] is not a valid Association or a list of rules.
+                                                                                                                                                                                                                              -13
+                                                                                                                                                 MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{156.48}}], {1.11022 10   }}]
+
+                                                                                                                                                                                                                                                                                                                             1.
+Table::iterb: Iterator {MachineLearning`file65Vectors`PackagePrivate`vectorLength[Values[MachineLearning`MLDataset[<|(f1f2f3f4f5) -> <|Type -> NumericalVector, Weight -> 5., Values -> MachineLearning`MatrixRowTimes[{{0., 0., 0., 0., 0.}}, ---------------------------------------------------------------------------------------------------------------------------------------------------------------], ID -> 1901983031993012071|>|>, <|ExampleNumber -> 1, ExampleWeights -> 1|>][[1,All,Values,Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]]]]]]} does not have appropriate bounds.
+                                                                                                                                                                                                                                                                                                                                            -12            -15            -14            -15            -15
+                                                                                                                                                                                                                                               MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{2016., 8., 13., 1., 7.}}], {1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   }}]
+
+Part::pkspec1: The expression Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]] cannot be used as a part specification.
+
+General::stop: Further output of Part::pkspec1 will be suppressed during this calculation.
+
+                                                                                                                                                                                                                                                                1.                                                                                                  18
+Values::invrl: The argument MachineLearning`MLDataset[<|(f1f2f3f4f5) -> <|Type -> NumericalVector, Weight -> 5., Values -> MachineLearning`MatrixRowTimes[{{0., 0., 0., 0., 0.}}, ---------------------------------------------------------------------------------------------------------------------------------------------------------------], ID -> 1.90198 10  |>|>, <|ExampleNumber -> 1., ExampleWeights -> 1.|>][[1,All,Values,Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]]]] is not a valid Association or a list of rules.
+                                                                                                                                                                                                                                                                               -12            -15            -14            -15            -15
+                                                                                                                                                                                  MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{2016., 8., 13., 1., 7.}}], {1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   }}]
+
+General::stop: Further output of Values::invrl will be suppressed during this calculation.
+
+                                                                                                                                                                                                                                                                                                                             1.                                                                                                  18
+Table::iterb: Iterator {MachineLearning`file65Vectors`PackagePrivate`vectorLength[Values[MachineLearning`MLDataset[<|(f1f2f3f4f5) -> <|Type -> NumericalVector, Weight -> 5., Values -> MachineLearning`MatrixRowTimes[{{0., 0., 0., 0., 0.}}, ---------------------------------------------------------------------------------------------------------------------------------------------------------------], ID -> 1.90198 10  |>|>, <|ExampleNumber -> 1., ExampleWeights -> 1.|>][[1,All,Values,Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]]]]]]} does not have appropriate bounds.
+                                                                                                                                                                                                                                                                                                                                            -12            -15            -14            -15            -15
+                                                                                                                                                                                                                                               MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{2016., 8., 13., 1., 7.}}], {1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   }}]
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                       1.                                                                                                  18
+Table::iterb: Iterator {MachineLearning`file65Vectors`PackagePrivate`vectorLength[Values[MachineLearning`MLDataset[MachineLearning`file52DataProcessing`PackagePrivate`ah[(f1f2f3f4f5) -> MachineLearning`file52DataProcessing`PackagePrivate`ah[Type -> NumericalVector, Weight -> 5., Values -> MachineLearning`MatrixRowTimes[{{0., 0., 0., 0., 0.}}, ---------------------------------------------------------------------------------------------------------------------------------------------------------------], ID -> 1.90198 10  ]], MachineLearning`file52DataProcessing`PackagePrivate`ah[ExampleNumber -> 1., ExampleWeights -> 1.]][[1,All,Values,Transpose[RandomSample[Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]]]]]]]]} does not have appropriate bounds.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                      -12            -15            -14            -15            -15
+                                                                                                                                                                                                                                                                                                                                                         MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{2016., 8., 13., 1., 7.}}], {1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   , 1.11022 10   }}]
+
+General::stop: Further output of Table::iterb will be suppressed during this calculation.
+
+Set::shape: Lists {MachineLearning`file53DimensionalityReduction`PackagePrivate`m$9054666, MachineLearning`file53DimensionalityReduction`PackagePrivate`n$9054666} and {1} are not the same shape.
+
+Set::shape: Lists {MachineLearning`file68DimensionReduction`PackagePrivate`m$9054669, MachineLearning`file68DimensionReduction`PackagePrivate`n$9054669} and {1} are not the same shape.
+
+Set::shape: Lists {MachineLearning`file68DimensionReduction`PackagePrivate`m$9054670, MachineLearning`file68DimensionReduction`PackagePrivate`n$9054670} and {1} are not the same shape.
+
+General::stop: Further output of Set::shape will be suppressed during this calculation.
+
+Total::normal: Nonatomic expression expected at position 1 in Total[MachineLearning`file68DimensionReduction`PackagePrivate`cov$9054670, 2].
+
+ConstantArray::ilsmn: Single or list of non-negative machine-sized integers expected at position 2 of ConstantArray[1, MachineLearning`file27RandomForest`PackagePrivate`n].
+
+LibraryFunction::datanoexist: -- Message text not found --
+
+LibraryFunction::memerr: -- Message text not found -- (makeTree)
+
+LibraryFunction::datanoexist: -- Message text not found --
+
+LibraryFunction::memerr: -- Message text not found -- (makeTree)
+
+LibraryFunction::datanoexist: -- Message text not found --
+
+General::stop: Further output of LibraryFunction::datanoexist will be suppressed during this calculation.
+
+LibraryFunction::memerr: -- Message text not found -- (makeTree)
+
+General::stop: Further output of LibraryFunction::memerr will be suppressed during this calculation.
+
+                                                                                                                                                                                            -13
+Transpose::nmtx: The first two levels of {MachineLearning`MatrixRowPlus[MachineLearning`MatrixRowTimes[{{#1}}, MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{156.48}}], {1.11022 10   }}]], {156.48}]} cannot be transposed.
+
+General::stop: Further output of Transpose::nmtx will be suppressed during this calculation.
+
+                                                                                                                                                         -13
+MapThread::mptd: Object StandardDeviation[{{156.48}}] at position {2, 1} in MapThread[If[#1 > #2, #1, 1.] & , {StandardDeviation[{{156.48}}], {1.11022 10   }}] has only 0 of required 1 dimensions.
+
+General::stop: Further output of MapThread::mptd will be suppressed during this calculation.
+
+StandardDeviation::shlen: The argument {{156.48}} should have at least two elements.
+
+General::stop: Further output of StandardDeviation::shlen will be suppressed during this calculation.
+
+CompiledFunction::cfct: Number of arguments 3 does not match the length 5 of the argument template.
+
+CompiledFunction::cfct: Number of arguments 3 does not match the length 5 of the argument template.
+
+CompiledFunction::cfct: Number of arguments 3 does not match the length 5 of the argument template.
+
+General::stop: Further output of CompiledFunction::cfct will be suppressed during this calculation.
+2016-11-01,15:57,PJM,PPL,1483249048,2017,GS3,GS3,207.285,17.1029,2,3
+2016-11-01,15:57,PJM,PPL,6952537009,2017,GS3,OP3,1.22093,0.2,1,1
+2016-11-01,15:57,PJM,PPL,1508016001,2017,GS3,OP3,332.024,25.9481,3,10156
+2016-11-01,15:57,PJM,PPL,6981478064,2017,GS3,GS3,198.396,6.54865,1,4
+2016-11-01,15:57,PJM,PPL,1549090012,2017,LP5,LP5,7410.97,2200.11,3,6907
+2016-11-01,15:57,PJM,PPL,7157019001,2017,GS3,GS3,193.662,9.27584,2,1492
+2016-11-01,15:57,PJM,PPL,1718075007,2017,GS3,GS3,193.126,8.19977,2,195
+2016-11-01,15:57,PJM,PPL,7161017006,2017,GS3,OP3,194.278,7.25916,2,172
+2016-11-01,15:57,PJM,PPL,1787002047,2017,GS3,GS3,229.404,36.767,3,101
+2016-11-01,15:57,PJM,PPL,7185247015,2017,GS3,GS3,217.065,13.2579,2,47
+2016-11-01,15:57,PJM,PPL,1848404009,2017,GS3,GS3,271.388,13.9726,2,1832
+2016-11-01,15:57,PJM,PPL,7325440003,2017,GS3,OP3,718.847,66.4334,2,16
+2016-11-01,15:57,PJM,PPL,1870028015,2017,GS3,GS3,286.285,50.6932,1,2
+
+Partition::ilsmn: Single or list of non-negative machine-sized integers expected at position 2 of Partition[{1}, Transpose[1], Transpose[1], 1, Null].
+
+RandomSample::lrwl: The set of items to sample from, Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]], should be a non-empty list or a rule weights -> choices.
+
+Total::normal: Nonatomic expression expected at position 1 in Total[MachineLearning`file68DimensionReduction`PackagePrivate`cov$11396048, 2].
+
+ConstantArray::ilsmn: Single or list of non-negative machine-sized integers expected at position 2 of ConstantArray[1, MachineLearning`file27RandomForest`PackagePrivate`n].
+2016-11-01,15:57,PJM,PPL,7457129062,2017,GH2,GH2,199.891,12.2025,3,18
+2016-11-01,15:57,PJM,PPL,1933074028,2017,GS3,GS3,1.22093,0.2,1,1
+2016-11-01,15:57,PJM,PPL,7518040024,2017,GS3,GS3,228.285,25.5615,3,1448
+2016-11-01,15:57,PJM,PPL,7533895007,2017,GS3,GS3,267.174,29.1518,2,17
+2016-11-01,15:57,PJM,PPL,1948018014,2017,GS3,OP3,309.554,15.9304,2,6080
+2016-11-01,15:57,PJM,PPL,7536011012,2017,GS3,OP3,317.839,12.8786,2,2520
+2016-11-01,15:57,PJM,PPL,2050623519,2017,GS3,GS3,195.399,11.8093,3,5170
+2016-11-01,15:57,PJM,PPL,7578040004,2017,LP4,L4L,481.151,53.4415,3,4727
+2016-11-01,15:57,PJM,PPL,2101005030,2017,GS3,GS3,210.842,8.11122,2,491
+2016-11-01,15:57,PJM,PPL,7598040000,2017,GS3,GS3,255.733,20.1777,2,517
+2016-11-01,15:57,PJM,PPL,2189096028,2017,GS3,GS3,288.155,26.0651,2,1391
+2016-11-01,15:57,PJM,PPL,7630067003,2017,GS3,GS3,213.86,13.1069,3,977
+2016-11-01,15:57,PJM,PPL,2197970015,2017,GS3,GS3,454.791,20.3522,3,10430
+2016-11-01,15:57,PJM,PPL,7672257016,2017,GS3,OP3,217.25,14.8137,2,45
+2016-11-01,15:57,PJM,PPL,2255043006,2017,GS3,GS3,199.776,20.6694,2,92
+2016-11-01,15:57,PJM,PPL,7715905004,2017,GS3,GS3,213.544,14.9549,2,30
+2016-11-01,15:57,PJM,PPL,2358119009,2017,GS3,GS3,241.919,16.4857,3,1551
+2016-11-01,15:57,PJM,PPL,7734092013,2017,GS3,GS3,212.108,23.2462,1,20
+2016-11-01,15:57,PJM,PPL,2397275000,2017,GS3,252,198.902,16.0308,2,5
+2016-11-01,15:57,PJM,PPL,2403020013,2017,GS3,GS3,209.774,29.6038,2,1565
+2016-11-01,15:57,PJM,PPL,7853069009,2017,LP4,L4L,269.189,15.0197,2,7189
+2016-11-01,15:57,PJM,PPL,2470071000,2017,GS3,GS3,197.341,7.42001,3,41
+2016-11-01,15:57,PJM,PPL,7857102032,2017,GS3,OP3,508.337,148.3,3,5242
+2016-11-01,15:57,PJM,PPL,7873911004,2017,GS3,OP3,258.229,23.8573,2,340
+2016-11-01,15:57,PJM,PPL,2481015018,2017,GS3,GS3,686.359,19.4407,3,13666
+2016-11-01,15:57,PJM,PPL,7978066006,2017,GS3,GS3,299.389,55.1885,3,4337
+2016-11-01,15:57,PJM,PPL,2490071006,2017,GS3,GS3,294.369,13.1258,3,9331
+2016-11-01,15:57,PJM,PPL,8043117075,2017,GS3,GS3,290.444,20.4062,3,474
+2016-11-01,15:57,PJM,PPL,2541140007,2017,GS3,GS3,188.198,3.26875,2,22
+2016-11-01,15:57,PJM,PPL,8134095013,2017,GS3,GS3,466.388,42.2074,3,3054
+2016-11-01,15:57,PJM,PPL,2568866000,2017,GS3,OP3,210.195,21.7212,1,3
+2016-11-01,15:57,PJM,PPL,8177233008,2017,GS3,OP3,201.742,9.74744,2,12
+2016-11-01,15:57,PJM,PPL,2589022017,2017,GS3,GS3,304.924,14.2814,2,3769
+2016-11-01,15:57,PJM,PPL,8245870015,2017,GS3,GS3,208.401,9.68258,3,2682
+2016-11-01,15:57,PJM,PPL,2605099038,2017,MP1,MP1,723.491,42.4053,3,4452
+2016-11-01,15:57,PJM,PPL,8278081000,2017,GS3,GS3,303.093,15.2174,2,2138
+2016-11-01,15:57,PJM,PPL,2609022015,2017,GS3,GS3,204.238,1.75814,1,2
+2016-11-01,15:57,PJM,PPL,8317061044,2017,GS3,GS3,528.028,17.3536,2,3808
+2016-11-01,15:57,PJM,PPL,2757101001,2017,GS3,GS3,207.214,22.2694,3,185
+
+Partition::ilsmn: Single or list of non-negative machine-sized integers expected at position 2 of Partition[{1}, Transpose[1], Transpose[1], 1, Null].
+
+General::stop: Further output of Partition::ilsmn will be suppressed during this calculation.
+
+RandomSample::lrwl: The set of items to sample from, Transpose[Partition[{1}, Transpose[1], Transpose[1], 1, Null]], should be a non-empty list or a rule weights -> choices.
+
+General::stop: Further output of RandomSample::lrwl will be suppressed during this calculation.
+
+Total::normal: Nonatomic expression expected at position 1 in Total[MachineLearning`file68DimensionReduction`PackagePrivate`cov$17403717, 2].
+
+General::stop: Further output of Total::normal will be suppressed during this calculation.
+
+ConstantArray::ilsmn: Single or list of non-negative machine-sized integers expected at position 2 of ConstantArray[1, MachineLearning`file27RandomForest`PackagePrivate`n].
+
+General::stop: Further output of ConstantArray::ilsmn will be suppressed during this calculation.
+2016-11-01,15:57,PJM,PPL,8324423330,2017,GS3,OP3,741.235,362.295,2,134
+2016-11-01,15:57,PJM,PPL,2795451000,2017,GS3,OP3,1.22093,0.2,1,1
+2016-11-01,15:57,PJM,PPL,8439148015,2017,GS3,GS3,270.402,15.0668,2,544
+2016-11-01,15:57,PJM,PPL,2899463008,2017,GS3,OP3,244.342,16.5586,2,1978
+2016-11-01,15:57,PJM,PPL,8477076009,2017,GS3,GS3,309.809,28.7364,2,5196
+2016-11-01,15:57,PJM,PPL,2901093009,2017,GS3,OP3,217.589,14.5389,2,41
+2016-11-01,15:57,PJM,PPL,8596131009,2017,GS3,GS3,251.195,29.5411,3,1786
+2016-11-01,15:57,PJM,PPL,2945125004,2017,GS3,GS3,221.353,31.8048,3,49
+2016-11-01,15:57,PJM,PPL,8632193007,2017,GS3,GS3,197.5,8.08055,2,917
+2016-11-01,15:57,PJM,PPL,3028014005,2017,GS3,GS3,245.201,16.7433,2,1852
+2016-11-01,15:57,PJM,PPL,8661004019,2017,GS3,GS3,298.017,14.1257,3,3826
+2016-11-01,15:57,PJM,PPL,3075292002,2017,GS3,GS3,223.823,10.7865,2,359
+2016-11-01,15:57,PJM,PPL,8664118001,2017,GS3,GS3,256.861,38.5778,2,10
+2016-11-01,15:57,PJM,PPL,8667845005,2017,GS3,MG3,251.497,21.6488,2,2313
+2016-11-01,15:57,PJM,PPL,3084337023,2017,GS3,GS3,1.22093,0.2,1,1
+2016-11-01,15:57,PJM,PPL,8697077042,2017,GS3,GS3,194.934,11.0643,2,5
+2016-11-01,15:57,PJM,PPL,3110071007,2017,GS3,GS3,216.72,21.7934,3,46
+2016-11-01,15:57,PJM,PPL,8698087024,2017,GS3,GS3,192.626,3.52367,1,6
+2016-11-01,15:57,PJM,PPL,3208025006,2017,LP4,LP4,707.233,50.5051,3,7616
+2016-11-01,15:57,PJM,PPL,8710531005,2017,GS3,GS3,273.425,15.069,3,4785
+2016-11-01,15:57,PJM,PPL,3442005006,2017,GS3,GS3,245.747,30.5347,2,258
+2016-11-01,15:57,PJM,PPL,8834088003,2017,GS3,OP3,822.915,62.8195,3,5560
+2016-11-01,15:57,PJM,PPL,3469965001,2017,GS3,OP3,203.115,15.9613,2,6
+2016-11-01,15:57,PJM,PPL,8918095019,2017,LP4,L4L,197.135,10.5954,3,1307
+2016-11-01,15:57,PJM,PPL,3496111000,2017,GS3,GS3,204.981,25.61,2,11
+2016-11-01,15:57,PJM,PPL,8952065019,2017,GS3,GS3,347.291,44.0307,2,375
+2016-11-01,15:57,PJM,PPL,3502542004,2017,GS3,252,261.01,12.6238,2,2269
+2016-11-01,15:57,PJM,PPL,8974442001,2017,GS3,OP3,208.52,14.3981,2,15
+2016-11-01,15:57,PJM,PPL,3529011008,2017,GS3,GS3,195.832,8.31796,2,17
+2016-11-01,15:57,PJM,PPL,8997008007,2017,GS3,GS3,191.491,1.27411,1,2
+2016-11-01,15:57,PJM,PPL,3555044000,2017,GS3,Null,199.529,11.5662,2,84
+2016-11-01,15:57,PJM,PPL,3663085008,2017,GS3,GS3,262.582,16.9116,2,198
+2016-11-01,15:57,PJM,PPL,9101805000,2017,LP4,L4L,208.271,12.9113,3,5119
+2016-11-01,15:57,PJM,PPL,9133245029,2017,GS3,GS3,246.693,22.2238,2,101
+2016-11-01,15:57,PJM,PPL,3768017002,2017,GS3,GS3,261.235,75.63,2,162
+2016-11-01,15:57,PJM,PPL,9220080016,2017,LP4,Null,236.001,17.3678,2,2060
+2016-11-01,15:57,PJM,PPL,3917409005,2017,GS3,GS3,459.077,18.0028,3,17868
+2016-11-01,15:57,PJM,PPL,9277205007,2017,GS3,OP3,280.355,21.8098,2,770
+2016-11-01,15:57,PJM,PPL,3955901008,2017,GS3,GS3,241.045,12.232,2,4888
+2016-11-01,15:57,PJM,PPL,9311297005,2017,GS3,OP3,211.205,10.5806,2,95
+2016-11-01,15:57,PJM,PPL,3985091006,2017,GS3,OP3,716.822,22.9199,2,3189
+2016-11-01,15:57,PJM,PPL,9341740000,2017,GS3,GS3,214.145,15.6001,2,2845
+2016-11-01,15:57,PJM,PPL,3999545008,2017,GS3,GS3,216.577,13.5046,1,8
+2016-11-01,15:57,PJM,PPL,4036056009,2017,GS3,GS3,189.838,2.41041,2,53
+2016-11-01,15:57,PJM,PPL,9369128011,2017,GS3,GS3,253.347,28.2647,2,97
+2016-11-01,15:57,PJM,PPL,4080552016,2017,GS3,GS3,225.669,32.75,3,144
+2016-11-01,15:57,PJM,PPL,9370014000,2017,GS3,GS3,770.992,31.4345,3,4390
+2016-11-01,15:57,PJM,PPL,4132972004,2017,GS3,OP3,298.82,12.9714,2,7052
+2016-11-01,15:57,PJM,PPL,9390014006,2017,GS3,GS3,280.212,15.1407,3,3974
+2016-11-01,15:57,PJM,PPL,9406003002,2017,GS3,GS3,283.799,9.1315,2,2278
+2016-11-01,15:57,PJM,PPL,4246723039,2017,GS1,GS1,1.22093,0.2,1,1
+2016-11-01,15:57,PJM,PPL,9414070017,2017,GS3,GS3,299.19,23.6841,2,1830
+2016-11-01,15:57,PJM,PPL,4247724156,2017,GS3,GS3,304.886,19.7397,3,14449
+2016-11-01,15:57,PJM,PPL,9427198006,2017,GS3,GS3,215.778,12.6255,2,54
+2016-11-01,15:57,PJM,PPL,4248018013,2017,GS3,GS3,226.573,23.7764,3,1059
+2016-11-01,15:57,PJM,PPL,9494092008,2017,GS3,GS3,197.16,8.36414,2,376
+2016-11-01,15:57,PJM,PPL,4335096023,2017,GS3,GS3,210.355,15.5368,2,24
+2016-11-01,15:57,PJM,PPL,9619110001,2017,GS3,GS3,246.255,18.793,3,3891
+2016-11-01,15:57,PJM,PPL,4362107000,2017,GS3,OP3,272.59,14.8892,2,2115
+2016-11-01,15:57,PJM,PPL,9642098029,2017,GS3,GS3,220.805,9.65854,3,5122
+2016-11-01,15:57,PJM,PPL,4373042001,2017,LP4,LP4,233.827,16.5468,2,853
+2016-11-01,15:57,PJM,PPL,9659444004,2017,GS1,GS1,224.681,21.9752,2,170
+2016-11-01,15:57,PJM,PPL,4382107006,2017,GS3,GS3,565.938,57.1973,3,4801
+2016-11-01,15:57,PJM,PPL,9692120003,2017,GS3,GS3,219.217,43.4918,1,9
+2016-11-01,15:57,PJM,PPL,4404055012,2017,GS3,GS3,248.549,18.2822,3,3776
+2016-11-01,15:57,PJM,PPL,9703249011,2017,GS3,GS3,262.192,10.3822,2,9574
+2016-11-01,15:57,PJM,PPL,4443053007,2017,GS3,GS3,211.964,12.7897,2,1324
+2016-11-01,15:57,PJM,PPL,9711386014,2017,GS3,GS3,205.791,7.21505,3,408
+2016-11-01,15:57,PJM,PPL,9712166016,2017,GS3,GS3,242.768,15.8432,3,2061
+2016-11-01,15:57,PJM,PPL,4506323355,2017,GS3,GS3,1325.43,114.978,3,11044
+2016-11-01,15:57,PJM,PPL,9724379005,2017,GS3,GS3,259.531,25.2209,2,360
+2016-11-01,15:57,PJM,PPL,4569009029,2017,GS3,GS3,217.622,17.6518,3,45
+2016-11-01,15:57,PJM,PPL,9727173005,2017,GS3,GS3,271.156,22.8236,2,502
+2016-11-01,15:57,PJM,PPL,4611096018,2017,GS3,GS3,269.723,16.2544,3,3176
+2016-11-01,15:57,PJM,PPL,9775137024,2017,LP4,L4L,304.736,26.1691,3,2101
+2016-11-01,15:57,PJM,PPL,4614109003,2017,GS3,OP3,242.433,23.1573,2,56
+2016-11-01,15:57,PJM,PPL,9840099004,2017,GS3,GS3,194.344,9.68892,3,645
+2016-11-01,15:57,PJM,PPL,4706006004,2017,GS3,GS3,189.058,4.22896,2,10
+2016-11-01,15:57,PJM,PPL,9849046018,2017,GS3,GS3,273.561,30.4604,3,4932
+2016-11-01,15:57,PJM,PPL,4723394012,2017,GS3,OP3,588.672,20.5981,2,5491
+2016-11-01,15:57,PJM,PPL,9853057001,2017,GS3,GS3,278.405,25.354,3,4281
+2016-11-01,15:57,PJM,PPL,4739129012,2017,GS3,GS3,720.631,22.2203,3,7407
+2016-11-01,15:57,PJM,PPL,9862620003,2017,GS3,GS3,213.116,10.9214,2,93
+2016-11-01,15:57,PJM,PPL,4755003004,2017,GS3,GS3,203.945,11.721,2,2
+2016-11-01,15:57,PJM,PPL,9950159000,2017,GS3,GS3,295.747,14.2618,3,11422
+2016-11-01,15:57,PJM,PPL,4831088034,2017,LP4,LP4,622.735,37.9567,2,1653
+2016-11-01,15:57,PJM,PPL,9967590002,2017,GS3,OP3,192.484,11.158,2,3
+2016-11-01,15:57,PJM,PPL,4915095022,2017,GS3,GS3,198.832,12.554,2,29
+2016-11-01,15:57,PJM,PPL,5061049004,2017,GS3,GS3,224.107,20.9514,2,143
+2016-11-01,15:57,PJM,PPL,5074080019,2017,GS3,GS3,297.475,30.7761,2,1032

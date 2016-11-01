@@ -1,131 +1,142 @@
-#!/usr/bin/env/WolframScript -script
-BeginPackage["pplPredict`"];
+BeginPackage["pplPredict`", {"DatabaseLink`", "DBConnect`"}];
 
 If[ Length @ $CommandLine != 4,
-    Throw[$Failed]; Return[1],
-    Nothing
+    Return[1]
+];
+fileName = $CommandLine[[4]];
+premises = Import[fileName, "Text", "Numeric"-> False] // StringSplit;
+
+conn = JEConnection[];
+If[ Not @ MatchQ[conn, _SQLConnection],
+    Return[1]
 ];
 
-fileName = $CommandLine[[4]]
 
-Needs @ "DatabaseLink`";
-Get @ "DBConnect.m";
 
-conn =  JEConnection[];
-If[ Not@ MatchQ[ conn, _SQLConnection ],
-    Throw[$Failed]; Return[1],
-    Nothing
-];
+(*#################### Query Strings ####################*)
+recordQry = StringTemplate["select 
+		Year(h.UsageDate),
+		Month(h.UsageDate),
+		Day(h.UsageDate),
+		h.HourEnding,
+		DatePart(weekday, h.UsageDate),
+		h.Usage,
+		p.RateClass, p.Strata
+	from HourlyUsage as h
+	inner join Premise as p
+		on p.UtilityId = h.UtilityId
+		and p.PremiseId = h.PremiseId
+	where h.UtilityId = 'PPL'
+		and h.PremiseId = '`premise`'
+		and Month(h.Usage) in (6,7,8,9)
+			"][<|"premise" -> #|>]&;
 
-(* Import the Utility Parameters *)
-SQLExecute[conn,"select  
-        Cast(Year(pv.StartDate)-1 as VARCHAR), 
-        Replace(pv.RateClass,' ',''), 
-        Cast(pv.Strata as VARCHAR), pv.ParameterID, pv.ParameterValue
-        from UtilityParameterValue as pv
-        where pv.UtilityID = 'PPL'
-        and (pv.ParameterId = 'NCRatio'
-        or  pv.ParameterId = 'RateClassLoss'
-        or  pv.ParameterId = 'NormalKW'
-        or  pv.ParameterId = 'CoincidentKW')"]//
-    <|"Year"->#,"RateClass"->#2,"Strata"->#3,#4->#5|>&@@@#&//
-    GroupBy[#, {#Year, #RateClass, #Strata}&]&//
-    Map[Merge[Identity]]//
-    Select[#, KeyExistsQ[#, "RateClassLoss"] && KeyExistsQ[#, "NCRatio"]&]&//
-    Select[#, Length @ #NCRatio == 5&]&//
-    Map[#NCRatio * (1 + #RateClassLoss[[1]] / 100.)&]//
-    (utilParams=#)&;
+reconQry = "select 
+        CAST(CPYearId-1 as varchar), 
+        ParameterValue
+    from SystemLoad
+    where UtilityId = 'PPL'";
 
-    Print["Util Param Dict Keys:"];
-    Print@Keys[utilParams];
-(* 
-Premises are generated from the recipe calculations. BASH script determines
-all unique premises ids and stores them in local file.
-*) 
-premises = Rest @ StringSplit @ Import[fileName, "Text"];
+loadlossQry = "select 
+		Cast(cp.CPYearID-1 as varchar),
+		RTrim(pv.RateClass), 
+		pv.ParameterValue
+	from UtilityParameterValue as pv
+	inner join CoincidentPeak as cp
+		on cp.CPID = pv.CPID
+		and cp.UtilityId = pv.UtilityId
+	where pv.UtilityId = 'PPL'
+		and pv.ParameterId = 'Loss Factor'";
 
-(* Template accepts PremiseID as parameter. Selects all years of summer usage data *)
-queryTemp = StringTemplate[
-    "select YEAR(h.UsageDate), 
-        MONTH(h.UsageDate), 
-        Day(h.UsageDate), 
-        h.HourEnding, 
-        DatePart(weekday, h.UsageDate), 
-        h.Usage,
-        p.RateClass, p.Strata
-     from HourlyUsage as h
-     inner join Premise as p
-        on p.UtilityId = h.UtilityId
-        and p.premiseId = h.Premiseid
-     where h.UtilityId = 'PPL'
-        and h.PremiseId = '`premise`'
-        and MONTH(h.UsageDate) in (6,7,8,9)"];
 
+(*#################### Query Execution ####################*)
+(* System and Utility queries only. Premises queries called in loop *)
+
+(* <|{year} -> {f_1, ..., f_5} |> *)
+reconFactor = SQLExecute[conn, reconQry] //
+    <|"Year" -> #, "Value" -> #2|>& @@@ #& //
+    GroupBy[#, #Year&]& //
+    Map[Merge[Identity]] //
+    Map[#Value&];
+
+(* <|{year, rateclass} -> lossFactor  |>  *)
+loadlossFactor = SQLExecute[conn, loadlossQry]//
+	Rule[{#, #2}, #3]& @@@ #&//
+	Association;
+
+
+
+(*#################### Icap Logic Loop ####################*)
 (* time stamp *)
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
 
-labels = {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "PredictedIcap", 
-    "IcapUnc", "YearCount", "SampleCount"};
+labels = {"RunDate", "RunTime", "ISO", "Utility", "PremiseId", "Year", "RateClass", "Strata", "PredictedICap",
+    "ICapUnc", "YearCount", "NumSamples"};
+
+util = "PPL";
+iso = "PJM";
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
 
 writeFunc @ labels;
-(* Loop over premises; train predictor and predict summer values *)
 Do[
+	records = SQLExecute[conn, recordQry[premId]];
+	sampleCount = Length @ records;
 
-    records = SQLExecute[conn, queryTemp[<|"premise"-> premItr|>]];
-    sampleCount = Length @ records;
-    yearCount = Length @ Union @ records[[All,1]];
-    maxYear = Union[ records[[All,1]] ] // Last;
-    {rateClass, strata} = records[[1,-2;;]];
-   
-        
-    If[ maxYear != 2016, Continue[]];
-
-    trainingData = Thread[(#[[All,;;5]] -> #[[All,6]] )]& @ records;
+    If[ sampleCount == 0, Continue[]];
     
-    (*
-    predictTREE = Predict[ N @ trainingData, Method -> "RandomForest", PerformanceGoal->"TrainingSpeed" ];
+	yearCount = Length @ Union @ records[[All, 1]];
+	maxYear = Last @ Union @ records[[All, 1]];
+	{rateClass, strata} = records[[1, -2;;]];
+
+    (* check for the correct years  *)
+	If[maxYear != 2016, Continue[]];
+
+    (* if utility vector fails, skip premise *)
+    maxYearKey = ToString @ maxYear;
+    localRecon = Lookup[reconFactor, {maxYearKey}, ConstantArray[0.,5]] // First;
+    localLoss = Lookup[loadlossFactor, {{maxYearKey, rateClass}}, 0.] // First;
+
+
+    utilVector = If[ Length @ localRecon == 5 && localLoss != 0.,
+        localRecon * localLoss,
+        $Failed];
+    
+    If[ FailureQ @ utilVector, Continue[]];
+    
+    (* prep the training data; convert to numeric;
+        train the predictor;
+        map predictor over summer;
+        reap top 5 usage values;
+    *)
+	trainingData = N[#[[All, ;;5]] -> #[[All, 6]]]& @ records;
+
+	predictTREE = Predict[trainingData, Method -> "RandomForest", PerformanceGoal -> "TrainingSpeed"];
 
     ClearAll @ buildSummer;
     Attributes[buildSummer] = HoldFirst;
     buildSummer[func_]:= Outer[
         func[{maxYear+1, #, #2, #3, #4}, "Distribution"]&,
-        Range[6.,9],
-        Range[1.,31],
-        Range[1.,7],
-        Range[13.,19]
+        Range[6., 9],
+        Range[1., 31],
+        Range[1., 7],
+        Range[13., 19]
     ];
 
-    {summerTREEPred, summerTREEUnc} = buildSummer[ predictTREE ] // 
-        Flatten // TakeLargestBy[#, First, 5]& // List @@@ # & // Transpose ;
+    {summerTREEPred, summerTREEUnc} = buildSummer[predictTREE] //
+        Flatten// TakeLargestBy[#, First, 5]& // List @@@ #& // Transpose;
 
-        *)
-
-    (* Utility Vector *)
-    keys = ToString /@ {maxYear-2, rateClass, strata};
-    utilVector = Lookup[utilParams,{keys}, ConstantArray[0.,5]]//First;
-
-   
-    Print[];
-    Print["Keys: ", keys];
-    Print["Util Vector: ", utilVector];
-    Print[];
-    (* Compute *)
+  
     icapTREE = Mean /@ {summerTREEPred * utilVector, summerTREEUnc * utilVector};
+    {icap, icapUnc} = If[Head @ # === Times, First @ #, #]& /@ icapTREE;
 
-    {icap, icapUnc} = If[Head@#===Times,First@#,#]& /@ icapTREE;
-
-    results = {runDate, runTime, premItr, maxYear+1, rateClass, 
-        Sequence @ strata, Sequence @ icap, icapUnc, yearCount, sampleCount};
+    results = {runDate, runTime, iso, util, premId, maxYear+1, rateClass, strata,
+        icap, icapUnc, yearCount, sampleCount};
 
     writeFunc @ results;
-
-,{premItr, premises[[;;10]]}]
-
-
-
+,{premId, premises}]
 
 EndPackage[];
 Quit[];
+
