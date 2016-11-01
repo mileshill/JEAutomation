@@ -128,7 +128,7 @@ $(recipe_calc ${CON_REC} ${CON_REC_RES} ${CON_UNIQ})
 
 #################### Predictions #################### 
 # Interval 
-$(predict ${INT_PRED} ${INT_PRED_RES} ${INT_UNIQ} ${INT_ALIAS})
+#$(predict ${INT_PRED} ${INT_PRED_RES} ${INT_UNIQ} ${INT_ALIAS})
 
 # Monthly with demand
 #$(predict ${DMD_PRED} ${DMD_PRED_RES} ${DMD_UNIQ})

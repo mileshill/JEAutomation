@@ -4,39 +4,6 @@
 
 # Logging and overwrite vars
 
-:<<'END'
-while [[ $# -gt 0 ]]
-do
-    key="$1"
-    case $key in
-        -o |--overwrite)
-            OVERWRITE=1
-            shift
-            ;;
-        -p|--predict)
-            ONLY_PREDICT=1
-            shift
-            ;;
-        -r|--recipe)
-            ONLY_RECIPE=1
-            shift
-            ;;
-        -u |--utility)
-            UTILITY="$2"
-            shift
-            ;;
-        *)
-            ;;
-    esac
-    shift
-done
-
-# If no utility given
-
-if [ -z "${UTILITY}" ]; then
-    UTILITY=$(basename $(pwd))
-fi
-END
 #################### Var Declaration #################### 
 # Utility Level Vars
 UTILITY=$(basename $(pwd))
@@ -53,6 +20,22 @@ INT_PRED="${UTILITY}_pred.m"
 INT_PRED_RES="${UTILITY}_pred.csv"
 INT_UNIQ="${UTILITY}_premises_int.txt"
 INT_ALIAS="INT"
+
+# Monthly demand
+DMD_REC="${UTILITY}_rec_dmd.m"
+DMD_REC_RES="${UTILITY}_rec_dmd.csv"
+DMD_PRED="${UTILITY}_pred_dmd.m"
+DMD_PRED_RES="${UTILITY}_pred_dmd.csv"
+DMD_UNIQ="${UTILITY}_premises_dmd.txt"
+DMD_ALIAS="DMD"
+
+# Monthly consumption
+CON_REC="${UTILITY}_rec_con.m"
+CON_REC_RES="${UTILITY}_rec_con.csv"
+CON_PRED="${UTILITY}_pred_con.m"
+CON_PRED_RES="${UTILITY}_pred_con.csv"
+CON_UNIQ="${UTILITY}_premises_con.txt"
+CON_ALIAS="CON"
 
 # Could this be junked?
 COMPARE="pred_compare.m"
@@ -104,9 +87,15 @@ function predict {
 # Interval recipe and uniq premises
 $(recipe_calc ${INT_REC} ${INT_REC_RES} ${INT_UNIQ})
 
+# Monthly with demand and uniq premises
+#$(recipe_calc ${DMD_REC} ${DMD_REC_RES} ${DMD_UNIQ})
+
+# Monthly consumption and uniq premises
+#$(recipe_calc ${CON_REC} ${CON_REC_RES} ${CON_UNIQ})
+
 #################### Predictions #################### 
 # Interval 
-#$(predict ${INT_PRED} ${INT_PRED_RES} ${INT_UNIQ} ${INT_ALIAS})
+$(predict ${INT_PRED} ${INT_PRED_RES} ${INT_UNIQ} ${INT_ALIAS})
 
 # Monthly with demand
 #$(predict ${DMD_PRED} ${DMD_PRED_RES} ${DMD_UNIQ})

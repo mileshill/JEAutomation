@@ -1,2 +1,4 @@
 mv: cannot stat ‘*.txt’: No such file or directory
 sh: line 1:   387 Killed                  MathKernel -script ppl_pred.m ./INT_b.tmp >> ppl_pred.csv
+sh: line 1:  4389 Killed                  MathKernel -script ppl_pred.m ./INT_a.tmp >> ppl_pred.csv
+sh: line 1:  4388 Killed                  MathKernel -script ppl_pred.m ./INT_b.tmp >> ppl_pred.csv

@@ -36,6 +36,8 @@ SQLExecute[conn,"select
     Map[#NCRatio * (1 + #RateClassLoss[[1]] / 100.)&]//
     (utilParams=#)&;
 
+    Print["Util Param Dict Keys:"];
+    Print@Keys[utilParams];
 (* 
 Premises are generated from the recipe calculations. BASH script determines
 all unique premises ids and stores them in local file.
@@ -63,7 +65,8 @@ queryTemp = StringTemplate[
 runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
 runTime = DateString[{"Hour24", ":", "Minute"}];
 
-labels = {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "PredictedIcap", "IcapUnc", "YearCount", "SampleCount"};
+labels = {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "PredictedIcap", 
+    "IcapUnc", "YearCount", "SampleCount"};
 stdout=Streams[][[1]];
 writeFunc = Write[stdout, StringRiffle[#,","]]&;
 
@@ -76,12 +79,14 @@ Do[
     yearCount = Length @ Union @ records[[All,1]];
     maxYear = Union[ records[[All,1]] ] // Last;
     {rateClass, strata} = records[[1,-2;;]];
-    
+   
+        
     If[ maxYear != 2016, Continue[]];
 
-    trainingData = N[ #[[All,;;5]] -> #[[All,6]] ]& @ records;
-    predictTREE = Predict[ trainingData, Method -> "RandomForest", PerformanceGoal->"TrainingSpeed" ];
-    (*predictNN   = Predict[ trainingData, Method -> "NeuralNetwork", PerformanceGoal->"TrainingSpeed"]; *)
+    trainingData = Thread[(#[[All,;;5]] -> #[[All,6]] )]& @ records;
+    
+    (*
+    predictTREE = Predict[ N @ trainingData, Method -> "RandomForest", PerformanceGoal->"TrainingSpeed" ];
 
     ClearAll @ buildSummer;
     Attributes[buildSummer] = HoldFirst;
@@ -96,26 +101,31 @@ Do[
     {summerTREEPred, summerTREEUnc} = buildSummer[ predictTREE ] // 
         Flatten // TakeLargestBy[#, First, 5]& // List @@@ # & // Transpose ;
 
-    (*{summerNNPred, summerNNUnc}  = buildSummer[ predictNN   ] // 
-        Flatten // TakeLargestBy[#, First, 5]& // List @@@ # & // Transpose ;*)
-    
-    (* Utility Vector *)
-    utilVector = utilParams[ToString /@ {maxYear-2, rateClass, strata}];
+        *)
 
+    (* Utility Vector *)
+    keys = ToString /@ {maxYear-2, rateClass, strata};
+    utilVector = Lookup[utilParams,{keys}, ConstantArray[0.,5]]//First;
+
+   
+    Print[];
+    Print["Keys: ", keys];
+    Print["Util Vector: ", utilVector];
+    Print[];
     (* Compute *)
     icapTREE = Mean /@ {summerTREEPred * utilVector, summerTREEUnc * utilVector};
-    (*icapNN  = Mean  /@ {summerNNPred * utilVector, summerNNUnc * utilVector };*)
 
     {icap, icapUnc} = If[Head@#===Times,First@#,#]& /@ icapTREE;
 
-    results = {runDate, runTime, premItr, maxYear+1, rateClass, Sequence @ strata, Sequence @ icap, icapUnc, yearCount, sampleCount};
+    results = {runDate, runTime, premItr, maxYear+1, rateClass, 
+        Sequence @ strata, Sequence @ icap, icapUnc, yearCount, sampleCount};
+
     writeFunc @ results;
 
-,{premItr, premises}]
+,{premItr, premises[[;;10]]}]
 
 
 
 
-Return[0];
 EndPackage[];
 Quit[];
