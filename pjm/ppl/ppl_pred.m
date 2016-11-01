@@ -1,6 +1,12 @@
 #!/usr/bin/env/WolframScript -script
-Print @ "This is where predict occurs";
-Quit[];
+BeginPackage["pplPredict`"];
+
+If[ Length @ $CommandLine != 4,
+    Throw[$Failed]; Return[1],
+    Nothing
+];
+
+fileName = $CommandLine[[4]]
 
 Needs @ "DatabaseLink`";
 Get @ "DBConnect.m";
@@ -17,7 +23,7 @@ SQLExecute[conn,"select
         Replace(pv.RateClass,' ',''), 
         Cast(pv.Strata as VARCHAR), pv.ParameterID, pv.ParameterValue
         from UtilityParameterValue as pv
-        where pv.UtilityID = 'PECO'
+        where pv.UtilityID = 'PPL'
         and (pv.ParameterId = 'NCRatio'
         or  pv.ParameterId = 'RateClassLoss'
         or  pv.ParameterId = 'NormalKW'
@@ -34,7 +40,7 @@ SQLExecute[conn,"select
 Premises are generated from the recipe calculations. BASH script determines
 all unique premises ids and stores them in local file.
 *) 
-premises = Rest @ StringSplit @ Import["peco_premises.txt","Text"];
+premises = Rest @ StringSplit @ Import[fileName, "Text"];
 
 (* Template accepts PremiseID as parameter. Selects all years of summer usage data *)
 queryTemp = StringTemplate[
@@ -49,20 +55,19 @@ queryTemp = StringTemplate[
      inner join Premise as p
         on p.UtilityId = h.UtilityId
         and p.premiseId = h.Premiseid
-     where h.UtilityId = 'PECO'
+     where h.UtilityId = 'PPL'
         and h.PremiseId = '`premise`'
         and MONTH(h.UsageDate) in (6,7,8,9)"];
 
-(* Assign the stdout stream and Row 1 for the CSV outputfile *)
-stdout = Streams[][[1]];
-labels = {
-    "Premise", "Year", "RateClass", "Strata", 
-    "PredictedICap", "Uncertainty", "TrainingYears", "TrainingSamples"};
+(* time stamp *)
+runDate = DateString[{"Year", "-", "Month", "-", "Day"}];
+runTime = DateString[{"Hour24", ":", "Minute"}];
 
-Write[stdout, StringRiffle[ labels, ", "]]; 
+labels = {"RunDate", "RunTime", "PremiseId", "Year", "RateClass", "Strata", "PredictedIcap", "IcapUnc", "YearCount", "SampleCount"};
+stdout=Streams[][[1]];
+writeFunc = Write[stdout, StringRiffle[#,","]]&;
 
-
-
+writeFunc @ labels;
 (* Loop over premises; train predictor and predict summer values *)
 Do[
 
@@ -72,9 +77,11 @@ Do[
     maxYear = Union[ records[[All,1]] ] // Last;
     {rateClass, strata} = records[[1,-2;;]];
     
+    If[ maxYear != 2016, Continue[]];
+
     trainingData = N[ #[[All,;;5]] -> #[[All,6]] ]& @ records;
     predictTREE = Predict[ trainingData, Method -> "RandomForest", PerformanceGoal->"TrainingSpeed" ];
-    predictNN   = Predict[ trainingData, Method -> "NeuralNetwork", PerformanceGoal->"TrainingSpeed"]; 
+    (*predictNN   = Predict[ trainingData, Method -> "NeuralNetwork", PerformanceGoal->"TrainingSpeed"]; *)
 
     ClearAll @ buildSummer;
     Attributes[buildSummer] = HoldFirst;
@@ -89,25 +96,26 @@ Do[
     {summerTREEPred, summerTREEUnc} = buildSummer[ predictTREE ] // 
         Flatten // TakeLargestBy[#, First, 5]& // List @@@ # & // Transpose ;
 
-    {summerNNPred, summerNNUnc}  = buildSummer[ predictNN   ] // 
-        Flatten // TakeLargestBy[#, First, 5]& // List @@@ # & // Transpose ;
+    (*{summerNNPred, summerNNUnc}  = buildSummer[ predictNN   ] // 
+        Flatten // TakeLargestBy[#, First, 5]& // List @@@ # & // Transpose ;*)
     
     (* Utility Vector *)
     utilVector = utilParams[ToString /@ {maxYear-2, rateClass, strata}];
 
     (* Compute *)
     icapTREE = Mean /@ {summerTREEPred * utilVector, summerTREEUnc * utilVector};
-    icapNN  = Mean  /@ {summerNNPred * utilVector, summerNNUnc * utilVector };
+    (*icapNN  = Mean  /@ {summerNNPred * utilVector, summerNNUnc * utilVector };*)
 
-    {icap, icapUnc} = If[Head@#===Times,First@#,#]& /@ Mean[ {icapTREE, icapNN} ];
+    {icap, icapUnc} = If[Head@#===Times,First@#,#]& /@ icapTREE;
 
-    results = {premItr, maxYear+1, rateClass, Sequence @ strata, Sequence @ icap, icapUnc, yearCount, sampleCount};
-    Write[stdout, StringRiffle[ results, ", " ]];
+    results = {runDate, runTime, premItr, maxYear+1, rateClass, Sequence @ strata, Sequence @ icap, icapUnc, yearCount, sampleCount};
+    writeFunc @ results;
 
 ,{premItr, premises}]
 
 
 
 
-Return[0]
+Return[0];
+EndPackage[];
 Quit[];
