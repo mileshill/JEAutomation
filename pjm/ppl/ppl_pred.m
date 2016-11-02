@@ -28,7 +28,7 @@ recordQry = StringTemplate["select
 		and p.PremiseId = h.PremiseId
 	where h.UtilityId = 'PPL'
 		and h.PremiseId = '`premise`'
-		and Month(h.Usage) in (6,7,8,9)
+		and Month(h.UsageDate) in (6,7,8,9)
 			"][<|"premise" -> #|>]&;
 
 reconQry = "select 
@@ -83,15 +83,17 @@ writeFunc @ labels;
 Do[
 	records = SQLExecute[conn, recordQry[premId]];
 	sampleCount = Length @ records;
-
-    If[ sampleCount == 0, Continue[]];
     
+
+    (* valid query?  *)
+    If[ sampleCount == 0, Continue[]];
+
 	yearCount = Length @ Union @ records[[All, 1]];
 	maxYear = Last @ Union @ records[[All, 1]];
 	{rateClass, strata} = records[[1, -2;;]];
 
     (* check for the correct years  *)
-	If[maxYear != 2016, Continue[]];
+    If[maxYear != 2016,  Continue[]];
 
     (* if utility vector fails, skip premise *)
     maxYearKey = ToString @ maxYear;
@@ -102,9 +104,10 @@ Do[
     utilVector = If[ Length @ localRecon == 5 && localLoss != 0.,
         localRecon * localLoss,
         $Failed];
-    
+   
     If[ FailureQ @ utilVector, Continue[]];
     
+
     (* prep the training data; convert to numeric;
         train the predictor;
         map predictor over summer;
