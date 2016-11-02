@@ -72,10 +72,10 @@ strataLoadShape = SQLExecute[conn, strataLoadShapeQ]//
 
 rclf = SQLExecute[conn, rclfQ] //
 	MapAt[StringTrim @ ToString @ #&, {All, ;;3}]//
-	<|"Year"-> #1, "RateClass" -> #2, "Strata" -> #3, "SLS" -> #4 |> & @@@ #&//
+	<|"Year"-> #1, "RateClass" -> #2, "Strata" -> #3, "RCLF" -> #4 |> & @@@ #&//
 	GroupBy[#, {#Year, #RateClass, #Strata}&]& //
 	Map[First] //
-	Map[#SLS&];
+	Map[#RCLF&];
 
 summerScaling = SQLExecute[conn, summerScalingQ] //
 	MapAt[StringTrim @ ToString @ #&, {All, ;;3}]//
@@ -113,9 +113,9 @@ Do[
 
 	localSLS = Lookup[strataLoadShape, {{rateClass, strata}}, 0.] // First;
 	localRCLF = Lookup[rclf, {{year, rateClass, strata}}, 0.] // First; 
-	localSS = Lookup[summerScaling, {{year,rateClass,strata}}, 0.] // First; 
+	localSS = Lookup[summerScaling, {{year,rateClass,strata}}, 1.] // First; 
 	localPLC = Lookup[plcScaling, year, 0.]; 
-    
+   
     icap = localSLS * localRCLF * localSS * localPLC;
 
     yearADJ = ToExpression[year] + 1; 
