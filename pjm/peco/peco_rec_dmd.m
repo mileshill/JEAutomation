@@ -38,7 +38,7 @@ monthlyWithDemandQuery = "
         and p.UtilityId = m.UtilityId
     where m.UtilityId = 'PECO'
         and Month(m.EndDate) in (6,7,8,9)
-        and m.Demand is not Null
+        and (m.Demand is not Null or m.Demand > 0)
     group by m.PremiseId,
         Cast(Year(m.StartDate) as varchar),
         RTrim(p.RateClass), RTrim(p.Strata),

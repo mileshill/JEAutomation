@@ -60,7 +60,8 @@ recordsQ = "select distinct
 	inner join Premise as p
 		on p.UtilityId = m.UtilityId
 		and p.PremiseId = m.PremiseId
-	where m.UtilityId = 'PECO'";
+	where m.UtilityId = 'PECO'
+        and (m.Demand = 0 or m.Demand is NULL)";
 
 (* execute queries and group *)
 strataLoadShape = SQLExecute[conn, strataLoadShapeQ]//
