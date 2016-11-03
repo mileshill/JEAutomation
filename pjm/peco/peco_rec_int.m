@@ -18,7 +18,7 @@ With[
 	"select distinct h.PremiseId, 
         Cast(Year(h.Usagedate) as VARCHAR), 
         h.Usage,
-		p.RateClass, p.Strata
+		RTrim(p.RateClass), RTrim(p.Strata)
 	from HourlyUsage as h
 	inner join Premise as p
 		on p.UtilityId = h.UtilityID
@@ -30,7 +30,7 @@ With[
 	where h.UtilityId = 'PECO'
 	order by h.premiseID, 
         Cast(Year(h.UsageDate) as VARCHAR), 
-        p.RateClass, p.Strata"]//
+        RTrim(p.RateClass), RTrim(p.Strata)"]//
 		AssociationThread[labels -> #]& /@ #&//
 		GroupBy[#,{#PremiseId, #Year, #RateClass, #Strata}&]&//
 		Map[Merge[Identity]]//
@@ -44,7 +44,7 @@ With[
 (* Query for utility/system parameters *)
 SQLExecute[conn,"select  
 	Cast(Year(pv.StartDate)-1 as VARCHAR), 
-	Replace(pv.RateClass,' ',''), 
+	RTRIM(pv.RateClass), 
 	Cast(pv.Strata as VARCHAR), pv.ParameterID, pv.ParameterValue
 	from UtilityParameterValue as pv
 	where pv.UtilityID = 'PECO'

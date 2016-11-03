@@ -41,8 +41,8 @@ monthlyWithDemandQuery = "
         and (m.Demand is not Null or m.Demand > 0)
     group by m.PremiseId,
         Cast(Year(m.StartDate) as varchar),
-        RTrim(p.RateClass), RTrim(p.Strata),
-        m.EndDate
+        RTrim(p.RateClass), RTrim(p.Strata) --,
+        --m.EndDate
     having Count(m.Demand) = 4";
 
 weatherCorrectionFactorQuery = "

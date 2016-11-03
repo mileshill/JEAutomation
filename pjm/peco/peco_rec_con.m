@@ -13,7 +13,7 @@ If[Not @ MatchQ[conn, _SQLConnection],
 
 (* sls: {RateClass, Strata} -> Loadshape *)
 strataLoadShapeQ = "select distinct 
-	p.RateClass, p.Strata,
+	RTrim(p.RateClass), RTrim(p.Strata),
 	(sls.ConstantCoefficient + 99 * sls.LinearCoefficient) as LoadShape
 from SeasonLoadShape as sls
 inner join Premise as p
@@ -28,7 +28,7 @@ where sls.DayType = 'WEEKDAY'
 (* rclf: {Year, RateClass, Strata} -> rclf *)
 rclfQ = "select distinct 
 	Cast(Year(StartDate) as varchar), 
-	u.RateClass, u.Strata, 
+	RTrim(u.RateClass), RTrim(u.Strata), 
 	(1 + u.ParameterValue/100.) as RCLF
 from UtilityParameterValue as u
 inner join CoincidentPeak as c
@@ -39,7 +39,7 @@ where u.ParameterId = 'RateClassLoss'
 (* summerSclaing: {Year, RateClass, Strata} -> summerScaling *)
 summerScalingQ = "select distinct
 	Cast(Year(StartDate) as varchar), 
-	RateClass, Strata, 
+	RTrim(RateClass), RTrim(Strata), 
 	ParameterValue
 from UtilityParameterValue
 where UtilityId = 'PECO'
@@ -55,7 +55,7 @@ where UtilityId = 'PECO'
 (* consumption records *)
 recordsQ = "select distinct
 	m.PremiseId, Cast((Year(m.StartDate) + 1) as varchar),
-	p.RateClass, p.Strata
+	RTrim(p.RateClass), RTrim(p.Strata)
 	from MonthlyUsage as m
 	inner join Premise as p
 		on p.UtilityId = m.UtilityId
@@ -114,7 +114,7 @@ Do[
 
 	localSLS = Lookup[strataLoadShape, {{rateClass, strata}}, 0.] // First;
 	localRCLF = Lookup[rclf, {{year, rateClass, strata}}, 0.] // First; 
-	localSS = Lookup[summerScaling, {{year,rateClass,strata}}, 1.] // First; 
+	localSS = Lookup[summerScaling, {{year,rateClass,strata}}, 0.] // First; 
 	localPLC = Lookup[plcScaling, year, 0.]; 
    
     icap = localSLS * localRCLF * localSS * localPLC;
