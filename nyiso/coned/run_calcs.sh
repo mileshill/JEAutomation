@@ -47,34 +47,14 @@ RESULT_DIR=./results/
 RECIPE_RESULTS="${UTILITY}_rec.csv"
 
 # Interval
-INT_REC="${UTILITY}_rec_int.m"
-INT_REC_RES="${UTILITY}_rec_int.csv"
+INT_REC="${UTILITY}_rec.m"
+INT_REC_RES="${UTILITY}_rec_.csv"
 INT_PRED="${UTILITY}_pred_most.m"
 INT_PRED_RES="${UTILITY}_pred_most.csv"
 INT_UNIQ="${UTILITY}_premises_int.txt"
 INT_ALIAS="INT"
 
-# Monthly demand
-DMD_REC="${UTILITY}_rec_dmd.m"
-DMD_REC_RES="${UTILITY}_rec_dmd.csv"
-DMD_PRED="${UTILITY}_pred_dmd.m"
-DMD_PRED_RES="${UTILITY}_pred_dmd.csv"
-DMD_UNIQ="${UTILITY}_premises_dmd.txt"
-DMD_ALIAS="DMD"
-
-# Monthly consumption
-CON_REC="${UTILITY}_rec_con.m"
-CON_REC_RES="${UTILITY}_rec_con.csv"
-CON_PRED="${UTILITY}_pred_con.m"
-CON_PRED_RES="${UTILITY}_pred_con.csv"
-CON_UNIQ="${UTILITY}_premises_con.txt"
-CON_ALIAS="CON"
-
-# Could this be junked?
-COMPARE="pred_compare.m"
-COMPARE_RESULT="${UTILITY}_pred_compare.csv"
-
-#################### Auxiliary Functions ####################  
+################### Auxiliary Functions ####################  
 # Auxiliary functions
 function record {
     echo "CST:$(date '+%Y_%m_%d_%H_%M_%S') UTILITY=${UTILITY} DESC=$1" >> ${LOGFILE}
@@ -121,10 +101,10 @@ function predict {
 $(recipe_calc ${INT_REC} ${INT_REC_RES} ${INT_UNIQ})
 
 # Monthly with demand and uniq premises
-$(recipe_calc ${DMD_REC} ${DMD_REC_RES} ${DMD_UNIQ})
+#$(recipe_calc ${DMD_REC} ${DMD_REC_RES} ${DMD_UNIQ})
 
 # Monthly consumption and uniq premises
-$(recipe_calc ${CON_REC} ${CON_REC_RES} ${CON_UNIQ})
+#$(recipe_calc ${CON_REC} ${CON_REC_RES} ${CON_UNIQ})
 
 #################### Predictions #################### 
 # Interval 
