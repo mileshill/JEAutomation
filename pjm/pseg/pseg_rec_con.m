@@ -50,7 +50,7 @@ If[Not @ MatchQ[conn, _SQLConnection],
 records = SQLExecute[conn, recordQuery]//
 	<|
 		"Premise" -> #, "Year" -> #2, "RateClass" -> #3, "Strata" -> #4, 
-		"Usage" -> #5, "NumHour" -> #6 
+		"Usage" -> If[Negative @ #, 0., #]&[#5], "NumHour" -> #6 
 	|>& @@@ #& //
 	GroupBy[#, {#Premise, #Year, #RateClass, #Strata}&]& //
 	Map[Merge[Identity]] //

@@ -310,3 +310,15 @@ CST:2016_10_27_14_35_57 UTILITY=pseg DESC=Unique premises: 2
 CST:2016_10_27_14_35_57 UTILITY=pseg DESC=Move *.csv *.txt to ./results/
 CST:2016_10_27_14_35_57 UTILITY=pseg DESC=Complete
 
+CST:2016_11_04_19_47_05 UTILITY=pseg DESC=Recipe start
+CST:2016_11_04_19_47_14 UTILITY=pseg DESC=Recipe end
+CST:2016_11_04_19_47_14 UTILITY=pseg DESC=Unique premises: 2
+CST:2016_11_04_19_47_14 UTILITY=pseg DESC=Recipe start
+CST:2016_11_04_19_47_17 UTILITY=pseg DESC=Recipe end
+CST:2016_11_04_19_47_17 UTILITY=pseg DESC=Unique premises: 2
+CST:2016_11_04_19_47_17 UTILITY=pseg DESC=Recipe start
+CST:2016_11_04_19_47_20 UTILITY=pseg DESC=Recipe end
+CST:2016_11_04_19_47_20 UTILITY=pseg DESC=Unique premises: 2
+CST:2016_11_04_19_47_20 UTILITY=pseg DESC=Move *.csv *.txt to ./results/
+CST:2016_11_04_19_47_20 UTILITY=pseg DESC=Complete
+
