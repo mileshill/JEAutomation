@@ -42,11 +42,13 @@ intervalQry = "select h.PremiseId,
 		on cp.UtilityId = h.UtilityId
 		and Year(cp.CPDate) = Year(m.EndDate)
 		and (cp.CPDate between m.StartDate and m.EndDate)				-- select days in coincident peak bill cycle
+        and (h.UsageDate between m.StartDate and m.EndDate)
 	inner join Premise as p												-- join adds RateClass and Stata
 		on p.PremiseId = h.PremiseId
 	inner join ConED as ce												-- join adds ZoneCode, Stratum, and TOD
 		on CAST(ce.[Account Number] as varchar) = h.PremiseId
 	where h.UtilityId = 'CONED'
+        and h.PremiseId = '695101410000000'
 	group by h.PremiseId, 
 		p.RateClass, ce.[Service Classification], 
 		ce.[Zone Code], ce.[Stratum Variable], ce.[Time of Day Code],
@@ -72,7 +74,16 @@ monthlyQry = "select m.PremiseId,
         on p.PremiseId = m.PremiseId
     inner join ConED as ce                                    -- join adds ZoneCode, Stratum, and TOD
         on CAST(ce.[Account Number] as varchar) = m.PremiseId
-    where m.UtilityId = 'CONED'";
+    where m.UtilityId = 'CONED'
+        and m.PremiseId not in (
+                select distinct PremiseId
+                from HourlyUsage
+                where UtilityId = 'CONED'
+        )
+        and (
+            m.PremiseId = '401126045000005' 
+            or m.PremiseId = '444011303900006'
+            or m.PremiseId = '266138069200019')";
 
 (* rateClass/serviceClass mapping and TODQ value *)
 rateClassMapQry = "select distinct 
@@ -121,7 +132,7 @@ If[ Not @ MatchQ[conn, _SQLConnection], Write[stdout, "Connection Failed"]; Retu
 (* interval meters *)
 intervalMeters = SQLExecute[conn, intervalQry];
 intervalVarTrue = Select[intervalMeters, #[[-1]] == 1& ];
-intervalVarFalse = Complement[intervalMeters, intervalVarTrue ][[All,;;-2]];
+intervalVarFalse = Select[intervalMeters,#[[-1]] == 0& ][[All,;;-2]];
 
 (* demand and consumption meters *)
 Clear[demandMeters, consumpMeters];
@@ -206,6 +217,8 @@ Do[
         9) bill cycle end           10) billed usage        11) billed demand
         12) if interval then CPHourUsage else Scalar || Demand
     *)
+    Clear[premId, rateClass, zoneCode, stratum, tod, year];
+    Clear[billStart, billEnd, billUsage, billDemand, useOrMType];
     {   premId, rateClass, zoneCode, 
         stratum, tod, year, billStart, billEnd,
         billUsage, billDemand, useOrMType
@@ -215,11 +228,13 @@ Do[
         }& @@ premItr;
 
     (* pull the correct CPDate/Hour from the association *)
+    Clear[localCPDate, localCPHour];
     localCPDate = coincidentPeakASC[year]["Date"];
     localCPHour = coincidentPeakASC[year]["HourEnding"];
 
     (*#################### Temperature variant Table ####################*) 
     (* select temperature variants by bill cycle  *)
+    Clear[billCycle];
     billCycle = {billStart, billEnd};
     tempVarSelect =  ( 
         Position[tempVariant, {Alternatives @@ billCycle, __}]//
@@ -229,7 +244,6 @@ Do[
             ]&
     );
     If[ FailureQ @ tempVarSelect, Continue[]];
-    
     (* if localCP in tempVarSelect for premise, the store the index; else continue to next premise *)
     localCPIdx = If[# =!= {}, First @ #, Continue[]]& @ (Flatten @ Position[tempVarSelect, {localCPDate, __}]);
 
@@ -241,20 +255,23 @@ Do[
         kw13,kw14,kw15,kw16,kw17,kw18,kw19,kw20,kw21,kw22,kw23,kw24
 	from CONED_LoadShapeTempAdj
 	where
-		Strata != ''
+        (
+        Strata != ''
 		and `todCondition`
 		and SC = `rateClass`
-		and `stratum` between [Strat L Bound] and [Strat U Bound]
+		and (`stratum` between [Strat L Bound] and [Strat U Bound])
 		and DayType = '`day`'
-		and `temp` between [Temp L Bound] and [Temp U Bound]
-	"][<|"todCondition" -> todCondition, "rateClass" -> rateClass, "stratum" -> stratum, "day" -> #, "temp" -> #2|>]&;
+		and (`temp` between [Temp L Bound] and [Temp U Bound])
+        )
+	"][<|"todCondition" -> #, "rateClass" -> #2, "stratum" -> #3, "day" -> #4, "temp" -> #5|>]&;
+    Clear[loadProfile];
     loadProfile = {}; 
 	Do[
-		{dayType, temp} = day[[2;;]];
-        If[ KeyExistsQ[loadProfileASC, {dayType, temp}],
-            result = loadProfileASC[{dayType,temp}],
- 		    result = SQLExecute[conn, loadProfileQuery[dayType, temp]] // Flatten;
-            AssociateTo[loadProfileASC, {dayType,temp} -> result]
+        {date, dayType, temp} = day;
+        If[ KeyExistsQ[loadProfileASC, {day, todCondition, rateClass, stratum, dayType, temp}],
+            result = loadProfileASC[day],
+ 		    result = SQLExecute[conn, loadProfileQuery[todCondition, rateClass, stratum, dayType, temp]] // Flatten;
+            AssociateTo[loadProfileASC, {day, todCondition, rateClass, stratum, dayType, temp} -> result]
         ];
 		AppendTo[loadProfile, result];
 	,{day, tempVarSelect}];
@@ -267,9 +284,8 @@ Do[
     lp = loadProfile[[ localCPIdx, localCPHour ]];
 	normalizedUsage = csf * lp;
 	localMCD = If[ useOrMType === "Scalar", normalizedUsage, Min[normalizedUsage, billDemand]];
-
     
-    (*#################### Subzone and Forecast Trueup Factors ####################*)
+        (*#################### Subzone and Forecast Trueup Factors ####################*)
 	
 	utilityFactorQuery = StringTemplate["select  Factor
 		from CONED_UtilityParameters
@@ -284,13 +300,52 @@ Do[
 	
     yearADJ = ToExpression[year] + 1;
 	results = {runDate, runTime, iso, utility, premId, yearADJ, rateClass, stratum, MeterLogic[useOrMType, tod, "OUTPUT"], icap};
-	writeFunc @ results;
+	Print["\nPremise: ", premId];
+    Print["Year: ", yearADJ];
+    Print["RateClassMap: ", rateClass];
+    Print["Service Class: ", premItr[[2]]];
+    Print["Stratum: ", stratum];
+    Print["TOD: ", tod];
+    Print["Billed Usage: ", billUsage];
+    Print["Billed Demand: ", billDemand];
+    Print["Sum over LP: ", N[Total @ Flatten @ loadProfile]]
+    Print["Load Profile (cp): ", lp];
+    Print["CSF: ", csf];
+    Print["Normalized Usage: ", normalizedUsage];
+    Print["MCD :", localMCD];
+    Print["ICap: ", icap];
+    Print["Temp Var Length: ", Length@tempVarSelect];
+    Print["Load Profile Length: ", Length@loadProfile];
+    Print[""];
+    (*writeFunc /@ tempVarSelect;*)
+    writeFunc /@ loadProfile;
+    Continue[];
+    writeFunc @ results;
 
 ,{premItr, allPremisesForNormalizedUsage}
 ](* end Normalized Usage Loop *);
 
-Quit[];
-(* loop to handle the interval meters where variance is < 0.04 from billed usage. *)
+
+(* loop to handle the interval meters where variance is < 0.04 from billed usage. 
+The CPHourUsage must be selected before proceeding.
+*)
+intervalCPHourQuery = "select 
+        h.PremiseId, 
+        Cast(Year(h.UsageDate) as varchar), 
+        Usage
+    from HourlyUsage as h
+    inner join CoincidentPeak as cp
+        on cp.UtilityId = h.UtilityId
+        and cp.CPDate = h.UsageDate
+        and cp.HourEnding = h.HourEnding
+    where h.UtilityId = 'CONED'";
+
+(* dictionary to hold {premId, year}-> cp_date_hour_usage *)
+intervalMCD = SQLExecute[conn, intervalCPHourQuery]//
+    ({#, #2} -> #3)& @@@ #& // Association;
+
+
+(* loop logic *)
 Do[
 	(*#################### Initialization #################### *)
     (* premItr is an entire record!
@@ -316,7 +371,7 @@ Do[
     utilFactors = SQLExecute[conn, utilityFactorQuery]// Flatten;
 	utilProduct = If[ Length @ utilFactors == 2, Times @@(utilFactors + 1.), 0.];
 
-    localMCD = useOrMType;
+    localMCD = Lookup[intervalMCD, {{premId, year}}, 0.] //If[Head@#===List, First@#, #]&;
 	icap = localMCD * utilProduct;
 	
     yearADJ = ToExpression[year] + 1;
