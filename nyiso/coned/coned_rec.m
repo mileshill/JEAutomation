@@ -2,13 +2,6 @@
 (* imports *)
 BeginPackage["CONEDScript`",{"DatabaseLink`","DBConnect`"}];
 
-(* Open stdout for write operations *)
-stdout = Streams[][[1]];
-
-
-
-
-
 (* #################### Queries #################### *)
 (* ::Section:: *)
 (* METER TYPE FILTER *)
@@ -48,7 +41,7 @@ intervalQry = "select h.PremiseId,
 	inner join ConED as ce												-- join adds ZoneCode, Stratum, and TOD
 		on CAST(ce.[Account Number] as varchar) = h.PremiseId
 	where h.UtilityId = 'CONED'
-        and h.PremiseId = '695101410000000'
+        --and h.PremiseId = '695101410000000'
 	group by h.PremiseId, 
 		p.RateClass, ce.[Service Classification], 
 		ce.[Zone Code], ce.[Stratum Variable], ce.[Time of Day Code],
@@ -80,10 +73,10 @@ monthlyQry = "select m.PremiseId,
                 from HourlyUsage
                 where UtilityId = 'CONED'
         )
-        and (
-            m.PremiseId = '401126045000005' 
-            or m.PremiseId = '444011303900006'
-            or m.PremiseId = '266138069200019')";
+        --and (
+        --    m.PremiseId = '401126045000005' 
+        --   or m.PremiseId = '444011303900006'
+        --    or m.PremiseId = '266138069200019')";
 
 (* rateClass/serviceClass mapping and TODQ value *)
 rateClassMapQry = "select distinct 
@@ -202,7 +195,6 @@ iso = "NYISO";
 utility = "CONED";
 
 writeFunc @ labels;
-
 (* Loop handles all values that require use of Normalized Usage. That is Consumption, Demand, and
 Interval Meters; interval meters must have varinace from billed usage > 4% else they are handled
 in the second logic loop below.
@@ -268,10 +260,11 @@ Do[
     loadProfile = {}; 
 	Do[
         {date, dayType, temp} = day;
-        If[ KeyExistsQ[loadProfileASC, {day, todCondition, rateClass, stratum, dayType, temp}],
-            result = loadProfileASC[day],
+        keyPattern = {day, todCondition, rateClass, stratum, dayType, temp};
+        If[ KeyExistsQ[loadProfileASC, keyPattern],
+            result = loadProfileASC[keyPattern],
  		    result = SQLExecute[conn, loadProfileQuery[todCondition, rateClass, stratum, dayType, temp]] // Flatten;
-            AssociateTo[loadProfileASC, {day, todCondition, rateClass, stratum, dayType, temp} -> result]
+            AssociateTo[loadProfileASC, keyPattern -> result]
         ];
 		AppendTo[loadProfile, result];
 	,{day, tempVarSelect}];
@@ -300,6 +293,7 @@ Do[
 	
     yearADJ = ToExpression[year] + 1;
 	results = {runDate, runTime, iso, utility, premId, yearADJ, rateClass, stratum, MeterLogic[useOrMType, tod, "OUTPUT"], icap};
+    (*
 	Print["\nPremise: ", premId];
     Print["Year: ", yearADJ];
     Print["RateClassMap: ", rateClass];
@@ -320,6 +314,7 @@ Do[
     (*writeFunc /@ tempVarSelect;*)
     writeFunc /@ loadProfile;
     Continue[];
+    *)
     writeFunc @ results;
 
 ,{premItr, allPremisesForNormalizedUsage}
