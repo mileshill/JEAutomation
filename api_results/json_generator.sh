@@ -67,5 +67,7 @@ for file in "$@"; do
         #$(recipe_transform $file))
     elif [[ $file ]]
         echo "No match $file"
+    else
+        continue
     fi
 done
