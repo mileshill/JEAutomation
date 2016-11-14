@@ -13,18 +13,20 @@ If[Not @ MatchQ[conn, _SQLConnection],
 
 (* sls: {RateClass, Strata} -> Loadshape *)
 strataLoadShapeQ = "select distinct 
-	RTrim(p.RateClass), RTrim(p.Strata),
-	(sls.ConstantCoefficient + 99 * sls.LinearCoefficient) as LoadShape
-from SeasonLoadShape as sls
-inner join Premise as p
-	on p.RateClass = sls.RateClass
-	and p.Strata = sls.Strata
-where sls.DayType = 'WEEKDAY'
-	and sls.Season = 'Summer'
-	and sls.HourEnding = 17
-	and sls.Segment = 4
-	and sls.UpBandEffTemp = 200";
+		RTrim(sls.RateClass), 
+		RTrim(sls.Strata),
+		(sls.ConstantCoefficient + 99 * sls.LinearCoefficient) as LoadShape
+	from SeasonLoadShape as sls
+	--inner join Premise as p
+	--	on p.RateClass = sls.RateClass
+	--	and p.Strata = sls.Strata
+	where sls.DayType = 'WEEKDAY'
+		and sls.Season = 'Summer'
+		and sls.HourEnding = 17
+		and sls.Segment = 4
+		and sls.UpBandEffTemp = 200";
 
+(*
 (* rclf: {Year, RateClass, Strata} -> rclf *)
 rclfQ = "select distinct 
 	Cast(Year(StartDate) as varchar), 
@@ -35,7 +37,21 @@ inner join CoincidentPeak as c
 	on c.CPID = u.CPID
 where u.ParameterId = 'RateClassLoss'
 	and u.UtilityId = 'PECO'";
+*)
 
+(* rclf: {Year, RateClass, Strata} -> rclf *)
+rclfQ = "select distinct 
+		Cast(cp.CPYearID-1 as varchar), 
+		RTrim(upv.RateClass) as RateClass, 
+		RTrim(upv.Strata) as Strata, 
+		(1 + upv.ParameterValue/100.) as RCLF
+	from UtilityParameterValue as upv
+	inner join CoincidentPeak as cp
+		on cp.CPID = upv.CPID
+	where upv.ParameterId = 'RateClassLoss'
+		and upv.UtilityId = 'PECO'";
+
+(*
 (* summerSclaing: {Year, RateClass, Strata} -> summerScaling *)
 summerScalingQ = "select distinct
 	Cast(Year(StartDate) as varchar), 
@@ -44,14 +60,39 @@ summerScalingQ = "select distinct
 from UtilityParameterValue
 where UtilityId = 'PECO'
 	and ParameterId = 'StrataSummerScale'";
+*)
 
+(* summerSclaing: {Year, RateClass, Strata} -> summerScaling *)
+summerScalingQ = "select distinct
+	Cast(cp.CPYearId-1 as varchar),	
+	RTrim(upv.RateClass) as RateClass,
+	RTrim(upv.Strata) as Strata,
+	ParameterValue
+from UtilityParameterValue as upv
+inner join CoincidentPeak as cp
+	on cp.CPID = upv.CPID
+where upv.UtilityId = 'PECO'
+	and upv.ParameterId = 'StrataSummerScale'";
+
+(*
 (* PLC: {Year} -> ParameterValue *)
 plcScalingQ = "select 
 	Cast(CPYearId as varchar), ParameterValue
 from SystemLoad
 where UtilityId = 'PECO'
 	and ParameterId = 'PLCScaleFactor'";
+*)
 
+(* PLC: {Year} -> ParameterValue *)
+plcScalingQ = "select distinct
+		Cast(cp.CPYearId-1 as varchar) as Year,
+		sl.ParameterValue
+	from SystemLoad as sl
+	inner join CoincidentPeak as cp
+		on cp.CPYearId = sl.CPYearId
+	where sl.UtilityId = 'PECO'
+		and sl.ParameterId = 'PLCScaleFactor'";
+(*
 (* consumption records *)
 recordsQ = "select distinct
 	m.PremiseId, Cast((Year(m.StartDate) + 1) as varchar),
@@ -62,6 +103,21 @@ recordsQ = "select distinct
 		and p.PremiseId = m.PremiseId
 	where m.UtilityId = 'PECO'
         and (m.Demand = 0 or m.Demand is NULL)";
+*)
+
+
+(* consumption records *)
+recordsQ = "select distinct
+		m.PremiseId,
+		Cast(Year(m.EndDate) as varchar) as Year,
+		RTrim(p.RateClass) as RateClass,
+		RTrim(p.Strata) as Strata
+	from MonthlyUsage as m
+	inner join Premise as p
+		on p.PremiseId = m.PremiseId
+		and p.UtilityID = m.UtilityId
+	where m.UtilityId = 'PECO'
+		and (m.Demand is NULL or m.Demand = 0)";
 
 (* execute queries and group *)
 strataLoadShape = SQLExecute[conn, strataLoadShapeQ]//
@@ -70,6 +126,7 @@ strataLoadShape = SQLExecute[conn, strataLoadShapeQ]//
 	GroupBy[#, {#RateClass, #Strata}&]& //
 	Map[First] //
 	Map[#SLS&];
+
 
 rclf = SQLExecute[conn, rclfQ] //
 	MapAt[StringTrim @ ToString @ #&, {All, ;;3}]//
