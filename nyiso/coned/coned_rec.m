@@ -41,13 +41,14 @@ intervalQry = "select h.PremiseId,
 	inner join ConED as ce												-- join adds ZoneCode, Stratum, and TOD
 		on CAST(ce.[Account Number] as varchar) = h.PremiseId
 	where h.UtilityId = 'CONED'
-        --and h.PremiseId = '695101410000000'
+        --and h.PremiseId = '494032427400037'
 	group by h.PremiseId, 
 		p.RateClass, ce.[Service Classification], 
 		ce.[Zone Code], ce.[Stratum Variable], ce.[Time of Day Code],
 		Year(m.EndDate), 
 		m.StartDate, m.EndDate,
-		m.Usage, m.Demand";
+		m.Usage, m.Demand 
+    having Count(h.Usage) = (DateDiff(hour, m.StartDate, m.EndDate) + 24)";
 
 (* Filter meterTypes for Demand and Consumption  *)
 monthlyQry = "select m.PremiseId,
@@ -357,18 +358,29 @@ Do[
             ToString[#7], #8, #9, #10, #11, #12
         }& @@ premItr[[;;-2]];
 
+    yearADJ = ToExpression[year] + 1;
 	utilityFactorQuery = StringTemplate["select  Factor
 		from CONED_UtilityParameters
 		where 
-			Cast(CPYear-1 as varchar) = '`year`'
+			Cast(CPYear as varchar) = '`year`'
 			and (MeterType = '`meterType`' or MeterType = 'All-Meter-Types')
-			and Zone = '`zone`'"][<|"year"-> year, "meterType" -> MeterLogic[useOrMType, tod], "zone" -> zoneCode |>];	
+			and Zone = '`zone`'"][<|"year"-> yearADJ, "meterType" -> MeterLogic[useOrMType, tod], "zone" -> zoneCode |>];	
+    
     utilFactors = SQLExecute[conn, utilityFactorQuery]// Flatten;
 	utilProduct = If[ Length @ utilFactors == 2, Times @@(utilFactors + 1.), 0.];
 
     localMCD = Lookup[intervalMCD, {{premId, year}}, 0.] //If[Head@#===List, First@#, #]&;
 	icap = localMCD * utilProduct;
-	
+    (*
+    Print["Year :", year];
+    Print["bill demand: ", billDemand];
+    Print["bill usage: ", billUsage];
+    Print["idr sum: ", useOrMType];
+    Print["util factors: ", utilFactors];
+    Print["interval mcd: ", localMCD];
+    Print["meter type: ", MeterLogic[useOrMType, tod]];
+    Print["zone: ", zoneCode];
+*)
     yearADJ = ToExpression[year] + 1;
 	results = {runDate, runTime, iso, utility, premId, yearADJ, rateClass, stratum, MeterLogic[useOrMType, tod, "OUTPUT"], icap};
 	writeFunc @ results;
