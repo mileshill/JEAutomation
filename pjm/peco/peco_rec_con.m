@@ -173,7 +173,8 @@ Do[
 	localRCLF = Lookup[rclf, {{year, rateClass, strata}}, 0.] // First; 
 	localSS = Lookup[summerScaling, {{year,rateClass,strata}}, 0.] // First; 
 	localPLC = Lookup[plcScaling, year, 0.]; 
-   
+  
+    If[localSS == 0., Continue[]];
     icap = localSLS * localRCLF * localSS * localPLC;
 
     yearADJ = ToExpression[year] + 1; 
