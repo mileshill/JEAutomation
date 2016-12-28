@@ -19,40 +19,44 @@ fi
 - Variance test is computed in SQL; 
 *)
 intervalQry = "select h.PremiseId, 
-			p.RateClass, ce.[Service Classification],
-			ce.[Zone Code] as ZoneCode, ce.[Stratum Variable] as Stratum, ce.[Time of Day Code] as TOD,
-			Year(m.EndDate) as Year,
-			DateAdd(day, 1,  m.StartDate) as StartDate, 
-			m.EndDate,
-			m.Usage as BilledUsage, 
-			m.Demand as BilledDemand,	
-			Round(Sum(h.Usage), 0) as CPHourUsage,							-- sum all usage in cp bill cycle
-			iif( Abs((m.Usage - (Sum(h.Usage))) / m.Usage) <= 0.04, 1, 0) as VarTest-- varince test 
-		from HourlyUsage as h
-		inner join MonthlyUsage as m										-- join adds BilledUsage, BilledDemand
-			on m.PremiseId = h.PremiseID
-			and m.UtilityID = h.UtilityId
-		inner join CoincidentPeak as cp			
-			on cp.UtilityId = h.UtilityId
-			and Year(cp.CPDate) = Year(m.EndDate)
-			and (cp.CPDate between DateAdd(day, 1, m.StartDate) and m.EndDate) --select where cp_date in bill cycle	
-			and (h.UsageDate between DateAdd(day, 1, m.StartDate) and m.EndDate)
-		inner join Premise as p												-- join adds RateClass and Stata
-			on p.PremiseId = h.PremiseId
-		inner join ConED as ce												-- join adds ZoneCode, Stratum, and TOD
-			on CAST(ce.[Account Number] as varchar) = h.PremiseId
-		where 
-			h.UtilityId = 'CONED'
-			and h.HourEnding between 1 and 24
-		group by h.PremiseId, 
-			p.RateClass, ce.[Service Classification], 
-			ce.[Zone Code], ce.[Stratum Variable], ce.[Time of Day Code],
-			Year(m.EndDate), 
-			DateAdd(day, 1, m.StartDate), m.EndDate,
-			m.Usage, 
-			m.Demand
-		having
-			Count(h.Usage) = (DateDiff(hour, DateAdd(day, 1, m.StartDate), m.EndDate) + 24)";
+		p.RateClass, ce.[Service Classification],
+		ce.[Zone Code] as ZoneCode, ce.[Stratum Variable] as Stratum, ce.[Time of Day Code] as TOD,
+		Year(m.EndDate) as Year,
+		DateAdd(day, 0,  m.StartDate) as StartDate, 
+		m.EndDate,
+		m.Usage as BilledUsage, 
+		m.Demand as BilledDemand,	
+		Round(Sum(h.Usage), 0) as CPHourUsage,							-- sum all usage in cp bill cycle
+		iif( Abs((m.Usage - (Sum(h.Usage))) / m.Usage) <= 0.04, 1, 0) as VarTest-- varince test 
+		--Abs((m.Usage - (Sum(h.Usage))) / m.Usage) as var,
+		--Count(h.Usage) as UseCount,
+		--DateDiff(hour, DateAdd(day, 1, m.StartDate), EndDate)
+	from HourlyUsage as h
+	inner join MonthlyUsage as m										-- join adds BilledUsage, BilledDemand
+		on m.PremiseId = h.PremiseID
+		and m.UtilityID = h.UtilityId
+	inner join CoincidentPeak as cp			
+		on cp.UtilityId = h.UtilityId
+		and Year(cp.CPDate) = Year(m.EndDate)
+		and (cp.CPDate between m.StartDate and m.EndDate)				-- select days in coincident peak bill cycle	
+		and (h.UsageDate between m.StartDate and m.EndDate)
+	inner join Premise as p												-- join adds RateClass and Stata
+		on p.PremiseId = h.PremiseId
+		and p.PremiseId = '590003513000000'
+	inner join ConED as ce												-- join adds ZoneCode, Stratum, and TOD
+		on CAST(ce.[Account Number] as varchar) = h.PremiseId
+	where 
+		h.UtilityId = 'CONED'
+		and h.HourEnding between 1 and 24
+	group by h.PremiseId, 
+		p.RateClass, ce.[Service Classification], 
+		ce.[Zone Code], ce.[Stratum Variable], ce.[Time of Day Code],
+		Year(m.EndDate), 
+		m.StartDate, m.EndDate,
+		m.Usage, 
+		m.Demand
+	having
+		Count(h.Usage) = (DateDiff(hour, m.StartDate, m.EndDate) + 24)";
 
 (* Filter meterTypes for Demand and Consumption  *)
 monthlyQry = "select m.PremiseId,
@@ -173,7 +177,6 @@ SQLExecute[conn, dailyAvgQry]//
         (# /. Rule[key_List, temp_] :> Flatten[{key, temp}])&//
     (* {dateString, daytype} -> tempAdj *)
     (tempVariant = #)&;  
-
 (*#################### Aux: Meter Logic ####################*)
 (* SQL templates *)
 MeterLogic[_, 1] := "VTOU";
